@@ -12,10 +12,11 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          <a href="/" class="logo">LMS Rewa</a>
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div><a href="/register" class="text-white">Register</a> /
+        <a href="/login" class="text-white">Login</a></div>
       </q-toolbar>
     </q-header>
 
@@ -105,3 +106,8 @@ export default {
   },
 };
 </script>
+
+<style lang="sass" scoped>
+  .logo
+    color: #fff
+</style>

@@ -6,12 +6,24 @@ const routes = [
       { path: '', component: () => import('pages/Index.vue') },
     ],
   },
+  {
+    path: '/register',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/register', component: () => import('pages/auth/Register.vue') },
+    ],
+  },
+  {
+    path: '/login',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/login', component: () => import('pages/auth/Login.vue') },
+    ],
+  },
 
-  // Always leave this as last one,
-  // but you can also remove it
   {
     path: '*',
-    component: () => import('pages/Error404.vue'),
+    component: () => import('pages/404.vue'),
   },
 ];
 

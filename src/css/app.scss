@@ -1,1 +1,22 @@
 // app global css in SCSS form
+a{
+    text-decoration: none;
+    &:hover{
+        cursor: pointer;
+    }
+}
+.text-white{
+    color: #fff;
+}
+.heading{
+    text-align: center;
+    font-size: 3em;
+    margin: .5em 0 1em;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+.flex-h{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

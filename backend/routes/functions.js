@@ -28,3 +28,5 @@ function logError(e){
     // sendMailOnError(e)
     console.log('e', e)
 }
+
+module.exports = { logError };

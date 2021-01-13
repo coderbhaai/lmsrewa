@@ -13,7 +13,7 @@
                 </div>
             </q-card-section>
             <q-card-section>
-                <q-form class="q-gutter-md" @submit="onSubmit" @reset="onReset">
+                <q-form class="q-gutter-md" @submit="onSubmit">
                     <q-input v-model="name" label="Name" lazy-rules />
                     <q-input v-model="email" label="Email" lazy-rules/>
                     <q-input v-model="password" label="Password" lazy-rules/>
@@ -33,7 +33,7 @@
 
 <script type="text/javascript"></script>
 <script>
-    import axios from 'axios'
+    import { mapActions } from 'vuex'
     export default {
         data() {
             return {
@@ -48,8 +48,9 @@
             }
         },
         methods: {
-            onSubmit () {
-                const data =
+            onSubmit(e) {
+            e.preventDefault();
+            const data =
                 {
                     name: this.name,
                     email: this.email,
@@ -58,33 +59,8 @@
                     role: this.role
                 }
                 this.$store.dispatch('session/register', data)
-                .then(() => {
-                    this.loading = false
-                    this.$router.push({name: 'news'})
-                    this.$q.notify({
-                        color: 'positive',
-                        position: 'top',
-                        message: 'Registration Successful',
-                        icon: 'fa-check-circle'
-                    })
-                    }).catch(error => {
-                    this.loading = false
-                    this.$q.notify({
-                        color: 'negative',
-                        position: 'top',
-                        message: error.response.data.message || 'Something went wrong',
-                        icon: 'fa-exclamation-triangle'
-                    })
-                })
             },
-            onReset () {
-                this.name ='',
-                this.email ='',
-                this.password ='',
-                this.confirm_password ='',
-                this.role =''
-            }
-         },
+        },
         mounted() {
             particlesJS("particles-js", {
                 "particles": {
@@ -196,6 +172,9 @@
                 },
                 "retina_detect": true
             });
+            // if(typeof(Storage) !== "undefined" && JSON.parse(localStorage.getItem('user'))){
+            //     this.setState({ auth: JSON.parse(localStorage.getItem('user')).auth || false })
+            // }
         }
     }
 </script>

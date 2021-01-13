@@ -1,4 +1,5 @@
 const express = require('express')
+const router = express.Router();
 var pool = require('./mysqlConnector')
 const asyncMiddleware = require('./asyncMiddleware')
 const jwt = require('jsonwebtoken')
@@ -6,96 +7,93 @@ const bcrypt = require('bcryptjs')
 const nodemailer = require("nodemailer");
 const func = require('./functions')
 
-const time = new Date().toISOString().slice(0, 19).replace('T', ' ')
-
-const router = express.Router();
 var bodyParser = require('body-parser')
+router.use(bodyParser.urlencoded({ extended: false }))
 router.use(bodyParser.json())
-router.use(bodyParser.urlencoded({ extended: true }))
+// var cookieParser = require('cookie-parser')
+// router.use(cookieParser())
+
+const time = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
 const transporter = nodemailer.createTransport({ host: "smtpout.secureserver.net", port: 465, secure: true, auth: { user: 'contactus@thetrueloans.com', pass: 'contactus@123',  debug: true }, tls:{ rejectUnauthorized: false, secureProtocol: "TLSv1_method" } });
 
 router.post('/register', asyncMiddleware( async(req, res, next) => {
-    console.log('req.body', req.body)
-    // if(req.body.password !== req.body.password_confirmation ){
-    //     res.send({ success: false, message: "Passwords Mismtach" })
-    // }else {
-    //     let sql = `SELECT id FROM users WHERE email='${req.body.email}'`
-    //     pool.query(sql, (err, results) => {
-    //         try{
-    //             if(results[0]){
-    //                 res.send({ success: false, message: "Email already registered" }) 
-    //             } else{
-    //                 let post= {
-    //                     'name':                       req.body.name, 
-    //                     'email':                      req.body.email,
-    //                     'role':                       req.body.role,
-    //                     'phone':                      req.body.phone,
-    //                     "created_at":                 time,
-    //                     "updated_at":                 time,
-    //                 }
-    //                 const user={
-    //                     name:                       req.body.name, 
-    //                     email:                      req.body.email,
-    //                     role:                       req.body.role,
-    //                     phone:                      req.body.phone,
-    //                 }
-    //                 jwt.sign({ user }, 'secretkey', (err, token)=>{
-    //                     if(token){
-    //                         post.token  = token
-    //                         bcrypt.genSalt(10, (err2, salt)=>{
-    //                             if(err) throw err;
-    //                             bcrypt.hash(req.body.password, salt, (err3, hash)=>{
-    //                                 if(err3) throw err3;
-    //                                 post.password = hash
-    //                                 let sql2 = `INSERT INTO users SET ?`
-    //                                 pool.query(sql2, post, (err4, results2) => {
-    //                                     try{
-    //                                         if(results2){
-    //                                             const mailBody =`
-    //                                                 <h2><strong>Dear ${req.body.name}</strong></h2>
-    //                                                 <p>Thanks for registering with us.</p>
-    //                                                 <p>The details provided by you are:</p>
-    //                                                 <ul>
-    //                                                     <li>Name: ${req.body.name}</li>
-    //                                                     <li>Email: ${req.body.email}</li>
-    //                                                     <li>Phone: ${req.body.phone}</li>
-    //                                                 </ul>
-    //                                                 <p>We welcome you onboard.</p><br/>
-    //                                                 <p>Warm Regards</p>
-    //                                                 <p>Team Reward Eagle</p>
-    //                                                 `
-    //                                             let mailOptions = { to: req.body.email, from: '"ContactUs"<contactus@reward.com>', cc: "amit.khare588@gmail.com", subject: `${req.body.name} regsitered on website ✔ www.reward.com`, html: mailBody }
-    //                                             transporter.sendMail( mailOptions, (error, info)=>{
-    //                                                 if(error){ return console.log(error)}
-    //                                                 console.log("Message sent: %s");
-    //                                             });
-    //                                             user.token = token
-    //                                             user.auth = true
-    //                                             user.id = results2.insertId
-    //                                             res.cookie('token', token)
-    //                                             res.send({ success: true, user: user, message: 'Registration successful, Welcome!!!' })
-    //                                         }else if(err4){ throw err4 }
-    //                                     }catch(e){
-    //                                         func.logError(e, req.url)
-    //                                         res.status(500);
-    //                                         return;
-    //                                     }
-    //                                 })
-    //                             })
-    //                         })
-    //                     }
-    //                 })
-    //             }
-    //             if(err){ throw err }
-    //         }catch(e){
-    //             // func.logError(e, req.url)
-    //             console.log('e', e)
-    //             res.status(500);
-    //             return;
-    //         }
-    //     })
-    // }
+    // console.log('req.body', req.body)
+    // res.send({ success: true, user:{ 'name': 'Amit' }, message: 'this is a message' }) 
+    // res.send({ success: true, message: req.body }) 
+    if(req.body.password !== req.body.confirm_password ){
+        res.send({ success: false, message: "Passwords Mismtach" })
+    }else {
+        let sql = `SELECT id FROM users WHERE email='${req.body.email}'`
+        pool.query(sql, (err, results) => {
+            try{
+                if(results){
+                    if(results[0]){
+                        res.send({ success: false, message: "Email already registered" }) 
+                    } else {
+                        let post= {
+                            'name':                       req.body.name, 
+                            'email':                      req.body.email,
+                            'role':                       req.body.role,
+                            'status':                     0,
+                            "created_at":                 time,
+                            "updated_at":                 time,
+                        }
+                        const user={
+                            name:                       req.body.name, 
+                            email:                      req.body.email,
+                            role:                       req.body.role,
+                        }
+                        jwt.sign({ user }, 'secretkey', (err, token)=>{
+                            if(token){
+                                post.token  = token
+                                bcrypt.genSalt(10, (err2, salt)=>{
+                                    if(err) throw err;
+                                    bcrypt.hash(req.body.password, salt, (err3, hash)=>{
+                                        try{
+                                            if(err3) throw err3;
+                                            post.password = hash
+                                            let sql2 = `INSERT INTO users SET ?`
+                                            pool.query(sql2, post, (err4, results2) => {
+                                                try{
+                                                    if(results2){
+                                                        const mailBody =`
+                                                            <h2><strong>Dear ${req.body.name}</strong></h2>
+                                                            <p>Thanks for registering with us.</p>
+                                                            <p>The details provided by you are:</p>
+                                                            <ul>
+                                                                <li>Name: ${req.body.name}</li>
+                                                                <li>Email: ${req.body.email}</li>
+                                                                <li>Phone: ${req.body.phone}</li>
+                                                            </ul>
+                                                            <p>We welcome you onboard.</p><br/>
+                                                            <p>Warm Regards</p>
+                                                            <p>Team LMS Rewa</p>
+                                                            `
+                                                        let mailOptions = { to: req.body.email, from: '"ContactUs"<contactus@lmsrewa.com>', cc: "amit.khare588@gmail.com", subject: `${req.body.name} regsitered on ✔ LMS Rewa`, html: mailBody }
+                                                        transporter.sendMail( mailOptions, (error, info)=>{
+                                                            if(error){ return console.log(error)}
+                                                            console.log("Message sent: %s");
+                                                        });
+                                                        user.token = token
+                                                        user.auth = true
+                                                        user.id = results2.insertId
+                                                        res.cookie('token', token)
+                                                        res.send({ success: true, user: user, message: 'Registration successful, Welcome!!!' })
+                                                    }else if(err4){ throw err4 }
+                                                }catch(e){ func.logError(e, req.url); res.status(500); return; }
+                                            })
+                                        }catch(e){ func.logError(e, req.url); res.status(500); return; }
+                                    })
+                                })
+                            }
+                        })
+                    }
+                }
+                if(err){ throw err }
+            }catch(e){ func.logError(e); res.status(500); return; }
+        })
+    }
 }))
 
 router.post('/login', asyncMiddleware( async(req, res, next) => {

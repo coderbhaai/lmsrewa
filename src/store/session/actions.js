@@ -1,25 +1,21 @@
 import axios from 'axios';
-
-// import {LocalStorage} from 'quasar';
-import setAxiosHeaders from './helpers';
+// import { Notify } from 'quasar';
+import { message } from './functions';
 import api from '../api';
+import setAxiosHeaders from './helpers';
 
 export function init({ state }) {
   setAxiosHeaders(state);
 }
 
-export function register({ commit, state }, form) {
-  return (axios.post(api.regsiter, form)
-    .then((res) => {
-      console.log('res, state, commit', res);
-      if (res.data.success) {
-        commit('LOGIN', res.data.user);
-        setAxiosHeaders(state);
-      } else {
-        console.log('Regsitration failed');
-      }
-    })
-  );
+export async function register({ commit, state }, form) {
+  const res = await axios.post(api.register, form);
+  console.log('res', res);
+  if (res.data.success) {
+    commit('LOGIN', res.data.user);
+    setAxiosHeaders(state);
+  }
+  message(res.data.message);
 }
 
 export function login({ commit, dispatch, getters }, form) {

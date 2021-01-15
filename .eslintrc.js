@@ -63,6 +63,9 @@ module.exports = {
     'prefer-promise-reject-errors': 'off',
     'max-len': 'off',
     "no-console": "off",
+    "es6": true,
+    "semi": "error",
+    "one-var": [2, "never"],
     // allow debugger during development only
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   }

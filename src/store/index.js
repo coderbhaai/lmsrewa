@@ -11,7 +11,8 @@ const modules = {
   cloud,
 };
 
-const store = new Vuex.Store({ modules });
+// const store = new Vuex.Store({ modules });
+export default new Vuex.Store({ modules });
 
 // Automatically run the `init` action if available for every module.
 // for (const moduleName of Object.keys(modules)) {
@@ -20,4 +21,4 @@ const store = new Vuex.Store({ modules });
 //   }
 // }
 
-export default store;
+// export default store;

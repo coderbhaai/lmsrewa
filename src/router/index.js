@@ -27,14 +27,14 @@ export default function (/* { store, ssrContext } */) {
   });
 
   Router.beforeEach((to, from, next) => {
-    if (to.matched.some((record) => record.meta.authenticated)) {
+    if (to.matched.some((record) => record.meta.noAuth)) {
       if (localStorage.getItem('user') != null) {
         next({ name: 'home' });
       } else {
         next();
       }
     } else if (to.matched.some((record) => record.meta.requiresAuth)) {
-      if (localStorage.getItem('jwt') == null) {
+      if (localStorage.getItem('jwt').token == null) {
         next({
           path: '/login',
           params: { nextUrl: to.fullPath },

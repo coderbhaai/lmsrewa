@@ -14,7 +14,7 @@ const routes = [
       { path: '/register', component: () => import('pages/auth/Register.vue') },
     ],
     meta: {
-      authenticated: true,
+      noAuth: true,
     },
   },
   {
@@ -25,7 +25,29 @@ const routes = [
       { path: '/login', component: () => import('pages/auth/Login.vue') },
     ],
     meta: {
-      authenticated: true,
+      noAuth: true,
+    },
+  },
+  {
+    path: '/admin/addBlog',
+    name: 'AddBlog',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/admin/addBlog', component: () => import('pages/admin/AddBlog.vue') },
+    ],
+    meta: {
+      admin: true,
+    },
+  },
+  {
+    path: '/admin/blogs',
+    name: 'Blogs',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/admin/blogs', component: () => import('pages/admin/blogs.vue') },
+    ],
+    meta: {
+      admin: true,
     },
   },
   {

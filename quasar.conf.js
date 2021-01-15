@@ -84,6 +84,13 @@ module.exports = function (/* ctx */) {
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
+      plugins: [
+        'Loading',
+        'LocalStorage',
+        'Notify',
+        'AppFullscreen',
+        'Dialog'
+      ],
       iconSet: 'material-icons', // Quasar icon set
       lang: 'en-us', // Quasar language pack
       config: {},

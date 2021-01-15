@@ -1,6 +1,5 @@
 <template>
   <div class="q-pa-md">
-    <p>This is Home</p>
     <q-carousel
       arrows
       animated
@@ -32,7 +31,6 @@
 </template>
 
 <script>
-console.log('Running');
 export default {
   name: 'PageIndex',
   data() {
@@ -41,15 +39,15 @@ export default {
       autoplay: true,
     };
   },
-  created() {
-    console.log('Created');
-  },
-  mounted() {
-    console.log('Mounted');
-  },
-  beforeCreate() {
-    console.log('At this point, events and lifecycle have been initialized.');
-  },
+  // created() {
+  //   console.log('Created');
+  // },
+  // mounted() {
+  //   console.log('Mounted');
+  // },
+  // beforeCreate() {
+  //   console.log('At this point, events and lifecycle have been initialized.');
+  // },
 };
 </script>
 

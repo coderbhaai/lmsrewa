@@ -22,6 +22,7 @@
     "quasar": "^1.0.0"
   },
   "devDependencies": {
+    "@babel/plugin-transform-reserved-words": "^7.12.1",
     "@quasar/app": "^2.0.0",
     "babel-eslint": "^10.0.1",
     "eslint": "^6.8.0",

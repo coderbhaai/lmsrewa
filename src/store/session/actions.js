@@ -7,15 +7,29 @@ export function init({ state }) {
   setAxiosHeaders(state);
 }
 
-export async function fetchUser() {
-  return 'hi';
-  // const res = await axios.post(api.register, form);
-  // if (res.data.success) {
-  //   commit('LOGIN', res.data.user);
-  //   setAxiosHeaders(state);
-  //   this.$router.push({ name: 'home' });
-  // }
-  // message(res.data.message);
+export async function adminBlogMeta({ commit }) {
+  const res = await axios.get(api.adminBlogMeta);
+  commit('BLOGMETA', res.data.data);
+}
+
+export async function addBlogMeta({ commit }, form) {
+  const res = await axios.post(api.addBlogMeta, form);
+  commit('ADDBLOGMETA', res.data.data);
+}
+
+export async function updateBlogMeta({ commit }, form) {
+  const res = await axios.post(api.updateBlogMeta, form);
+  if (res.data.success) {
+    commit('UPDATEBLOGMETA', res.data.data);
+  }
+  message(res.data.message);
+}
+
+export async function adminBlogs({ commit }) {
+  const res = await axios.get(api.adminBlogs);
+  commit('ADMINBLOGS', res.data.data);
+  // console.log('res', res);
+  // commit('ADMINBLOGS', []);
 }
 
 export async function register({ commit, state }, form) {
@@ -36,6 +50,17 @@ export async function login({ commit, state }, form) {
     this.$router.push({ name: 'home' });
   }
   message(res.data.message);
+}
+
+export async function fetchUser() {
+  return 'hi';
+  // const res = await axios.post(api.register, form);
+  // if (res.data.success) {
+  //   commit('LOGIN', res.data.user);
+  //   setAxiosHeaders(state);
+  //   this.$router.push({ name: 'home' });
+  // }
+  // message(res.data.message);
 }
 
 // export function validate({ commit, state }) {

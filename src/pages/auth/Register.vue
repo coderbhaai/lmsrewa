@@ -49,16 +49,15 @@
         },
         methods: {
             onSubmit(e) {
-            e.preventDefault();
-            const data =
-                {
+                e.preventDefault();
+                const data = {
                     name: this.name,
                     email: this.email,
                     password: this.password,
                     confirm_password: this.confirm_password,
                     role: this.role
-                }
-                this.$store.dispatch('session/register', data)
+                };
+                this.$store.dispatch('session/register', data);
             },
         },
         mounted() {

@@ -10,11 +10,10 @@
         <q-tr :props="props">
           <q-td key="id" :props="props">{{ props.row.id }}</q-td>
           <q-td key="title" :props="props">{{ props.row.title }}</q-td>
-          <q-td key="coverImg" :props="props">{{ props.row.coverImg }}</q-td>
-          <!-- <q-td key="coverImg" :props="props"><img src="/images/blogs/" + {{ props.row.coverImg }}/></q-td> -->
+          <q-td key="coverImg" :props="props" class="previewImg"><img :src="'images/blog/'+ props.row.image"/></q-td>
           <q-td key="url" :props="props">{{ props.row.url }}</q-td>
           <q-td key="updated_at" :props="props">{{ props.row.updated_at }}</q-td>
-          <q-td><img src="/images/icons/edit.svg" class="edit"/></q-td>
+          <q-td><a :href="'/admin/updateBlog/' + props.row.id"><img src="/images/icons/edit.svg" class="edit"/></a></q-td>
         </q-tr>
       </template>
     </q-table>
@@ -29,7 +28,7 @@ export default {
     return {
       columns: [
         {
-          name: 'id', label: 'Edit1', align: 'left', field: 'Edit',
+          name: 'id', label: 'Sl No.', align: 'left', field: 'Edit',
         },
         {
           name: 'title', label: 'Title', align: 'left', field: 'title', sortable: true,

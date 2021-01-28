@@ -6,7 +6,33 @@ const time = new Date().toISOString().slice(0, 19).replace('T', ' ')
 const transporter = nodemailer.createTransport({ host: "smtpout.secureserver.net", port: 465, secure: true, auth: { user: 'contactus@thetrueloans.com', pass: 'contactus@123',  debug: true }, tls:{ rejectUnauthorized: false, secureProtocol: "TLSv1_method" } });
 
 
+const storage = './public/images/'
+// const storage = '/var/www/amitkk.com/public_html/public/images/'
 
+  
+function uploadImage(file, folder){
+    return new Promise((resolve, reject) => {
+        // var filename = file.name
+        var filename = Date.now() + '-' + file.name;
+        file.mv(storage+folder+'/'+filename, function(err){ if(err){ logError(err) } })
+        let post= {
+            'image' :                       filename,
+            'fileURL' :                     storage+folder+'/'+filename,
+            "created_at":                   time,
+            "updated_at":                   time,
+        }
+        let sql = `INSERT INTO media SET ?`
+        pool.query(sql, post, (err, results) => {
+            try{
+                if(err){ throw err }
+                if(results){ resolve( results.insertId ) }
+            }catch(e){ logError(e); return; }
+        })
+    });
+    
+
+    console.log('e', e)
+}
 
 function sendMailOnError(e) {
     const mailBody =`
@@ -29,4 +55,4 @@ function logError(e){
     console.log('e', e)
 }
 
-module.exports = { logError };
+module.exports = { logError, storage, uploadImage };

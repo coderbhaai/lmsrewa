@@ -8,8 +8,11 @@ const nodemailer = require("nodemailer");
 const func = require('./functions')
 
 var bodyParser = require('body-parser')
-router.use(bodyParser.urlencoded({ extended: false }))
+router.use(bodyParser.urlencoded({ extended: true }))
 router.use(bodyParser.json())
+const upload = require('express-fileupload')
+const fs = require('fs')
+router.use(upload())
 
 const time = new Date().toISOString().slice(0, 19).replace('T', ' ')
 const transporter = nodemailer.createTransport({ host: "smtpout.secureserver.net", port: 465, secure: true, auth: { user: 'contactus@thetrueloans.com', pass: 'contactus@123',  debug: true }, tls:{ rejectUnauthorized: false, secureProtocol: "TLSv1_method" } });
@@ -95,7 +98,7 @@ router.post('/updateBlogMeta', asyncMiddleware( async(req, res) => {
 }))
 
 router.get('/adminBlogs',  asyncMiddleware( async(req, res) => {
-    let sql = `SELECT id, title, url, coverImg, updated_at FROM blogs ORDER BY id DESC`
+    let sql = `SELECT a.id, a.title, a.url, a.coverImg, a.updated_at, b.image FROM blogs as a left join media as b on b.id = a.coverImg ORDER BY id DESC`
     pool.query(sql, (err, results) => {
         try{
             if(err){ throw err }
@@ -134,22 +137,23 @@ router.post('/addBlog', asyncMiddleware( async(req, res) => {
         "updated_at":           time,
     }
     if(req.files){
-        var file = req.files.file
-        var filename = file.name
-        post.coverImg = filename
-        file.mv(storage+'blog/'+filename, function(err){ if(err){ func.logError(err) } })
+        const id = await func.uploadImage(req.files.file, 'blog') 
+        post.coverImg = id
     }
     let sql = `INSERT INTO blogs SET ?`
     pool.query(sql, post, (err, results) => {
         try{
+            if(err){ throw err }
             if(results){
-                res.send({ success: true, message: 'Blog added successfuly' });
-            }else if(err){ throw err }
-        }catch(e){
-          func.logError(e)
-          res.status(500);
-          return;
-        }
+                let sql2 = `SELECT id, title, url, coverImg, updated_at FROM blogs WHERE id = ${results.insertId}`
+                pool.query(sql2, post, (err2, results2) => {
+                    try{
+                        if(err){ throw err2 }
+                        res.send({ success: true, message: 'Blog added successfuly', data: results2[0] });
+                    }catch(e){ func.logError(e); res.status(500); return; }
+                })
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
     })
 }))
 

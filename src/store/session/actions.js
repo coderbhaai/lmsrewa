@@ -28,8 +28,12 @@ export async function updateBlogMeta({ commit }, form) {
 export async function adminBlogs({ commit }) {
   const res = await axios.get(api.adminBlogs);
   commit('ADMINBLOGS', res.data.data);
-  // console.log('res', res);
-  // commit('ADMINBLOGS', []);
+}
+
+export async function blogMetaOptions({ commit }) {
+  const res = await axios.get(api.blogMetaOptions);
+  console.log('res.data', res.data);
+  commit('BLOGMETAOPTIONS', res.data);
 }
 
 export async function register({ commit, state }, form) {
@@ -85,4 +89,13 @@ export function logout({ commit }) {
 export function auth() {
   const user = 'hi';
   return user;
+}
+
+export async function addBlog({ commit }, form) {
+  const res = await axios.post(api.addBlog, form);
+  if (res.data.success) {
+    commit('ADDBLOG', res.data.data);
+    this.$router.push({ name: 'blogs' });
+  }
+  message(res.data.message);
 }

@@ -8,4 +8,5 @@ export default {
   adminBlogs: `${url}/admin/adminBlogs`,
   addBlog: `${url}/admin/addBlog`,
   updateBlog: `${url}/admin/updateBlog`,
+  blogMetaOptions: `${url}/admin/blogMetaOptions`,
 };

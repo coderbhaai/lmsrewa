@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-md">
-    <h1 class="heading">Add Blog Here</h1>
+    <h1 class="heading">Update Blog Here {{ $route.params.id }}</h1>
     <q-form class="q-gutter-md" @submit="onSubmit">
       <div class="row q-pb-lg">
         <div class="col-4 q-pr-lg">
@@ -125,7 +125,7 @@
 import { mapState, mapActions } from 'vuex';
 
 export default {
-  name: 'AddBlog',
+  name: 'UpdateBlog',
   data() {
     return {
       title: '',
@@ -147,7 +147,7 @@ export default {
       data.append('content', this.qeditor);
       data.append('tag', JSON.stringify(this.tagSelected));
       data.append('category', JSON.stringify(this.tagSelected));
-      this.$store.dispatch('session/addBlog', data);
+      this.$store.dispatch('session/updateBlog', data);
     },
   },
   computed: {

@@ -2,7 +2,6 @@ import { LocalStorage } from 'quasar';
 import setAxiosHeaders from './helpers';
 
 export const LOGIN = (state, user) => {
-  console.log('state in mutations', state, user);
   state.user = user;
   LocalStorage.set('user', user);
   setAxiosHeaders(state);

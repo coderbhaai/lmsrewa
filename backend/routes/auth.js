@@ -18,9 +18,6 @@ const time = new Date().toISOString().slice(0, 19).replace('T', ' ')
 const transporter = nodemailer.createTransport({ host: "smtpout.secureserver.net", port: 465, secure: true, auth: { user: 'contactus@thetrueloans.com', pass: 'contactus@123',  debug: true }, tls:{ rejectUnauthorized: false, secureProtocol: "TLSv1_method" } });
 
 router.post('/register', asyncMiddleware( async(req, res, next) => {
-    // console.log('req.body', req.body)
-    // res.send({ success: true, user:{ 'name': 'Amit' }, message: 'this is a message' }) 
-    // res.send({ success: true, message: req.body }) 
     if(req.body.password !== req.body.confirm_password ){
         res.send({ success: false, message: "Passwords Mismtach" })
     }else {
@@ -72,8 +69,8 @@ router.post('/register', asyncMiddleware( async(req, res, next) => {
                                                             `
                                                         let mailOptions = { to: req.body.email, from: '"ContactUs"<contactus@lmsrewa.com>', cc: "amit.khare588@gmail.com", subject: `${req.body.name} regsitered on ✔ LMS Rewa`, html: mailBody }
                                                         transporter.sendMail( mailOptions, (error, info)=>{
-                                                            if(error){ return console.log(error)}
-                                                            console.log("Message sent: %s");
+                                                            if(error){ func.printError(error) }
+                                                            func.printError("Message sent: %s")
                                                         });
                                                         user.token = token
                                                         user.auth = true

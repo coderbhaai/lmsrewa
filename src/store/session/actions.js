@@ -141,18 +141,3 @@ export async function updateVideo({ commit }, form) {
   }
   message(res.data.message);
 }
-
-// export function validate({ commit, state }) {
-//   if (!state.user) return Promise.resolve(null);
-//   return axios.get('auth/user')
-//     .then((res) => {
-//       const { user } = res.data.user;
-//       commit('LOGIN', user);
-//       return user;
-//     }).catch((error) => {
-//       if (error.res.status === 401) {
-//         commit('LOGOUT');
-//       }
-//       return null;
-//     });
-// }

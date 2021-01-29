@@ -97,28 +97,30 @@ router.get('/adminBlogMeta', asyncMiddleware( async(req, res) => {
 router.post('/addBlogMeta', asyncMiddleware( async(req, res) => {
     let post= {
         "type":                 req.body.type,
+        "name":                 req.body.name,
         "url":                  req.body.url,
         "created_at":           time,
         "updated_at":           time,
     }
-    if(req.body.type === 'page'){
-        if(req.files.cover){
-            var file = req.files.cover
-            var filename = file.name
-            file.mv(storage+'cover/'+filename, function(err){ if(err){ console.log('err', err) } })
-            post.name = filename
-        }
-    }else{
-        post.name = req.body.name
-    }    
+    // if(req.body.type === 'page'){
+    //     if(req.files.cover){
+    //         var file = req.files.cover
+    //         var filename = file.name
+    //         file.mv(storage+'cover/'+filename, function(err){ if(err){ func.printError(err) } })
+    //         post.name = filename
+    //     }
+    // }else{
+    //     post.name = req.body.name
+    // }    
     let sql = 'INSERT INTO blog_metas SET ?'
     pool.query(sql, post, (err, results) => {
-        try{ if(err) throw err;
-            if(err){ res.send({ success: false, message: err.sqlMessage }) }
+        try{ 
+            if(err) throw err;
             if(results){
                 let sql = `SELECT id, type, name, url, updated_at FROM blog_metas ORDER BY id DESC LIMIT 1`
                 pool.query(sql, (err, results2) => {
-                    try{ if(err) throw err;
+                    try{ 
+                        if(err) throw err;
                         res.send({ success: true, data: results2[0], message: 'Blog meta added successfuly' });
                     }catch(e){ func.logError(e); res.status(403); return; }
                 })
@@ -129,8 +131,8 @@ router.post('/addBlogMeta', asyncMiddleware( async(req, res) => {
 
 router.post('/updateBlogMeta', asyncMiddleware( async(req, res) => {
     let post= { 
-        "name":                 req.body.name,
         "type":                 req.body.type,
+        "name":                 req.body.name,
         "url":                  req.body.url,
         "updated_at":           time
     }
@@ -141,7 +143,7 @@ router.post('/updateBlogMeta', asyncMiddleware( async(req, res) => {
     //         var oldCover = req.body.oldCover
     //         if(oldCover){
     //             if (fs.existsSync(storage+'cover/'+oldCover)) { fs.unlinkSync(storage+'cover/'+oldCover) }
-    //             file.mv(storage+'cover/'+filename, function(err){ if(err){ console.log('err', err) } })
+    //             file.mv(storage+'cover/'+filename, function(err){ if(err){ func.printError(err) } })
     //         }
     //         post.name = filename
     //     }
@@ -150,12 +152,13 @@ router.post('/updateBlogMeta', asyncMiddleware( async(req, res) => {
     // }
     let sql = `UPDATE blog_metas SET ? WHERE id = ${req.body.id} `;
     pool.query(sql, post, (err, results) => {
-        try{ if(err) throw err;
-            if(err){ res.send({ success: false, message: err.sqlMessage }) }
+        try{ 
+            if(err) throw err;
             if(results){
                 let sql = `SELECT id, type, name, url, updated_at FROM blog_metas WHERE id = ${req.body.id}`
                 pool.query(sql, (err, results2) => {
-                    try{ if(err) throw err;
+                    try{ 
+                        if(err) throw err;
                         res.send({ success: true, data: results2[0], message: 'Blog meta updated successfuly' })
                     }catch(e){ func.logError(e); res.status(403); return; }
                 })
@@ -225,7 +228,6 @@ router.post('/addBlog', asyncMiddleware( async(req, res) => {
 }))
 
 router.get('/getBlog/:id', asyncMiddleware( async(req, res) => {
-    console.log('req.params.id', req.params.id)
     let sql = `SELECT a.id, a.title, a.url, a.coverImg, a.content, a.category, a.tag, a.updated_at, b.image, b.id as mediaId FROM blogs as a left join media as b on b.id = a.coverImg WHERE a.id = '${req.params.id}'`
     pool.query(sql, async(err, results) => {
         try{
@@ -281,7 +283,6 @@ router.get('/adminVideos',  asyncMiddleware( async(req, res) => {
 }))
 
 router.post('/addVideo', asyncMiddleware( async(req, res) => {
-    console.log('req.body', req.body)
     let post= {
         'type':                 req.body.type,
         'video_name':           req.body.name,
@@ -313,36 +314,28 @@ router.post('/addVideo', asyncMiddleware( async(req, res) => {
 
 router.post('/updateVideo', asyncMiddleware( async(req, res) => {
     let post= {
-        'url':                  req.body.url,
         'type':                 req.body.type,
         'video_name':           req.body.name,
-        'video_class':          req.body.class,
-        'video_sub':            req.body.subject,
+        'url':                  req.body.url,
+        'video_class':          req.body.video_class,
+        'video_sub':            req.body.sub,
         'status':               req.body.status,
         "updated_at":           time,
     }
     let sql = `UPDATE videos SET ? WHERE id = ${req.body.id}`;
     pool.query(sql, post, (err, results) => {
         try{
+            if(err){ throw err }
             if(results){
-                let sql = `SELECT id, type, url, video_name, video_class, video_sub FROM videos WHERE id = ${req.body.id}`
-                pool.query(sql, (err2, results2) => {
+                let sql2 = `SELECT id, type, url, video_name, video_class, video_sub, status, updated_at FROM videos WHERE id = ${req.body.id}`
+                pool.query(sql2, (err2, results2) => {
                     try{
-                        if(results2){
-                            res.send({ success: true, data: results2[0], message: 'Video updated successfuly' });
-                        }else if(err2){ throw err2 }
-                    }catch(e){
-                      logError(e, req.url)
-                      res.status(500);
-                      return;
-                    }
+                        if(err2){ throw err2 }
+                        if(results2){ res.send({ success: true, data: results2[0], message: 'Video updated successfuly' }); }
+                    }catch(e){ func.logError(e); res.status(500); return; }
                 })
-            }else if(err){ throw err }
-        }catch(e){
-          logError(e, req.url)
-          res.status(500);
-          return;
-        }
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
     })
 }))
 

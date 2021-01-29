@@ -17,19 +17,24 @@
         <div><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
       </q-form>
     </div>
-    <q-dialog v-model="alert">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Alert</div>
-        </q-card-section>
-
+    <q-dialog v-model="medium" persistent transition-show="scale" transition-hide="scale">
+      <q-card style="width: 70vw; max-width: 80vw;">
+        <q-card-section class="modalHead"><div class="text-h6">Update Video</div><q-btn flat label="Close" color="primary" v-close-popup @click="resetData()"/></q-card-section>
         <q-card-section class="q-pt-none">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas eveniet porro. Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro labore.
+          <q-form class="q-gutter-md" @submit="updateSubmit">
+            <div class="row qmb-lg">
+              <div class="col-4 q-pr-lg"><q-select v-model="type" :options="options" label="Type" lazy-rules required/></div>
+              <div class="col-4 q-pr-lg"><q-select emit-value v-model="video_class" :options="classOptions" label="Class" option-value="name" option-label="name" lazy-rules required/></div>
+              <div class="col-4 q-pr-lg"><q-select emit-value v-model="sub" :options="subjectOptions" label="Subject" option-value="name" option-label="name" lazy-rules required/></div>
+            </div>
+            <div class="row">
+              <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name" lazy-rules required/></div>
+              <div class="col-4 q-pr-lg"><q-input v-model="url" label="URL" lazy-rules required/></div>
+              <div class="col-4 q-pr-lg"><q-select emit-value v-model="status" :options="display_options" option-value="value" option-label="name" label="Display Status" lazy-rules required/></div>
+            </div>
+            <div class="text-center"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
+          </q-form>
         </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="OK" color="primary" v-close-popup />
-        </q-card-actions>
       </q-card>
     </q-dialog>
     <q-table title="Videos" :data="adminVideos" :columns="columns" row-key="id">
@@ -47,7 +52,7 @@
           <q-td key="video_sub" :props="props">{{ props.row.video_sub }}</q-td>
           <q-td key="status" :props="props">{{ props.row.status }}</q-td>
           <q-td key="updated_at" :props="props">{{ props.row.updated_at }}</q-td>
-          <q-td><img src="/images/icons/edit.svg" class="edit"/></q-td>
+          <q-td><img @click="updateDialog(props.row)" src="/images/icons/edit.svg" class="edit"/></q-td>
         </q-tr>
       </template>
     </q-table>
@@ -60,6 +65,7 @@ import { mapState, mapActions } from 'vuex';
 export default {
   data() {
     return {
+      id: '',
       type: '',
       name: '',
       url: '',
@@ -67,7 +73,7 @@ export default {
       sub: '',
       status: '',
       showAddForm: false,
-      alert: false,
+      medium: false,
       columns: [
         {
           name: 'id', label: 'Sl No.', align: 'left', field: 'Edit',
@@ -119,9 +125,10 @@ export default {
         status: this.status,
       };
       this.$store.dispatch('session/addVideo', data);
-      // this.resetData();
+      this.resetData();
     },
     resetData() {
+      this.id = '';
       this.type = '';
       this.name = '';
       this.url = '';
@@ -129,40 +136,35 @@ export default {
       this.sub = '';
       this.status = '';
       this.showAddForm = false;
+      this.medium = false;
     },
-    editItem(item) {
-      console.log('item', item);
-      this.editedIndex = this.data.indexOf(item);
-      this.editedItem = {
-        id: item.id,
-        name: item.name,
-        url: item.url,
-        type: item.type,
-      };
-      // this.editedItem = this.editedItem.assign({}, item);
+    updateDialog(data) {
+      this.id = data.id;
+      this.type = data.type;
+      this.name = data.video_name;
+      this.url = data.url;
+      this.video_class = data.video_class;
+      this.sub = data.video_sub;
+      this.status = data.status;
       this.medium = true;
     },
     updateSubmit(e) {
       e.preventDefault();
       const data = {
-        id: this.editedItem.id,
-        name: this.editedItem.name,
-        url: this.editedItem.url,
-        type: this.editedItem.type,
+        id: this.id,
+        type: this.type,
+        name: this.name,
+        url: this.url,
+        video_class: this.video_class,
+        sub: this.sub,
+        status: this.status,
       };
-      this.$store.dispatch('session/updateBlogMeta', data);
-      this.medium = false;
+      this.$store.dispatch('session/updateVideo', data);
+      this.resetData();
     },
   },
   computed: {
     ...mapState('session', ['adminVideos', 'classOptions', 'subjectOptions']),
-    // setter
-    // set: function (newValue) {
-    //   // var names = newValue.split(' ')
-    //   // this.firstName = names[0]
-    //   // this.lastName = names[names.length - 1]
-    //   this.adminBlogs = newValue
-    // }
   },
   created() {
     this.$store.dispatch('session/adminBasics');

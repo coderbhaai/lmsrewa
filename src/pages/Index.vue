@@ -39,15 +39,6 @@ export default {
       autoplay: true,
     };
   },
-  // created() {
-  //   console.log('Created');
-  // },
-  // mounted() {
-  //   console.log('Mounted');
-  // },
-  // beforeCreate() {
-  //   console.log('At this point, events and lifecycle have been initialized.');
-  // },
 };
 </script>
 

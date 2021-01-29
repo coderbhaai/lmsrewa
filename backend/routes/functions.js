@@ -8,7 +8,8 @@ const fs = require('fs')
 
 const storage = './public/images/'
 // const storage = '/var/www/amitkk.com/public_html/public/images/'
-  
+function printError(mesg){ console.log('mesg', mesg) }
+
 function uploadImage(file, folder){
     return new Promise((resolve, reject) => {
         // var filename = file.name
@@ -28,9 +29,6 @@ function uploadImage(file, folder){
             }catch(e){ logError(e); return; }
         })
     });
-    
-
-    console.log('e', e)
 }
 
 function uploadDeleteImage(file, folder, id, image){
@@ -97,4 +95,4 @@ function logError(e){
     console.log('e', e)
 }
 
-module.exports = { logError, storage, uploadImage, uploadDeleteImage, blogMetaName };
+module.exports = { printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName };

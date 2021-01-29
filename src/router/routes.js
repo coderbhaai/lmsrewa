@@ -73,6 +73,28 @@ const routes = [
     },
   },
   {
+    path: '/admin/basics',
+    name: 'basics',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/admin/basics', component: () => import('pages/admin/basics.vue') },
+    ],
+    meta: {
+      admin: true,
+    },
+  },
+  {
+    path: '/admin/videos',
+    name: 'videos',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/admin/videos', component: () => import('pages/admin/videos.vue') },
+    ],
+    meta: {
+      admin: true,
+    },
+  },
+  {
     path: '*',
     component: () => import('pages/404.vue'),
   },

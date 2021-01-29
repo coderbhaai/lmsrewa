@@ -17,6 +17,73 @@ router.use(upload())
 const time = new Date().toISOString().slice(0, 19).replace('T', ' ')
 const transporter = nodemailer.createTransport({ host: "smtpout.secureserver.net", port: 465, secure: true, auth: { user: 'contactus@thetrueloans.com', pass: 'contactus@123',  debug: true }, tls:{ rejectUnauthorized: false, secureProtocol: "TLSv1_method" } });
 
+router.get('/adminBasics', asyncMiddleware( async(req, res) => {
+    let sql = `SELECT id, type, name, tab1, tab2, tab3, updated_at FROM basics;`
+    pool.query(sql, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ data: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/addBasic', asyncMiddleware( async(req, res) => {
+    let post= {
+        'type':                 req.body.type,
+        'name':                 req.body.name,
+        'tab1':                 req.body.tab1,
+        'tab2':                 req.body.tab2,
+        'tab3':                 req.body.tab3,
+        "created_at":           time,
+        "updated_at":           time,
+    }
+    let sql = `INSERT INTO basics SET ?`
+    pool.query(sql, post, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){
+                let sql = `SELECT id, type, name, tab1, tab2, tab3, updated_at FROM basics ORDER BY id DESC LIMIT 1`
+                pool.query(sql, (err2, results2) => {
+                    try{
+                        if(err2){ throw err2 }
+                        if(results2){
+                            res.send({ success: true, data: results2[0], message: 'Basic added successfuly' });
+                        }
+                    }catch(e){ func.logError(e); res.status(500); return; }
+                })
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/updateBasic', asyncMiddleware( async(req, res) => {
+    let post= {
+        'type':                 req.body.type,
+        'name':                 req.body.name,
+        'tab1':                 req.body.tab1,
+        'tab2':                 req.body.tab2,
+        'tab3':                 req.body.tab3,
+        "updated_at":           time,
+    }
+    let sql = `UPDATE basics SET ? WHERE id = '${req.body.id}'`;
+    pool.query(sql, post, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){
+                let sql = `SELECT id, type, name, tab1, tab2, tab3, updated_at FROM basics WHERE id = ${req.body.id}`
+                pool.query(sql, (err2, results2) => {
+                    try{
+                        if(err2){ throw err2 }
+                        if(results2){
+                            res.send({ success: true, data: results2[0], message: 'Basic updated successfuly' })
+                        }
+                    }catch(e){ func.logError(e); res.status(500); return; }
+                })
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
 router.get('/adminBlogMeta', asyncMiddleware( async(req, res) => {
     let sql = `SELECT id, type, name, url FROM blog_metas ORDER BY id DESC`
     pool.query(sql, (err, results) => {
@@ -182,34 +249,100 @@ router.post('/updateBlog', asyncMiddleware( async(req, res) => {
         "updated_at":           time,
     }
     if(req.files){
-        var file = req.files.file
-        var filename = file.name
-        post.coverImg = filename
-        file.mv(storage+'blog/'+filename, function(err){ if(err){ func.logError(e) } })
-        if (fs.existsSync(storage+'blog/'+req.body.oldCoverImg)) { fs.unlinkSync(storage+'blog/'+req.body.oldCoverImg) }
+        await func.uploadDeleteImage(req.files.file, 'blog', req.body.mediaId, req.body.oldImage)
     }
     let sql = `UPDATE blogs SET ? WHERE id = ${req.body.id}`;
     pool.query(sql, post, (err, results) => {
         try{
+            if(err){ throw err }
             if(results){
                 let sql = `SELECT id, title, url, coverImg, category, tag, content, updated_at FROM blogs WHERE id = ${req.body.id}`
                 pool.query(sql, (err2, results2) => {
                     try{
+                        if(err2){ throw err2 }
                         if(results2){
                             res.send({ success: true, data: results2[0], message: 'Blog updated successfuly' });
+                        }
+                    }catch(e){ func.logError(e); res.status(500); return; }
+                })
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.get('/adminVideos',  asyncMiddleware( async(req, res) => {
+    let sql = `SELECT id, type, url, video_name, video_class, video_sub, status, updated_at FROM videos ORDER BY id DESC`
+    pool.query(sql, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ data: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/addVideo', asyncMiddleware( async(req, res) => {
+    console.log('req.body', req.body)
+    let post= {
+        'type':                 req.body.type,
+        'video_name':           req.body.name,
+        'url':                  req.body.url,
+        'video_class':          req.body.video_class,
+        'video_sub':            req.body.sub,
+        'status':               req.body.status,
+        "created_at":           time,
+        "updated_at":           time,
+    }
+    let sql = `INSERT INTO videos SET ?`
+    pool.query(sql, post, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){
+                let sql = `SELECT id, type, url, video_name, video_class, video_sub, status, updated_at FROM videos ORDER BY id DESC LIMIT 1`
+                pool.query(sql, (err2, results2) => {
+                    try{
+                        if(err2){ throw err2 }
+                        if(results2){
+                            res.send({ success: true, data: results2[0], message: 'Video added successfuly' });
+                        }
+                    }catch(e){ func.logError(e); res.status(500); return; }
+                })
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/updateVideo', asyncMiddleware( async(req, res) => {
+    let post= {
+        'url':                  req.body.url,
+        'type':                 req.body.type,
+        'video_name':           req.body.name,
+        'video_class':          req.body.class,
+        'video_sub':            req.body.subject,
+        'status':               req.body.status,
+        "updated_at":           time,
+    }
+    let sql = `UPDATE videos SET ? WHERE id = ${req.body.id}`;
+    pool.query(sql, post, (err, results) => {
+        try{
+            if(results){
+                let sql = `SELECT id, type, url, video_name, video_class, video_sub FROM videos WHERE id = ${req.body.id}`
+                pool.query(sql, (err2, results2) => {
+                    try{
+                        if(results2){
+                            res.send({ success: true, data: results2[0], message: 'Video updated successfuly' });
                         }else if(err2){ throw err2 }
                     }catch(e){
-                      func.logError(e)
+                      logError(e, req.url)
                       res.status(500);
                       return;
                     }
                 })
             }else if(err){ throw err }
         }catch(e){
-          func.logError(e)
+          logError(e, req.url)
           res.status(500);
           return;
-        }        
+        }
     })
 }))
 

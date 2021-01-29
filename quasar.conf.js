@@ -89,7 +89,8 @@ module.exports = function (/* ctx */) {
         'LocalStorage',
         'Notify',
         'AppFullscreen',
-        'Dialog'
+        'Dialog',
+        'axios',
       ],
       iconSet: 'material-icons', // Quasar icon set
       lang: 'en-us', // Quasar language pack
@@ -108,12 +109,12 @@ module.exports = function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [
-        'axios',
-        'vuelidate',
-        'title',
-        'auth',
-      ],
+      // plugins: [
+      //   'axios',
+      //   'vuelidate',
+      //   'title',
+      //   'auth',
+      // ],
     },
 
     // animations: 'all', // --- includes all animations

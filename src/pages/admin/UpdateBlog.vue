@@ -4,14 +4,14 @@
     <q-form class="q-gutter-md" @submit="onSubmit">
       <div class="row q-pb-lg">
         <div class="col-4 q-pr-lg">
-          <q-input v-model="title" label="Blog Title" lazy-rules @input="update"/>
+          <q-input v-model="title" label="Blog Title" lazy-rules/>
         </div>
         <div class="col-4 q-pr-lg">
           <q-input v-model="url" label="Blog URL" lazy-rules />
         </div>
-        <div class="col-4">
+        <div class="col-4 previewImg">
           <q-file v-model="image" label="Blog Image" />
-          <!-- <img :src="'/images/blog/'+ oldImage"/> -->
+          <img :src="'/images/blog/'+ oldImage" class="q-mt-sm"/>
         </div>
       </div>
       <div class="row q-pb-lg">
@@ -116,20 +116,23 @@
         </div>
       </div>
       <div>
-        <q-btn label="Add Blog" type="submit" color="primary"/>
+        <q-btn label="Update Blog" type="submit" color="primary"/>
       </div>
     </q-form>
   </div>
 </template>
 
 <script>
+// import { mapState, mapActions, mapFields } from 'vuex';
 import { mapState, mapActions } from 'vuex';
+import axios from 'axios';
+import api from '../../store/api';
 
 export default {
   name: 'UpdateBlog',
   data() {
     return {
-      // loading: false,
+      id: '',
       title: '',
       url: '',
       image: '',
@@ -137,6 +140,7 @@ export default {
       tagSelected: [],
       catSelected: [],
       oldImage: '',
+      mediaId: '',
     };
   },
   methods: {
@@ -144,52 +148,57 @@ export default {
     onSubmit(e) {
       e.preventDefault();
       const data = new FormData();
+      data.append('id', this.id);
       data.append('file', this.image);
       data.append('title', this.title);
       data.append('url', this.url.replace(/ /g, '-'));
       data.append('content', this.qeditor);
       data.append('tag', JSON.stringify(this.tagSelected));
-      data.append('category', JSON.stringify(this.tagSelected));
+      data.append('category', JSON.stringify(this.catSelected));
+      data.append('oldImage', this.oldImage);
+      data.append('mediaId', this.mediaId);
       this.$store.dispatch('session/updateBlog', data);
     },
-    update() {
-      this.title = 'value';
-    },
-    // fetchBlog() {
-    //   console.log('FetchBLog');
-    //   console.log('$route.params.id', this.$route.params.id);
-    //   this.loading = true;
-    //   this.$axios.get('/').then((response) => {
-    //     this.loading = false;
-    //     this.articles = response.data.articles;
-    //   });
-    // },
   },
   computed: {
     ...mapState('session', ['tagOptions', 'catOptions', 'blogToEdit']),
+    // ...mapFields('session', ['tagOptions', 'catOptions', 'blogToEdit']),
+    // tagOptions: {
+    //   get() {
+    //     return this.$store.state.tagOptions;
+    //   },
+    //   set(value) {
+    //     this.$store.commit('tagOptions', value);
+    //   },
+    // },
+    // catOptions: {
+    //   get() {
+    //     return this.$store.state.catOptions;
+    //   },
+    //   set(value) {
+    //     this.$store.commit('catOptions', value);
+    //   },
+    // },
   },
   created() {
-    console.log('Created');
     this.$store.dispatch('session/blogMetaOptions');
     // const id = { id: this.$route.params.id };
     // this.$store.dispatch('session/getBlog', id);
-    // this.fetchBlog();
   },
   mounted() {
-    this.$axios.get(`http://localhost:3060/admin/getBlog/'${this.$route.params.id}`)
+    axios.get(api.getBlog + this.$route.params.id)
       .then(
         (res) => {
-          console.log('res', res);
-          // this.data = res;
+          this.id = res.data.data.id;
+          this.title = res.data.data.title;
+          this.url = res.data.data.url;
+          this.tagSelected = JSON.parse(res.data.data.tag);
+          this.catSelected = JSON.parse(res.data.data.category);
+          this.qeditor = res.data.data.content;
+          this.oldImage = res.data.data.image;
+          this.mediaId = res.data.data.mediaId;
         },
       );
-    console.log('Mounted');
-    // this.title = this.blogToEdit.title;
-    // this.url = this.blogToEdit.url;
-    // this.tagSelected = JSON.parse(this.blogToEdit.tag);
-    // this.catSelected = JSON.parse(this.blogToEdit.category);
-    // this.qeditor = this.blogToEdit.content;
-    // this.oldImage = this.blogToEdit.image;
   },
 };
 </script>

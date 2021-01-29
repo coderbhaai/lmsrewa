@@ -2,6 +2,10 @@
     <div>
         <div v-if="user.role=='Admin'">
             <q-list class="rounded-borders">
+              <q-item clickable tag="a" href="/admin/basics">
+                <q-item-section avatar><q-icon name="schedule" /></q-item-section>
+                <q-item-section><q-item-label>Basics</q-item-label></q-item-section>
+              </q-item>
                 <q-expansion-item expand-separator icon="mail" label="Blogs" caption="Add &amp; Update Blogs" default-closed >
                     <q-item clickable tag="a" href="/admin/addBlog">
                         <q-item-section avatar><q-icon name="schedule" /></q-item-section>
@@ -15,12 +19,12 @@
                         <q-item-section avatar><q-icon name="schedule" /></q-item-section>
                         <q-item-section><q-item-label>Blog Meta</q-item-label></q-item-section>
                     </q-item>
-                    <!-- <q-expansion-item :header-inset-level="1" :content-inset-level="1" expand-separator icon="schedule" label="Add Blog">
-                    <q-card>
-                    </q-card> -->
-                    <!-- </q-expansion-item> -->
                 </q-expansion-item>
             </q-list>
+            <q-item clickable tag="a" href="/admin/videos">
+              <q-item-section avatar><q-icon name="schedule" /></q-item-section>
+              <q-item-section><q-item-label>Videos</q-item-label></q-item-section>
+            </q-item>
         </div>
   </div>
 </template>

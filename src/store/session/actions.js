@@ -32,7 +32,6 @@ export async function adminBlogs({ commit }) {
 
 export async function blogMetaOptions({ commit }) {
   const res = await axios.get(api.blogMetaOptions);
-  console.log('res.data', res.data);
   commit('BLOGMETAOPTIONS', res.data);
 }
 
@@ -98,4 +97,11 @@ export async function addBlog({ commit }, form) {
     this.$router.push({ name: 'blogs' });
   }
   message(res.data.message);
+}
+
+export async function getBlog({ commit }, form) {
+  const res = await axios.get(api.getBlog + form.id, form);
+  if (res.data.success) {
+    commit('BLOGTOEDIT', res.data.data);
+  }
 }

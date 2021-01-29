@@ -29,6 +29,7 @@ export const BLOGMETAOPTIONS = (state, data) => {
   state.tagOptions = data.tagOptions;
 };
 export const ADDBLOG = (state, data) => state.adminBlogs.unshift(data);
+export const BLOGTOEDIT = (state, data) => { state.blogToEdit = data; };
 // export const UPDATEBLOG = (state, data) => {
 //   const index = state.adminBlogs.findIndex((i) => i.id === data.id);
 //   if (index !== -1) {

@@ -34,6 +34,26 @@ function uploadImage(file, folder){
     console.log('e', e)
 }
 
+function blogMetaName(type, data) {
+    var list = []
+    return new Promise((resolve, reject) => {
+        if(data.length>0){
+            for(var i = 0; i < data.length; i++){
+                let sql = `SELECT name, id, url FROM blog_metas WHERE type = '${type}' AND id = '${data[i]}';`
+                pool.query(sql, (err, results) => {
+                    try{ 
+                        if(err) throw err;
+                        list.push(results[0])
+                        if(i == data.length){ resolve(list) }
+                    }catch(e){ logError(e); return; }
+                });
+            }
+        }else{
+            resolve(list)
+        }
+    });
+}
+
 function sendMailOnError(e) {
     const mailBody =`
         <h2><strong>Hi</h2>
@@ -55,4 +75,4 @@ function logError(e){
     console.log('e', e)
 }
 
-module.exports = { logError, storage, uploadImage };
+module.exports = { logError, storage, uploadImage, blogMetaName };

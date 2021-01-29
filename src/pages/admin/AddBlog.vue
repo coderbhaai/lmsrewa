@@ -108,7 +108,7 @@
       </div>
       <div class="row q-pb-lg">
         <div class="col-6 q-pr-sm">
-          <q-select filled map-options emit-value v-model="catSelected" multiple  :options="catOptions" option-value="value" option-label="text" counter label="Select Category"/>
+          <q-select filled map-options emit-value v-model="catSelected" multiple :options="catOptions" option-value="value" option-label="text" counter label="Select Category"/>
         </div>
         <div class="col-6 q-pr-sm">
           <q-select filled map-options emit-value v-model="tagSelected" multiple :options="tagOptions" option-value="value" option-label="text" counter label="Select Tag"/>
@@ -146,7 +146,7 @@ export default {
       data.append('url', this.url.replace(/ /g, '-'));
       data.append('content', this.qeditor);
       data.append('tag', JSON.stringify(this.tagSelected));
-      data.append('category', JSON.stringify(this.tagSelected));
+      data.append('category', JSON.stringify(this.catSelected));
       this.$store.dispatch('session/addBlog', data);
     },
   },

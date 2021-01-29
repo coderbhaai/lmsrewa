@@ -107,7 +107,7 @@ export default {
         },
       ],
       options: [
-        'Category', 'Tag',
+        'category', 'tag',
       ],
       editedIndex: -1,
       editedItem: {

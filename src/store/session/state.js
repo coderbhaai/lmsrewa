@@ -7,4 +7,5 @@ export default {
   blogMetaOptions: [],
   catOptions: [],
   tagOptions: [],
+  blogToEdit: [],
 };

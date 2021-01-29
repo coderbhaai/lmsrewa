@@ -4,13 +4,14 @@
     <q-form class="q-gutter-md" @submit="onSubmit">
       <div class="row q-pb-lg">
         <div class="col-4 q-pr-lg">
-          <q-input v-model="title" label="Blog Title" lazy-rules />
+          <q-input v-model="title" label="Blog Title" lazy-rules @input="update"/>
         </div>
         <div class="col-4 q-pr-lg">
           <q-input v-model="url" label="Blog URL" lazy-rules />
         </div>
         <div class="col-4">
           <q-file v-model="image" label="Blog Image" />
+          <!-- <img :src="'/images/blog/'+ oldImage"/> -->
         </div>
       </div>
       <div class="row q-pb-lg">
@@ -108,7 +109,7 @@
       </div>
       <div class="row q-pb-lg">
         <div class="col-6 q-pr-sm">
-          <q-select filled map-options emit-value v-model="catSelected" multiple  :options="catOptions" option-value="value" option-label="text" counter label="Select Category"/>
+          <q-select filled map-options emit-value v-model="catSelected" multiple :options="catOptions" option-value="value" option-label="text" counter label="Select Category"/>
         </div>
         <div class="col-6 q-pr-sm">
           <q-select filled map-options emit-value v-model="tagSelected" multiple :options="tagOptions" option-value="value" option-label="text" counter label="Select Tag"/>
@@ -128,16 +129,18 @@ export default {
   name: 'UpdateBlog',
   data() {
     return {
+      // loading: false,
       title: '',
       url: '',
       image: '',
       qeditor: '',
-      tagSelected: null,
-      catSelected: null,
+      tagSelected: [],
+      catSelected: [],
+      oldImage: '',
     };
   },
   methods: {
-    ...mapActions('session', ['tagOptions', 'catOptions']),
+    ...mapActions('session', ['tagOptions', 'catOptions', 'blogToEdit']),
     onSubmit(e) {
       e.preventDefault();
       const data = new FormData();
@@ -149,12 +152,44 @@ export default {
       data.append('category', JSON.stringify(this.tagSelected));
       this.$store.dispatch('session/updateBlog', data);
     },
+    update() {
+      this.title = 'value';
+    },
+    // fetchBlog() {
+    //   console.log('FetchBLog');
+    //   console.log('$route.params.id', this.$route.params.id);
+    //   this.loading = true;
+    //   this.$axios.get('/').then((response) => {
+    //     this.loading = false;
+    //     this.articles = response.data.articles;
+    //   });
+    // },
   },
   computed: {
-    ...mapState('session', ['tagOptions', 'catOptions']),
+    ...mapState('session', ['tagOptions', 'catOptions', 'blogToEdit']),
   },
   created() {
+    console.log('Created');
     this.$store.dispatch('session/blogMetaOptions');
+    // const id = { id: this.$route.params.id };
+    // this.$store.dispatch('session/getBlog', id);
+    // this.fetchBlog();
+  },
+  mounted() {
+    this.$axios.get(`http://localhost:3060/admin/getBlog/'${this.$route.params.id}`)
+      .then(
+        (res) => {
+          console.log('res', res);
+          // this.data = res;
+        },
+      );
+    console.log('Mounted');
+    // this.title = this.blogToEdit.title;
+    // this.url = this.blogToEdit.url;
+    // this.tagSelected = JSON.parse(this.blogToEdit.tag);
+    // this.catSelected = JSON.parse(this.blogToEdit.category);
+    // this.qeditor = this.blogToEdit.content;
+    // this.oldImage = this.blogToEdit.image;
   },
 };
 </script>

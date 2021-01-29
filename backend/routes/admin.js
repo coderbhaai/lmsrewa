@@ -145,7 +145,7 @@ router.post('/addBlog', asyncMiddleware( async(req, res) => {
         try{
             if(err){ throw err }
             if(results){
-                let sql2 = `SELECT id, title, url, coverImg, updated_at FROM blogs WHERE id = ${results.insertId}`
+                let sql2 = `SELECT a.id, a.title, a.url, a.coverImg, a.updated_at, b.image, b.id as mediaId FROM blogs as a left join media as b on b.id = a.coverImg FROM blogs WHERE a.id = ${results.insertId}`
                 pool.query(sql2, post, (err2, results2) => {
                     try{
                         if(err){ throw err2 }
@@ -158,19 +158,17 @@ router.post('/addBlog', asyncMiddleware( async(req, res) => {
 }))
 
 router.get('/getBlog/:id', asyncMiddleware( async(req, res) => {
-    let sql = `SELECT id, title, url, coverImg, content, category, tag, updated_at FROM blogs WHERE id = '${req.params.id}'`
+    console.log('req.params.id', req.params.id)
+    let sql = `SELECT a.id, a.title, a.url, a.coverImg, a.content, a.category, a.tag, a.updated_at, b.image, b.id as mediaId FROM blogs as a left join media as b on b.id = a.coverImg WHERE a.id = '${req.params.id}'`
     pool.query(sql, async(err, results) => {
         try{
-            if(results){ 
+            if(err){ throw err }
+            if(results){
                 const catList = await func.blogMetaName('category', JSON.parse(results[0].category))
                 const tagList = await func.blogMetaName('tag', JSON.parse(results[0].tag))
-                res.send({ data: results[0], catList, tagList });
-            }else if(err){ throw err }
-        }catch(e){
-          func.logError(e)
-          res.status(500);
-          return;
-        }
+                res.send({ success: true, data: results[0], catList, tagList });
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
     })
 }))
 

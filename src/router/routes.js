@@ -84,6 +84,17 @@ const routes = [
     },
   },
   {
+    path: '/admin/meta',
+    name: 'meta',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/admin/meta', component: () => import('pages/admin/meta.vue') },
+    ],
+    meta: {
+      admin: true,
+    },
+  },
+  {
     path: '/admin/videos',
     name: 'videos',
     component: () => import('layouts/MainLayout.vue'),

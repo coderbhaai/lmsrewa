@@ -1,11 +1,7 @@
 <template>
   <div class="q-pa-md">
-    <div v-if="showAddForm">
-      <q-btn @click="hideForm()" class="q-mb-lg" rounded glossy color="accent">Hide Form</q-btn>
-    </div>
-    <div v-else>
-      <q-btn @click="showForm()" class="q-mb-lg" rounded glossy color="primary">Add Basic</q-btn>
-    </div>
+    <div v-if="showAddForm"><q-btn @click="hideForm()" class="q-mb-lg" rounded glossy color="accent">Hide Form</q-btn></div>
+    <div v-else><q-btn @click="showForm()" class="q-mb-lg" rounded glossy color="primary">Add Basic</q-btn></div>
     <div v-if="showAddForm">
       <q-form class="q-gutter-md q-mb-lg" @submit="addSubmit">
         <div class="row">

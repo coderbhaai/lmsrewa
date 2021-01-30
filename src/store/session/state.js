@@ -13,4 +13,5 @@ export default {
   blogMetaOptions: [],
   blogToEdit: [],
   adminVideos: [],
+  adminMetas: [],
 };

@@ -141,3 +141,25 @@ export async function updateVideo({ commit }, form) {
   }
   message(res.data.message);
 }
+
+export async function adminMetas({ commit }) {
+  const res = await axios.get(api.adminMetas);
+  console.log('res.data.data', res.data.data);
+  commit('ADMINMETAS', res.data.data);
+}
+
+export async function addMeta({ commit }, form) {
+  const res = await axios.post(api.addMeta, form);
+  if (res.data.success) {
+    commit('ADDMETA', res.data.data);
+  }
+  message(res.data.message);
+}
+
+export async function updateMeta({ commit }, form) {
+  const res = await axios.post(api.updateMeta, form);
+  if (res.data.success) {
+    commit('UPDATEMETA', res.data.data);
+  }
+  message(res.data.message);
+}

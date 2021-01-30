@@ -6,3 +6,4 @@ export const blogMeta = (state) => state.blogMeta;
 export const adminBlogs = (state) => state.adminBlogs;
 export const blogMetaOptions = (state) => state.blogMetaOptions;
 export const adminVideos = (state) => state.adminVideos;
+export const adminMetas = (state) => state.adminMetas;

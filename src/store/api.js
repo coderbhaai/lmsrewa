@@ -16,4 +16,7 @@ export default {
   adminVideos: `${url}/admin/adminVideos`,
   addVideo: `${url}/admin/addVideo`,
   updateVideo: `${url}/admin/updateVideo`,
+  adminMetas: `${url}/admin/adminMetas`,
+  addMeta: `${url}/admin/addMeta`,
+  updateMeta: `${url}/admin/updateMeta`,
 };

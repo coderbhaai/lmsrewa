@@ -411,4 +411,67 @@ router.get('/adminComments', asyncMiddleware( async(req, res) => {
     })
 }))
 
+router.get('/adminMetas',  asyncMiddleware( async(req, res) => {
+    let sql = `SELECT id, url, title, description, keyword, updated_at FROM metas ORDER BY id DESC`
+    pool.query(sql, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ data: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/addMeta', asyncMiddleware( async(req, res) => {
+    let post= {
+        'url':                  req.body.url,
+        'title':                req.body.title,
+        'description':          req.body.description,
+        'keyword':              req.body.keyword,
+        "created_at":           time,
+        "updated_at":           time,
+    }
+    let sql = `INSERT INTO metas SET ?`
+    pool.query(sql, post, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){
+                let sql = `SELECT id, url, title, description, keyword, updated_at FROM metas ORDER BY id DESC LIMIT 1`
+                pool.query(sql, (err2, results2) => {
+                    try{
+                        if(err2){ throw err2 }
+                        if(results2){
+                            res.send({ success: true, data: results2[0], message: 'Meta added successfuly' });
+                        }
+                    }catch(e){ func.logError(e); res.status(500); return; }
+                })
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/updateMeta', asyncMiddleware( async(req, res) => {
+    let post= {
+        'url':                  req.body.url,
+        'title':                req.body.title,
+        'description':          req.body.description,
+        'keyword':              req.body.keyword,
+        "updated_at":           time,
+    }
+    let sql = `UPDATE metas SET ? WHERE id = ${req.body.id}`;
+    pool.query(sql, post, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){
+                let sql2 = `SELECT id, url, title, description, keyword, updated_at FROM metas WHERE id = ${req.body.id}`
+                pool.query(sql2, (err2, results2) => {
+                    try{
+                        if(err2){ throw err2 }
+                        if(results2){ res.send({ success: true, data: results2[0], message: 'Meta updated successfuly' }); }
+                    }catch(e){ func.logError(e); res.status(500); return; }
+                })
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
 module.exports = router;

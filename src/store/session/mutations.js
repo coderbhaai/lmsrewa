@@ -58,3 +58,12 @@ export const UPDATEVIDEO = (state, data) => {
     state.adminVideos.splice(index, 1, data);
   }
 };
+
+export const ADMINMETAS = (state, data) => { state.adminMetas = data; };
+export const ADDMETA = (state, data) => state.adminMetas.unshift(data);
+export const UPDATEMETA = (state, data) => {
+  const index = state.adminMetas.findIndex((i) => i.id === data.id);
+  if (index !== -1) {
+    state.adminMetas.splice(index, 1, data);
+  }
+};

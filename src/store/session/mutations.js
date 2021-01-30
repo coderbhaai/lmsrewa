@@ -67,3 +67,6 @@ export const UPDATEMETA = (state, data) => {
     state.adminMetas.splice(index, 1, data);
   }
 };
+
+export const BLOGS = (state, data) => { state.blogs = data; };
+export const SUGGESTBLOGS = (state, data) => { state.suggestBlogs = data; };

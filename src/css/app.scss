@@ -1,4 +1,9 @@
 // app global css in SCSS form
+h1,h2,h3,h4,h5,h6{
+    font-size: 1rem;
+    margin: 10px 0;
+    line-height: unset;
+}
 a{
     text-decoration: none;
     &:hover{
@@ -14,7 +19,7 @@ img{
 }
 .heading{
     text-align: center;
-    font-size: 3em;
+    font-size: 2em;
     margin: .5em 0 1em;
     font-weight: 500;
     letter-spacing: 1px;
@@ -39,4 +44,8 @@ img.edit{
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+.container{
+    width: 80%;
+    margin: 0 auto;
 }

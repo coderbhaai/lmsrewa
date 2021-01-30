@@ -14,4 +14,6 @@ export default {
   blogToEdit: [],
   adminVideos: [],
   adminMetas: [],
+  blogs: [],
+  suggestBlogs: [],
 };

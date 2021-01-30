@@ -29,6 +29,10 @@
               <q-item-section avatar><q-icon name="schedule" /></q-item-section>
               <q-item-section><q-item-label>Meta Tags</q-item-label></q-item-section>
             </q-item>
+            <q-item clickable tag="a" href="/auth/logOut">
+                <q-item-section avatar><q-icon name="schedule" /></q-item-section>
+                <q-item-section><q-item-label>Log Out</q-item-label></q-item-section>
+              </q-item>
         </div>
   </div>
 </template>

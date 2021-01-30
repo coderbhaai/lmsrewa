@@ -19,4 +19,7 @@ export default {
   adminMetas: `${url}/admin/adminMetas`,
   addMeta: `${url}/admin/addMeta`,
   updateMeta: `${url}/admin/updateMeta`,
+  blogs: `${url}/blog`,
+  singleBlog: `${url}/single/`,
+  suggestBlogs: `${url}/suggestBlogs`,
 };

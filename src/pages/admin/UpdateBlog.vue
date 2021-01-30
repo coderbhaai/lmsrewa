@@ -123,7 +123,6 @@
 </template>
 
 <script>
-// import { mapState, mapActions, mapFields } from 'vuex';
 import { mapState, mapActions } from 'vuex';
 import axios from 'axios';
 import api from '../../store/api';

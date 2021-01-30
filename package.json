@@ -8,7 +8,9 @@
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
     "test": "echo \"No test specified\" && exit 0",
-    "dev": "nodemon backend/server.js"
+    "dev": "nodemon backend/server.js",
+    "app": "quasar dev -m cordova -T android",
+    "soft": "quasar dev -m electron" 
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
@@ -25,6 +27,10 @@
     "@babel/plugin-transform-reserved-words": "^7.12.1",
     "@quasar/app": "^2.0.0",
     "babel-eslint": "^10.0.1",
+    "devtron": "^1.4.0",
+    "electron": "^9.4.2",
+    "electron-debug": "^3.2.0",
+    "electron-devtools-installer": "^3.1.1",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-loader": "^3.0.3",

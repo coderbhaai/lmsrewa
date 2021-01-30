@@ -63,7 +63,7 @@ const routes = [
   },
   {
     path: '/admin/blogs',
-    name: 'blogs',
+    name: 'adminBlogs',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '/admin/blogs', component: () => import('pages/admin/blogs.vue') },
@@ -104,6 +104,22 @@ const routes = [
     meta: {
       admin: true,
     },
+  },
+  {
+    path: '/blog',
+    name: 'blog',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/blog', component: () => import('pages/blog/blog.vue') },
+    ],
+  },
+  {
+    path: '/blog/:url',
+    name: 'single',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/blog/:url', component: () => import('pages/blog/single.vue') },
+    ],
   },
   {
     path: '*',

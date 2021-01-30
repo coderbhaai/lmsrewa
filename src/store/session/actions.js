@@ -144,7 +144,6 @@ export async function updateVideo({ commit }, form) {
 
 export async function adminMetas({ commit }) {
   const res = await axios.get(api.adminMetas);
-  console.log('res.data.data', res.data.data);
   commit('ADMINMETAS', res.data.data);
 }
 
@@ -162,4 +161,15 @@ export async function updateMeta({ commit }, form) {
     commit('UPDATEMETA', res.data.data);
   }
   message(res.data.message);
+}
+
+export async function blogs({ commit }) {
+  const res = await axios.get(api.blogs);
+  commit('BLOGS', res.data.data);
+}
+
+export async function suggestBlogs({ commit }) {
+  const res = await axios.get(api.suggestBlogs);
+  console.log('res.data', res.data);
+  commit('SUGGESTBLOGS', res.data.data);
 }

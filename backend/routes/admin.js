@@ -474,4 +474,21 @@ router.post('/updateMeta', asyncMiddleware( async(req, res) => {
     })
 }))
 
+router.get('/videos/:slug', asyncMiddleware( async(req, res) => {
+    if(req.params.slug === 'All'){ var where = ''; }else{ var where = `WHERE video_class= '${req.params.slug}'`; }
+    let sql =   `SELECT id, type, url, video_name, video_class, video_sub FROM videos ${where};
+                SELECT DISTINCT video_class FROM videos`
+    pool.query(sql, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ 
+                res.send({ 
+                    data:       results[0],
+                    classes:    results[1]
+                });
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
 module.exports = router;

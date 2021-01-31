@@ -16,4 +16,6 @@ export default {
   adminMetas: [],
   blogs: [],
   suggestBlogs: [],
+  videos: [],
+  activeClasses: [],
 };

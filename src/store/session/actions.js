@@ -170,6 +170,10 @@ export async function blogs({ commit }) {
 
 export async function suggestBlogs({ commit }) {
   const res = await axios.get(api.suggestBlogs);
-  console.log('res.data', res.data);
   commit('SUGGESTBLOGS', res.data.data);
+}
+
+export async function videos({ commit }, form) {
+  const res = await axios.get(api.videos + form.id);
+  commit('VIDEOS', res.data);
 }

@@ -70,3 +70,8 @@ export const UPDATEMETA = (state, data) => {
 
 export const BLOGS = (state, data) => { state.blogs = data; };
 export const SUGGESTBLOGS = (state, data) => { state.suggestBlogs = data; };
+export const VIDEOS = (state, data) => {
+  console.log('data', data);
+  state.videos = data.data;
+  state.activeClasses = data.classes;
+};

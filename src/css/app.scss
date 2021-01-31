@@ -49,3 +49,10 @@ img.edit{
     width: 80%;
     margin: 0 auto;
 }
+.oneLine{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+}

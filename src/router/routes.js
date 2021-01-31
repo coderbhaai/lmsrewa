@@ -122,6 +122,14 @@ const routes = [
     ],
   },
   {
+    path: '/video-tutorials/:id',
+    name: 'videos',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/video-tutorials/:id', component: () => import('pages/index/videos.vue') },
+    ],
+  },
+  {
     path: '*',
     component: () => import('pages/404.vue'),
   },

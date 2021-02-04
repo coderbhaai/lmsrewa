@@ -9,8 +9,8 @@ export default ({app, router, Vue}) => {
     if (!protectedRoute) return next()
 
     // If auth is required and the user is logged in, verify the token...
-    if (app.store.getters['session/isAuthenticated']) {
-      return app.store.dispatch('session/validate').then(user => {
+    if (app.store.getters['/isAuthenticated']) {
+      return app.store.dispatch('/validate').then(user => {
         user ? next() : next({name: 'login'})
       })
     }

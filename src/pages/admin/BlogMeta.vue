@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   data() {
@@ -72,7 +72,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('session', ['adminBlogMeta']),
+    ...mapActions(['adminBlogMeta']),
     showForm() {
       this.showAddForm = true;
     },
@@ -86,7 +86,7 @@ export default {
         url: this.url,
         type: this.type,
       };
-      this.$store.dispatch('session/addBlogMeta', data);
+      this.$store.dispatch('addBlogMeta', data);
     },
     resetData() {
       this.id = '';
@@ -111,15 +111,15 @@ export default {
         name: this.name,
         url: this.url,
       };
-      this.$store.dispatch('session/updateBlogMeta', data);
+      this.$store.dispatch('updateBlogMeta', data);
       this.resetData();
     },
   },
   computed: {
-    ...mapState('session', ['blogMeta']),
+    ...mapGetters(['blogMeta']),
   },
   created() {
-    this.$store.dispatch('session/adminBlogMeta');
+    this.$store.dispatch('adminBlogMeta');
   },
 };
 </script>

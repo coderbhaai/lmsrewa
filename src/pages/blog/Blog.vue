@@ -18,18 +18,18 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'blog',
   methods: {
-    ...mapActions('session', ['blogs']),
+    ...mapActions(['blogs']),
   },
   computed: {
-    ...mapState('session', ['blogs']),
+    ...mapGetters(['blogs']),
   },
   created() {
-    this.$store.dispatch('session/blogs');
+    this.$store.dispatch('blogs');
   },
 };
 </script>

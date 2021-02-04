@@ -21,11 +21,12 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   data() {
     return {
+      name: 'adminBlogs',
       columns: [
         {
           name: 'id', label: 'Sl No.', align: 'left', field: 'Edit',
@@ -46,20 +47,13 @@ export default {
     };
   },
   methods: {
-    ...mapActions('session', ['adminBlogs']),
+    ...mapActions(['adminBlogs']),
   },
   computed: {
-    ...mapState('session', ['adminBlogs']),
-    // setter
-    // set: function (newValue) {
-    //   // var names = newValue.split(' ')
-    //   // this.firstName = names[0]
-    //   // this.lastName = names[names.length - 1]
-    //   this.adminBlogs = newValue
-    // }
+    ...mapGetters(['adminBlogs']),
   },
   created() {
-    this.$store.dispatch('session/adminBlogs');
+    this.$store.dispatch('adminBlogs');
   },
 };
 </script>

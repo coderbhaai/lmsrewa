@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   data() {
@@ -85,6 +85,9 @@ export default {
         {
           name: 'updated_at', label: 'Date', align: 'left', field: 'updated_at', sortable: true,
         },
+        {
+          name: 'id', label: 'Edit', align: 'left', field: 'id', sortable: true,
+        },
       ],
       // options: [
       //   'Basic',
@@ -92,7 +95,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('session', ['adminBasics']),
+    ...mapActions(['adminBasics']),
     showForm() {
       this.showAddForm = true;
     },
@@ -108,7 +111,7 @@ export default {
         tab2: this.tab2,
         tab3: this.tab3,
       };
-      this.$store.dispatch('session/addBasic', data);
+      this.$store.dispatch('addBasic', data);
       this.resetData();
     },
     resetData() {
@@ -140,15 +143,15 @@ export default {
         tab2: this.tab2,
         tab3: this.tab3,
       };
-      this.$store.dispatch('session/updateBasic', data);
+      this.$store.dispatch('updateBasic', data);
       this.resetData();
     },
   },
   computed: {
-    ...mapState('session', ['adminBasics', 'basicOptions']),
+    ...mapGetters(['adminBasics', 'basicOptions']),
   },
   created() {
-    this.$store.dispatch('session/adminBasics');
+    this.$store.dispatch('adminBasics');
   },
 };
 </script>

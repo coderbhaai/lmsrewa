@@ -1,4 +1,4 @@
-import axios from 'axios/index';
+import axios from 'axios';
 
 export default function setAxiosHeaders(state) {
   axios.defaults.headers.common.Authorization = state.user

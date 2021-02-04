@@ -23,4 +23,5 @@ export default {
   singleBlog: `${url}/single/`,
   suggestBlogs: `${url}/suggestBlogs`,
   videos: `${url}/admin/videos/`,
+  subjects: `${url}/admin/subjects/`,
 };

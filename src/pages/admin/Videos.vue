@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   data() {
@@ -107,7 +107,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('session', ['adminVideos']),
+    ...mapActions(['adminVideos']),
     showForm() {
       this.showAddForm = true;
     },
@@ -124,7 +124,7 @@ export default {
         sub: this.sub,
         status: this.status,
       };
-      this.$store.dispatch('session/addVideo', data);
+      this.$store.dispatch('addVideo', data);
       this.resetData();
     },
     resetData() {
@@ -159,16 +159,16 @@ export default {
         sub: this.sub,
         status: this.status,
       };
-      this.$store.dispatch('session/updateVideo', data);
+      this.$store.dispatch('updateVideo', data);
       this.resetData();
     },
   },
   computed: {
-    ...mapState('session', ['adminVideos', 'classOptions', 'subjectOptions']),
+    ...mapGetters(['adminVideos', 'classOptions', 'subjectOptions']),
   },
   created() {
-    this.$store.dispatch('session/adminBasics');
-    this.$store.dispatch('session/adminVideos');
+    this.$store.dispatch('adminBasics');
+    this.$store.dispatch('adminVideos');
   },
 };
 </script>

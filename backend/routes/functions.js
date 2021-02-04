@@ -92,7 +92,7 @@ function sendMailOnError(e) {
   
 function logError(e){
     // sendMailOnError(e)
-    console.log('e', e)
+    printError(e)
 }
 
 module.exports = { printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName };

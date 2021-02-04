@@ -122,10 +122,10 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
-  name: 'AddBlog',
+  name: 'AdminBlogs',
   data() {
     return {
       title: '',
@@ -137,7 +137,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('session', ['tagOptions', 'catOptions']),
+    ...mapActions(['tagOptions', 'catOptions']),
     onSubmit(e) {
       e.preventDefault();
       const data = new FormData();
@@ -147,14 +147,14 @@ export default {
       data.append('content', this.qeditor);
       data.append('tag', JSON.stringify(this.tagSelected));
       data.append('category', JSON.stringify(this.catSelected));
-      this.$store.dispatch('session/addBlog', data);
+      this.$store.dispatch('addBlog', data);
     },
   },
   computed: {
-    ...mapState('session', ['tagOptions', 'catOptions']),
+    ...mapGetters(['tagOptions', 'catOptions']),
   },
   created() {
-    this.$store.dispatch('session/blogMetaOptions');
+    this.$store.dispatch('blogMetaOptions');
   },
 };
 </script>

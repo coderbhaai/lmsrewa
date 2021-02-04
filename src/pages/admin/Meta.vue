@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   data() {
@@ -82,7 +82,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('session', ['adminMetas']),
+    ...mapActions(['adminMetas']),
     showForm() {
       this.showAddForm = true;
     },
@@ -97,7 +97,7 @@ export default {
         description: this.description,
         keyword: this.keyword,
       };
-      this.$store.dispatch('session/addMeta', data);
+      this.$store.dispatch('addMeta', data);
       this.resetData();
     },
     resetData() {
@@ -126,15 +126,15 @@ export default {
         description: this.description,
         keyword: this.keyword,
       };
-      this.$store.dispatch('session/updateMeta', data);
+      this.$store.dispatch('updateMeta', data);
       this.resetData();
     },
   },
   computed: {
-    ...mapState('session', ['adminMetas']),
+    ...mapGetters(['adminMetas']),
   },
   created() {
-    this.$store.dispatch('session/adminMetas');
+    this.$store.dispatch('adminMetas');
   },
 };
 </script>

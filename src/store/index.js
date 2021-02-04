@@ -1,24 +1,18 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import session from './session';
-import cloud from './cloud';
+import auth from './auth';
+import blog from './blog';
+import video from './video';
+import admin from './admin';
 
 Vue.use(Vuex);
 
 const modules = {
-  session,
-  cloud,
+  auth,
+  blog,
+  video,
+  admin,
 };
 
-// const store = new Vuex.Store({ modules });
 export default new Vuex.Store({ modules });
-
-// Automatically run the `init` action if available for every module.
-// for (const moduleName of Object.keys(modules)) {
-//   if (modules[moduleName].actions.init) {
-//     store.dispatch(`${moduleName}/init`);
-//   }
-// }
-
-// export default store;

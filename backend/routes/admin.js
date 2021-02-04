@@ -215,8 +215,8 @@ router.post('/addBlog', asyncMiddleware( async(req, res) => {
         try{
             if(err){ throw err }
             if(results){
-                let sql2 = `SELECT a.id, a.title, a.url, a.coverImg, a.updated_at, b.image, b.id as mediaId FROM blogs as a left join media as b on b.id = a.coverImg FROM blogs WHERE a.id = ${results.insertId}`
-                pool.query(sql2, post, (err2, results2) => {
+                let sql2 = `SELECT a.id, a.title, a.url, a.coverImg, a.updated_at, b.image, b.id as mediaId FROM blogs as a left join media as b on b.id = a.coverImg ORDER BY a.id DESC LIMIT 1`
+                pool.query(sql2, (err2, results2) => {
                     try{
                         if(err){ throw err2 }
                         res.send({ success: true, message: 'Blog added successfuly', data: results2[0] });
@@ -474,9 +474,8 @@ router.post('/updateMeta', asyncMiddleware( async(req, res) => {
     })
 }))
 
-router.get('/videos/:slug', asyncMiddleware( async(req, res) => {
-    if(req.params.slug === 'All'){ var where = ''; }else{ var where = `WHERE video_class= '${req.params.slug}'`; }
-    let sql =   `SELECT id, type, url, video_name, video_class, video_sub FROM videos ${where};
+router.get('/videos', asyncMiddleware( async(req, res) => {
+    let sql =   `SELECT id, type, url, video_name, video_class, video_sub FROM videos;
                 SELECT DISTINCT video_class FROM videos`
     pool.query(sql, (err, results) => {
         try{
@@ -487,6 +486,16 @@ router.get('/videos/:slug', asyncMiddleware( async(req, res) => {
                     classes:    results[1]
                 });
             }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.get('/subjects/:slug', asyncMiddleware( async(req, res) => {
+    let sql =   `SELECT DISTINCT video_sub FROM videos WHERE video_class= '${req.params.slug}'`
+    pool.query(sql, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ data: results }); }
         }catch(e){ func.logError(e); res.status(500); return; }
     })
 }))

@@ -55,9 +55,9 @@
                     email: this.email,
                     password: this.password,
                     confirm_password: this.confirm_password,
-                    role: this.role
+                    role: this.role,
                 };
-                this.$store.dispatch('session/register', data);
+                this.$store.dispatch('register', data);
             },
         },
         mounted() {

@@ -21,7 +21,6 @@ router.get('/blog', asyncMiddleware( async(req, res, next) => {
 }))
 
 router.get('/single/:url', asyncMiddleware( async(req, res, next) => {
-    console.log('req.params.url', req.params.url)
     let sql = `SELECT a.id, a.title, a.url, a.coverImg, a.content, a.updated_at, b.image FROM blogs as a left join media as b on b.id = a.coverImg WHERE a.url = '${req.params.url}';`
     pool.query(sql, async(err, results) => {
         try{

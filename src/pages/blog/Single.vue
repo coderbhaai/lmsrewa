@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import axios from 'axios';
 import api from '../../store/api';
 
@@ -42,20 +42,18 @@ export default {
     };
   },
   methods: {
-    ...mapActions('session', ['suggestBlogs']),
+    ...mapActions(['suggestBlogs']),
   },
   computed: {
-    ...mapState('session', ['suggestBlogs']),
+    ...mapGetters(['suggestBlogs']),
   },
   created() {
-    this.$store.dispatch('session/suggestBlogs');
+    this.$store.dispatch('suggestBlogs');
   },
   mounted() {
-    console.log('this.$route.params.id', this.$route.params);
     axios.get(api.singleBlog + this.$route.params.url)
       .then(
         (res) => {
-          console.log('res.data', res.data);
           this.data = res.data.data;
           this.loading = true;
         },

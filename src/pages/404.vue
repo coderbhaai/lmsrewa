@@ -45,7 +45,7 @@
                     email: this.email,
                     password: this.password,
                 }
-                this.$store.dispatch('session/login', data)
+                this.$store.dispatch('/login', data)
             },
         },
         mounted() {

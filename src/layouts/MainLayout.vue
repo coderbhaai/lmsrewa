@@ -2,25 +2,33 @@
   <q-layout view="hHh lpR fFf">
     <q-header elevated class="bg-primary text-white" height-hint="98">
       <q-toolbar>
-        <q-btn dense flat round icon="menu" @click="left = !left" />
+        <div v-if="user">
+          <div v-if="user.role=='Admin'"><q-btn dense flat round icon="menu" @click="left = !left" /></div>
+        </div>
         <q-toolbar-title><a href="/" class="logo"><q-avatar><img src="/images/icons/studyspectrum-logo.png"></q-avatar> STUDY SPECTRUM</a></q-toolbar-title>
-        <q-btn dense flat round icon="menu" @click="right = !right" />
+        <div v-if="user">
+          <div v-if="user.role=='Admin'"><q-btn dense flat round icon="menu" @click="right = !right" /></div>
+        </div>
       </q-toolbar>
       <q-tabs align="left">
         <q-route-tab to="/" label="Home" />
-        <q-route-tab to="/blog" label="Blog" />
-        <q-route-tab to="/video-tutorials/All" label="Video Tutorials" />
         <div v-if="user" class="row">
-          <!-- <q-route-tab to="/blog" label="Blog" /> -->
+          <q-route-tab to="/admin" label="Admin Panel" />
         </div>
         <div v-else class="row">
           <q-route-tab to="/register" label="Register"/>
           <q-route-tab to="/login" label="Login"/>
         </div>
+        <q-route-tab to="/blog" label="Blog" />
+        <q-route-tab to="/video-tutorials/All" label="Video Tutorials" />
       </q-tabs>
     </q-header>
-    <q-drawer show-if-above v-model="left" side="left" bordered><LeftSidebar/></q-drawer>
-    <q-drawer show-if-above v-model="right" side="right" bordered><RightSidebar/></q-drawer>
+    <div v-if="user">
+      <div v-if="user.role=='Admin'">
+        <q-drawer v-model="left" side="left" bordered><LeftSidebar/></q-drawer>
+        <q-drawer v-model="right" side="right" bordered><RightSidebar/></q-drawer>
+      </div>
+    </div>
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -34,7 +42,7 @@
 <script>
 import LeftSidebar from 'components/LeftSidebar.vue';
 import RightSidebar from 'components/RightSidebar.vue';
-import { mapState, mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'MainLayout',
@@ -47,14 +55,14 @@ export default {
     };
   },
   methods: {
-    ...mapActions('session', ['fetchUser']),
+    ...mapActions(['user']),
     logout() {
-      this.$store.dispatch('session/logout');
+      this.$store.dispatch('logout');
       this.$router.push({ name: 'login' });
     },
   },
   computed: {
-    ...mapState('session', ['user']),
+    ...mapGetters(['user']),
   },
 };
 </script>

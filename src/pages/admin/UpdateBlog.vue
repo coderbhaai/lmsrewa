@@ -123,7 +123,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import axios from 'axios';
 import api from '../../store/api';
 
@@ -143,7 +143,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('session', ['tagOptions', 'catOptions', 'blogToEdit']),
+    ...mapActions(['tagOptions', 'catOptions']),
     onSubmit(e) {
       e.preventDefault();
       const data = new FormData();
@@ -156,33 +156,14 @@ export default {
       data.append('category', JSON.stringify(this.catSelected));
       data.append('oldImage', this.oldImage);
       data.append('mediaId', this.mediaId);
-      this.$store.dispatch('session/updateBlog', data);
+      this.$store.dispatch('updateBlog', data);
     },
   },
   computed: {
-    ...mapState('session', ['tagOptions', 'catOptions', 'blogToEdit']),
-    // ...mapFields('session', ['tagOptions', 'catOptions', 'blogToEdit']),
-    // tagOptions: {
-    //   get() {
-    //     return this.$store.state.tagOptions;
-    //   },
-    //   set(value) {
-    //     this.$store.commit('tagOptions', value);
-    //   },
-    // },
-    // catOptions: {
-    //   get() {
-    //     return this.$store.state.catOptions;
-    //   },
-    //   set(value) {
-    //     this.$store.commit('catOptions', value);
-    //   },
-    // },
+    ...mapGetters(['tagOptions', 'catOptions']),
   },
   created() {
-    this.$store.dispatch('session/blogMetaOptions');
-    // const id = { id: this.$route.params.id };
-    // this.$store.dispatch('session/getBlog', id);
+    this.$store.dispatch('blogMetaOptions');
   },
   mounted() {
     axios.get(api.getBlog + this.$route.params.id)

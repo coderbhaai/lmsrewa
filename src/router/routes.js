@@ -25,6 +25,31 @@ const routes = [
     meta: { noAuth: true },
   },
   {
+    path: '/blog',
+    name: 'blog',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/blog', component: () => import('pages/blog/blog.vue') },
+    ],
+  },
+  {
+    path: '/blog/:url',
+    name: 'single',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/blog/:url', component: () => import('pages/blog/single.vue') },
+    ],
+  },
+  {
+    path: '/video-tutorials/:id',
+    name: 'videos',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/video-tutorials/:id', component: () => import('pages/index/videos.vue') },
+    ],
+  },
+  // Admin Routes
+  {
     path: '/admin/addBlog',
     name: 'addBlog',
     component: () => import('layouts/MainLayout.vue'),
@@ -88,29 +113,33 @@ const routes = [
     meta: { auth: true, admin: true },
   },
   {
-    path: '/blog',
-    name: 'blog',
+    path: '/admin/questionBank',
+    name: 'questionBank',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/blog', component: () => import('pages/blog/blog.vue') },
+      { path: '/admin/questionBank', component: () => import('pages/admin/questionBank.vue') },
     ],
+    meta: { auth: true, admin: true },
   },
   {
-    path: '/blog/:url',
-    name: 'single',
+    path: '/admin/addQuestion',
+    name: 'addQuestion',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/blog/:url', component: () => import('pages/blog/single.vue') },
+      { path: '/admin/addQuestion', component: () => import('pages/admin/addQuestion.vue') },
     ],
+    meta: { auth: true, admin: true },
   },
   {
-    path: '/video-tutorials/:id',
-    name: 'videos',
+    path: '/admin/updateQuestion/:id',
+    name: 'updateQuestion',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/video-tutorials/:id', component: () => import('pages/index/videos.vue') },
+      { path: '/admin/updateQuestion/:id', component: () => import('pages/admin/updateQuestion.vue') },
     ],
+    meta: { auth: true, admin: true },
   },
+  // Admin Routes
   {
     path: '*',
     component: () => import('pages/404.vue'),

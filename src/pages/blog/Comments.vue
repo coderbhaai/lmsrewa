@@ -89,7 +89,6 @@ export default {
         order: this.order,
         blogId: this.blogId,
       };
-      console.log('data', data);
       this.$store.dispatch('addComment', data);
       this.resetData();
     },
@@ -99,7 +98,6 @@ export default {
     },
     replyComment(e) {
       e.preventDefault();
-      console.log('Calling');
       const data = {
         name: this.user.name || this.name,
         email: this.user.email || this.email,
@@ -108,7 +106,6 @@ export default {
         order: this.order,
         blogId: this.blogId,
       };
-      console.log('data', data);
       this.$store.dispatch('addComment', data);
       this.resetData();
     },

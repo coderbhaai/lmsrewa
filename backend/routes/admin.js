@@ -429,7 +429,6 @@ router.get('/subjects/:slug', asyncMiddleware( async(req, res) => {
 }))
 
 router.post('/addComment', asyncMiddleware( async(req, res, next) => {
-    console.log('Adding Comment in backend', req.body)
     let post= {
         "user":                     req.body.name,
         "email":                    req.body.email,

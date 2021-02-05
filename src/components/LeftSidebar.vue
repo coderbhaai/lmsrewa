@@ -29,10 +29,18 @@
               <q-item-section avatar><q-icon name="schedule" /></q-item-section>
               <q-item-section><q-item-label>Meta Tags</q-item-label></q-item-section>
             </q-item>
+            <q-item clickable tag="a" href="/admin/addQuestion">
+              <q-item-section avatar><q-icon name="schedule" /></q-item-section>
+              <q-item-section><q-item-label>Add Question</q-item-label></q-item-section>
+            </q-item>
+            <q-item clickable tag="a" href="/admin/questionBank">
+              <q-item-section avatar><q-icon name="schedule" /></q-item-section>
+              <q-item-section><q-item-label>Question Bank</q-item-label></q-item-section>
+            </q-item>
             <q-item>
-                <q-item-section avatar><q-icon name="schedule" /></q-item-section>
-                <q-item-section @click="logOut"><q-item-label>Log Out</q-item-label></q-item-section>
-              </q-item>
+              <q-item-section avatar><q-icon name="schedule" /></q-item-section>
+              <q-item-section @click="logOut"><q-item-label>Log Out</q-item-label></q-item-section>
+            </q-item>
         </div>
         <!-- <div v-if="user.role=='User'">
             <q-list class="rounded-borders">

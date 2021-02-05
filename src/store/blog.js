@@ -34,12 +34,10 @@ const actions = {
     commit('SUGGESTBLOGS', res.data.data);
   },
   async singleBlog({ commit }, form) {
-    console.log('form', form);
     const res = await axios.get(api.singleBlog + form.url);
     commit('SINGLEBLOG', res.data);
   },
   async addComment({ commit }, form) {
-    console.log('form', form);
     const res = await axios.post(api.addComment, form);
     commit('ADDCOMMENT', res.data.message);
     message(res.data.message);

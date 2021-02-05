@@ -40,7 +40,6 @@ export default {
   methods: {
     onSubmit(e) {
       e.preventDefault();
-      console.log('Submit')
         const data =
         {
             email: this.email,

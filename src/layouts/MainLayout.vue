@@ -13,7 +13,7 @@
       <q-tabs align="left">
         <q-route-tab to="/" label="Home" />
         <div v-if="user" class="row">
-          <q-route-tab to="/admin" label="Admin Panel" />
+          <q-route-tab to="/admin/basics" label="Admin Panel" />
         </div>
         <div v-else class="row">
           <q-route-tab to="/register" label="Register"/>

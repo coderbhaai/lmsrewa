@@ -25,35 +25,20 @@ export default function (/* { store, ssrContext } */) {
     mode: process.env.VUE_ROUTER_MODE,
     base: process.env.VUE_ROUTER_BASE,
   });
-
+  
   Router.beforeEach((to, from, next) => {
-    if (to.matched.some((record) => record.meta.noAuth)) {
-      if (localStorage.getItem('user') != null) {
-        next({ name: 'home' });
-      } else {
-        next();
-      }
-    } else if (to.matched.some((record) => record.meta.requiresAuth)) {
-      if (localStorage.getItem('jwt').token == null) {
-        next({
-          path: '/login',
-          params: { nextUrl: to.fullPath },
-        });
-      } else {
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (to.matched.some((record) => record.meta.is_admin)) {
-          if (user.is_admin === 1) {
-            next();
-          } else {
-            next({ name: 'userboard' });
-          }
-        } else {
-          next();
-        }
-      }
-    } else {
-      next();
+    if (to.matched.some((record) => record.meta.auth)) {
+      if (localStorage.getItem('user')){ next(); } else { next({ name: 'blog' }); }
+    } 
+    else if (to.matched.some((record) => record.meta.noAuth)) {
+      if (localStorage.getItem('user')){ next({ name: 'blog' }); } else { next(); }
     }
+    else if (to.matched.some((record) => record.meta.admin)) {
+      if (localStorage.getItem('user')){
+        if (localStorage.getItem('user').role !== 'Admin') { next({ name: 'blog' }); } else { next(); }
+      } else { next({ name: 'blog' }); }
+    }
+    else { next(); }
   });
 
   return Router;

@@ -10,6 +10,34 @@ const storage = './public/images/'
 // const storage = '/var/www/amitkk.com/public_html/public/images/'
 function printError(mesg){ console.log('mesg', mesg) }
 
+function blogMetaData(id) {
+    return new Promise((resolve, reject) => {
+        let sql =   `SELECT title, url FROM blogs ORDER BY id DESC;
+                    SELECT name, url FROM blog_metas WHERE type = 'category';
+                    SELECT name, url FROM blog_metas WHERE type = 'tag';
+                    SELECT id, blogId, c_order, commentId, user, email, comment, updated_at FROM comments WHERE blogId = '${id}' AND status='1' AND c_order= '0' ORDER BY id DESC;
+                    SELECT id, blogId, c_order, commentId, user, email, comment, updated_at FROM comments WHERE blogId = '${id}' AND status='1' AND c_order= '1' ORDER BY id ASC`
+        pool.query(sql, [1, 2, 3, 4, 5], (err, results) => {
+            try{
+                if(err){ throw err }
+                if(results){ resolve(results ) }
+            }catch(e){ logError(e); res.status(500); return; }
+        });
+    });
+}
+
+function suggestBlogs() {
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT a.id, a.title, a.url, a.coverImg, a.content, a.updated_at, b.image FROM blogs as a left join media as b on b.id = a.coverImg ORDER by RAND() LIMIT 6;`
+      pool.query(sql, (err, rows) => {
+        try{
+            if(err){ throw err }
+            if(rows){ resolve(rows ) }
+        }catch(e){ logError(e); return; }
+      });
+    });
+}
+
 function uploadImage(file, folder){
     return new Promise((resolve, reject) => {
         // var filename = file.name
@@ -95,4 +123,4 @@ function logError(e){
     printError(e)
 }
 
-module.exports = { printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName };
+module.exports = { printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs };

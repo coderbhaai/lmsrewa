@@ -13,9 +13,7 @@ const routes = [
     children: [
       { path: '/register', component: () => import('pages/auth/Register.vue') },
     ],
-    meta: {
-      noAuth: true,
-    },
+    meta: { noAuth: true },
   },
   {
     path: '/login',
@@ -24,9 +22,7 @@ const routes = [
     children: [
       { path: '/login', component: () => import('pages/auth/Login.vue') },
     ],
-    meta: {
-      noAuth: true,
-    },
+    meta: { noAuth: true },
   },
   {
     path: '/admin/addBlog',
@@ -35,9 +31,7 @@ const routes = [
     children: [
       { path: '/admin/addBlog', component: () => import('pages/admin/AddBlog.vue') },
     ],
-    meta: {
-      admin: true,
-    },
+    meta: { auth: true, admin: true },
   },
   {
     path: '/admin/updateBlog/:id',
@@ -46,9 +40,7 @@ const routes = [
     children: [
       { path: '/admin/updateBlog/:id', component: () => import('pages/admin/UpdateBlog.vue') },
     ],
-    meta: {
-      admin: true,
-    },
+    meta: { auth: true, admin: true },
   },
   {
     path: '/admin/blogMeta',
@@ -57,9 +49,7 @@ const routes = [
     children: [
       { path: '/admin/blogMeta', component: () => import('pages/admin/blogMeta.vue') },
     ],
-    meta: {
-      admin: true,
-    },
+    meta: { auth: true, admin: true },
   },
   {
     path: '/admin/blogs',
@@ -68,9 +58,7 @@ const routes = [
     children: [
       { path: '/admin/blogs', component: () => import('pages/admin/blogs.vue') },
     ],
-    meta: {
-      admin: true,
-    },
+    meta: { auth: true, admin: true },
   },
   {
     path: '/admin/basics',
@@ -79,9 +67,7 @@ const routes = [
     children: [
       { path: '/admin/basics', component: () => import('pages/admin/basics.vue') },
     ],
-    meta: {
-      admin: true,
-    },
+    meta: { auth: true, admin: true },
   },
   {
     path: '/admin/meta',
@@ -90,9 +76,7 @@ const routes = [
     children: [
       { path: '/admin/meta', component: () => import('pages/admin/meta.vue') },
     ],
-    meta: {
-      admin: true,
-    },
+    meta: { auth: true, admin: true },
   },
   {
     path: '/admin/videos',
@@ -101,9 +85,7 @@ const routes = [
     children: [
       { path: '/admin/videos', component: () => import('pages/admin/videos.vue') },
     ],
-    meta: {
-      admin: true,
-    },
+    meta: { auth: true, admin: true },
   },
   {
     path: '/blog',

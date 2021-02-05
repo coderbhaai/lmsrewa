@@ -29,12 +29,12 @@
               <q-item-section avatar><q-icon name="schedule" /></q-item-section>
               <q-item-section><q-item-label>Meta Tags</q-item-label></q-item-section>
             </q-item>
-            <q-item clickable tag="a" href="/auth/logOut">
+            <q-item>
                 <q-item-section avatar><q-icon name="schedule" /></q-item-section>
-                <q-item-section><q-item-label>Log Out</q-item-label></q-item-section>
+                <q-item-section @click="logOut"><q-item-label>Log Out</q-item-label></q-item-section>
               </q-item>
         </div>
-        <div v-if="user.role=='User'">
+        <!-- <div v-if="user.role=='User'">
             <q-list class="rounded-borders">
               <q-item clickable tag="a" href="/admin/basics">
                 <q-item-section avatar><q-icon name="schedule" /></q-item-section>
@@ -49,17 +49,13 @@
                         <q-item-section avatar><q-icon name="schedule" /></q-item-section>
                         <q-item-section><q-item-label>Blog Lists</q-item-label></q-item-section>
                     </q-item>
-                    <q-item clickable tag="a" href="/admin/blogMeta">
-                        <q-item-section avatar><q-icon name="schedule" /></q-item-section>
-                        <q-item-section><q-item-label>Blog Meta</q-item-label></q-item-section>
-                    </q-item>
                 </q-expansion-item>
             </q-list>
-            <q-item clickable tag="a" href="/auth/logOut">
+            <q-item >
                 <q-item-section avatar><q-icon name="schedule" /></q-item-section>
-                <q-item-section><q-item-label>Log Out</q-item-label></q-item-section>
+                <q-item-section ><q-item-label>Log Out</q-item-label></q-item-section>
               </q-item>
-        </div>
+        </div> -->
   </div>
 </template>
 
@@ -70,9 +66,13 @@ export default {
   name: 'leftSidebar',
   methods: {
     ...mapActions(['user']),
-    logout() {
-      this.$store.dispatch('logout');
-      this.$router.push({ name: 'login' });
+    logOut(e) {
+      e.preventDefault();
+      const data={
+        email: this.user.email,
+        id: this.user.id
+      }
+      this.$store.dispatch('logout', data);
     },
   },
   computed: {

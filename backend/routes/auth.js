@@ -250,8 +250,25 @@ router.post('/resetPassword', asyncMiddleware( async(req, res, next) => {
     })
 }))
 
-router.post('/logOut', asyncMiddleware( async(req, res, next) => {
+router.post('/logout', asyncMiddleware( async(req, res, next) => {
     res.clearCookie('token')
-    res.send({ success: true, message: "You are logged Out" })
+    let sql = `SELECT id, email, token from users WHERE email = '${req.body.email}';
+                SELECT id, email, token from gofb WHERE email = '${req.body.email}';`
+    pool.query(sql, [1,2], async(err, results) => {
+        try{
+            if(err){ throw err }
+                if(results[0][0]){
+                    var sql2 = `UPDATE users SET token = Null, updated_at = '${time}' WHERE id = '${results[0][0].id}';`
+                }else if(results[1][0]){
+                    var sql2 = `UPDATE gofb SET token = Null, updated_at = '${time}' WHERE id = '${results[1][0].id}';`
+                }
+                pool.query(sql2, (err2, results2) => {
+                    try{
+                        if(err2){ throw err2 }
+                        if(results2){ res.send({ success: true, message: "You are logged Out" }) }
+                    }catch(e){ func.logError(e); res.status(500); return; }
+                })
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
 }))
 module.exports = router;

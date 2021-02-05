@@ -32,9 +32,13 @@ const actions = {
     }
     message(res.data.message);
   },
-  async logout({ commit }) {
-    commit('LOGOUT');
-    // message(res.data.message);
+  async logout({ commit }, form) {
+    const res = await axios.post(api.logout, form);
+    if (res.data.success) {
+      commit('LOGOUT', res.data.message);
+    }
+    message(res.data.message);
+    this.$router.push({ name: 'login' });
   },
 };
 
@@ -44,7 +48,7 @@ const mutations = {
     LocalStorage.set('user', user);
     setAxiosHeaders(state);
   },
-  LOGOUT: (state) => {
+  LOGOUT: (state, data) => {
     state.user = null;
     LocalStorage.clear();
     setAxiosHeaders(state);

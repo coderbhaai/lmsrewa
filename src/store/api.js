@@ -2,6 +2,7 @@ const url = 'http://localhost:3060';
 export default {
   register: `${url}/auth/register`,
   login: `${url}/auth/login`,
+  logout: `${url}/auth/logout`,
   adminBasics: `${url}/admin/adminBasics`,
   addBasic: `${url}/admin/addBasic`,
   updateBasic: `${url}/admin/updateBasic`,
@@ -24,4 +25,5 @@ export default {
   suggestBlogs: `${url}/suggestBlogs`,
   videos: `${url}/admin/videos/`,
   subjects: `${url}/admin/subjects/`,
+  addComment: `${url}/admin/addComment`,
 };

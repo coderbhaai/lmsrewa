@@ -339,78 +339,6 @@ router.post('/updateVideo', asyncMiddleware( async(req, res) => {
     })
 }))
 
-router.post('/addComment', asyncMiddleware( async(req, res, next) => {
-    let post= {
-        "blogId":                   req.body.id,
-        "c_order":                  req.body.order,
-        "status":                   req.body.status,
-        "commentId":                req.body.commentId,
-        "user":                     req.body.name,
-        "email":                    req.body.email,
-        "comment":                  req.body.comment,
-        "created_at":               time,
-        "updated_at":               time,
-    }
-    let sql = 'INSERT INTO comments SET ?'
-    pool.query(sql, post, (err, results) => {
-        try{
-            if(results){ res.send({ success: true, message: 'Comment submitted for approval' }); }else if(err){ throw err }
-        }catch(e){
-          func.logError(e)
-          res.status(500);
-          return;
-        }
-    })
-}))
-
-router.post('/updateComment', asyncMiddleware( async(req, res) => {
-    let post= {
-        'user':                 req.body.name,
-        'email':                req.body.email,
-        'comment':              req.body.comment,
-        'status':               req.body.status,
-        "updated_at":           time,
-    }
-    let sql = `UPDATE comments SET ? WHERE id = ${req.body.id}`;
-    pool.query(sql, post, (err, results) => {
-        try{
-            if(results){
-                let sql =   `SELECT a.id, a.blogId, a.c_order, a.commentId, a.user, a.email, a.comment, a.status, a.updated_at, b.url, b.title FROM comments as a
-                    left join blogs as b on b.id = a.blogId WHERE a.id = ${req.body.id}`
-                pool.query(sql, (err2, results2) => {
-                    try{
-                        if(results2){
-                            res.send({ success: true, data: results2[0], message: 'Comment updated successfuly' });
-                        }else if(err2){ throw err2 }
-                    }catch(e){
-                      func.logError(e)
-                      res.status(500);
-                      return;
-                    }
-                })
-            }else if(err){ throw err }
-        }catch(e){
-          func.logError(e)
-          res.status(500);
-          return;
-        }
-    })
-}))
-
-router.get('/adminComments', asyncMiddleware( async(req, res) => {
-    let sql =   `SELECT a.id, a.blogId, a.c_order, a.commentId, a.user, a.email, a.comment, a.status, a.updated_at, b.url, b.title FROM comments as a
-                left join blogs as b on b.id = a.blogId  ORDER BY a.id DESC`
-    pool.query(sql, (err, results) => {
-        try{
-            if(results){ res.send({ data: results }); }else if(err){ throw err }
-        }catch(e){
-          func.logError(e)
-          res.status(500);
-          return;
-        }
-    })
-}))
-
 router.get('/adminMetas',  asyncMiddleware( async(req, res) => {
     let sql = `SELECT id, url, title, description, keyword, updated_at FROM metas ORDER BY id DESC`
     pool.query(sql, (err, results) => {
@@ -497,6 +425,77 @@ router.get('/subjects/:slug', asyncMiddleware( async(req, res) => {
             if(err){ throw err }
             if(results){ res.send({ data: results }); }
         }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/addComment', asyncMiddleware( async(req, res, next) => {
+    console.log('Adding Comment in backend', req.body)
+    let post= {
+        "user":                     req.body.name,
+        "email":                    req.body.email,
+        "comment":                  req.body.comment,
+        "blogId":                   req.body.blogId,
+        "c_order":                  req.body.order,
+        "status":                   0,
+        "commentId":                req.body.commentId,
+        "created_at":               time,
+        "updated_at":               time,
+    }
+    let sql = 'INSERT INTO comments SET ?'
+    pool.query(sql, post, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ success: true, message: 'Comment submitted for approval' }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+
+router.post('/updateComment', asyncMiddleware( async(req, res) => {
+    let post= {
+        'user':                 req.body.name,
+        'email':                req.body.email,
+        'comment':              req.body.comment,
+        'status':               req.body.status,
+        "updated_at":           time,
+    }
+    let sql = `UPDATE comments SET ? WHERE id = ${req.body.id}`;
+    pool.query(sql, post, (err, results) => {
+        try{
+            if(results){
+                let sql =   `SELECT a.id, a.blogId, a.c_order, a.commentId, a.user, a.email, a.comment, a.status, a.updated_at, b.url, b.title FROM comments as a
+                    left join blogs as b on b.id = a.blogId WHERE a.id = ${req.body.id}`
+                pool.query(sql, (err2, results2) => {
+                    try{
+                        if(results2){
+                            res.send({ success: true, data: results2[0], message: 'Comment updated successfuly' });
+                        }else if(err2){ throw err2 }
+                    }catch(e){
+                      func.logError(e)
+                      res.status(500);
+                      return;
+                    }
+                })
+            }else if(err){ throw err }
+        }catch(e){
+          func.logError(e)
+          res.status(500);
+          return;
+        }
+    })
+}))
+
+router.get('/adminComments', asyncMiddleware( async(req, res) => {
+    let sql =   `SELECT a.id, a.blogId, a.c_order, a.commentId, a.user, a.email, a.comment, a.status, a.updated_at, b.url, b.title FROM comments as a
+                left join blogs as b on b.id = a.blogId  ORDER BY a.id DESC`
+    pool.query(sql, (err, results) => {
+        try{
+            if(results){ res.send({ data: results }); }else if(err){ throw err }
+        }catch(e){
+          func.logError(e)
+          res.status(500);
+          return;
+        }
     })
 }))
 

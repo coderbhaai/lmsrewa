@@ -56,7 +56,7 @@ const routes = [
     children: [
       { path: '/admin/addBlog', component: () => import('pages/admin/AddBlog.vue') },
     ],
-    meta: { auth: true, admin: true },
+    meta: { auth: true, ss: true },
   },
   {
     path: '/admin/updateBlog/:id',
@@ -65,7 +65,7 @@ const routes = [
     children: [
       { path: '/admin/updateBlog/:id', component: () => import('pages/admin/UpdateBlog.vue') },
     ],
-    meta: { auth: true, admin: true },
+    meta: { auth: true, ss: true },
   },
   {
     path: '/admin/blogMeta',
@@ -74,7 +74,7 @@ const routes = [
     children: [
       { path: '/admin/blogMeta', component: () => import('pages/admin/blogMeta.vue') },
     ],
-    meta: { auth: true, admin: true },
+    meta: { auth: true, ss: true },
   },
   {
     path: '/admin/blogs',
@@ -83,7 +83,7 @@ const routes = [
     children: [
       { path: '/admin/blogs', component: () => import('pages/admin/blogs.vue') },
     ],
-    meta: { auth: true, admin: true },
+    meta: { auth: true, ss: true },
   },
   {
     path: '/admin/basics',
@@ -92,7 +92,7 @@ const routes = [
     children: [
       { path: '/admin/basics', component: () => import('pages/admin/basics.vue') },
     ],
-    meta: { auth: true, admin: true },
+    meta: { auth: true, ss: true },
   },
   {
     path: '/admin/meta',
@@ -101,7 +101,7 @@ const routes = [
     children: [
       { path: '/admin/meta', component: () => import('pages/admin/meta.vue') },
     ],
-    meta: { auth: true, admin: true },
+    meta: { auth: true, ss: true },
   },
   {
     path: '/admin/videos',
@@ -110,7 +110,7 @@ const routes = [
     children: [
       { path: '/admin/videos', component: () => import('pages/admin/videos.vue') },
     ],
-    meta: { auth: true, admin: true },
+    meta: { auth: true, ss: true },
   },
   {
     path: '/admin/questionBank',
@@ -119,7 +119,7 @@ const routes = [
     children: [
       { path: '/admin/questionBank', component: () => import('pages/admin/questionBank.vue') },
     ],
-    meta: { auth: true, admin: true },
+    meta: { auth: true, ss: true },
   },
   {
     path: '/admin/addQuestion',
@@ -128,7 +128,7 @@ const routes = [
     children: [
       { path: '/admin/addQuestion', component: () => import('pages/admin/addQuestion.vue') },
     ],
-    meta: { auth: true, admin: true },
+    meta: { auth: true, ss: true },
   },
   {
     path: '/admin/updateQuestion/:id',
@@ -137,7 +137,25 @@ const routes = [
     children: [
       { path: '/admin/updateQuestion/:id', component: () => import('pages/admin/updateQuestion.vue') },
     ],
-    meta: { auth: true, admin: true },
+    meta: { auth: true, ss: true },
+  },
+  {
+    path: '/admin/institutes',
+    name: 'institutes',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/admin/institutes', component: () => import('pages/admin/institutes.vue') },
+    ],
+    meta: { auth: true, ss: true },
+  },
+  {
+    path: '/admin/questionBank',
+    name: 'QuestionBank',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/admin/questionBank', component: () => import('pages/admin/questionBank.vue') },
+    ],
+    meta: { auth: true, ss: true },
   },
   // Admin Routes
   {

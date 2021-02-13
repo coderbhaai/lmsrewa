@@ -17,6 +17,16 @@ router.use(upload())
 const time = new Date().toISOString().slice(0, 19).replace('T', ' ')
 const transporter = nodemailer.createTransport({ host: "smtpout.secureserver.net", port: 465, secure: true, auth: { user: 'contactus@thetrueloans.com', pass: 'contactus@123',  debug: true }, tls:{ rejectUnauthorized: false, secureProtocol: "TLSv1_method" } });
 
+router.get('/schoolOptions', asyncMiddleware( async(req, res) => {
+    let sql = `SELECT id as value, name as text from users WHERE role='Owner' AND status=1;`
+    pool.query(sql, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ data: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
 router.get('/adminBasics', asyncMiddleware( async(req, res) => {
     let sql = `SELECT id, type, name, tab1, tab2, tab3, updated_at FROM basics;`
     pool.query(sql, (err, results) => {
@@ -449,7 +459,6 @@ router.post('/addComment', asyncMiddleware( async(req, res, next) => {
     })
 }))
 
-
 router.post('/updateComment', asyncMiddleware( async(req, res) => {
     let post= {
         'user':                 req.body.name,
@@ -495,6 +504,34 @@ router.get('/adminComments', asyncMiddleware( async(req, res) => {
           res.status(500);
           return;
         }
+    })
+}))
+
+router.get('/adminInstitutes', asyncMiddleware( async(req, res) => {
+    let sql = `SELECT id, name, email, status, updated_at from users WHERE role='Owner';`
+    pool.query(sql, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ data: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/changeInstituteStatus', asyncMiddleware( async(req, res, next) => {
+    console.log('req.body', req.body)
+    let post= {
+        "status":                   req.body.status,
+        "updated_at":               time,
+    }
+    let sql = `UPDATE users SET ? WHERE id = ${req.body.id}`
+    pool.query(sql, post, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ 
+                const data = await func.getInstitute(req.body.id)
+                res.send({ success: true, data, message: 'Institute status changed successfully' }); 
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
     })
 }))
 

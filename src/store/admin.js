@@ -15,6 +15,7 @@ const state = {
   // blogToEdit: [],
   adminVideos: [],
   adminMetas: [],
+  adminInstitutes: []
 };
 
 const getters = {
@@ -30,6 +31,7 @@ const getters = {
   blogMetaOptions: (state) => state.blogMetaOptions,
   // blogToEdit: (state) => state.blogToEdit,
   adminVideos: (state) => state.adminVideos,
+  adminInstitutes: (state) => state.adminInstitutes
 };
 
 const actions = {
@@ -135,6 +137,17 @@ const actions = {
     }
     message(res.data.message);
   },
+  async adminInstitutes({ commit }) {
+    const res = await axios.get(api.adminInstitutes);
+    commit('ADMININSTITUTES', res.data.data);
+  },
+  async changeInstituteStatus({ commit }, form) {
+    const res = await axios.post(api.changeInstituteStatus, form);
+    if (res.data.success) {
+      commit('CHANGEINSTITUTESTATUS', res.data.data);
+    }
+    message(res.data.message);
+  },
 };
 
 const mutations = {
@@ -188,6 +201,13 @@ const mutations = {
       state.adminBlogs.splice(index, 1, data);
     }
   },
+  ADMININSTITUTES: (state, data) => { state.adminInstitutes = data; },
+  CHANGEINSTITUTESTATUS: (state, data) => {
+    const index = state.adminInstitutes.findIndex((i) => i.id === data.id);
+    if (index !== -1) { state.adminInstitutes.splice(index, 1, data); }
+  },
+
+
 };
 
 export default {

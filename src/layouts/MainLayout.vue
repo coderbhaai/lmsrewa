@@ -3,11 +3,11 @@
     <q-header elevated class="bg-primary text-white" height-hint="98">
       <q-toolbar>
         <div v-if="user">
-          <div v-if="user.role=='Admin'"><q-btn dense flat round icon="menu" @click="left = !left" /></div>
+          <div v-if="user.role=='SS' || user.role=='Admin' || user.role=='Owner'"><q-btn dense flat round icon="menu" @click="left = !left"/></div>
         </div>
         <q-toolbar-title><a href="/" class="logo"><q-avatar><img src="/images/icons/studyspectrum-logo.png"></q-avatar> STUDY SPECTRUM</a></q-toolbar-title>
         <div v-if="user">
-          <div v-if="user.role=='Admin'"><q-btn dense flat round icon="menu" @click="right = !right" /></div>
+          <div v-if="user.role=='Admin' || user.role=='Owner'"><q-btn dense flat round icon="menu" @click="right = !right" /></div>
         </div>
       </q-toolbar>
       <q-tabs align="left">
@@ -24,7 +24,7 @@
       </q-tabs>
     </q-header>
     <div v-if="user">
-      <div v-if="user.role=='Admin'">
+      <div v-if="user.role=='SS' || user.role=='Admin' || user.role=='Owner'">
         <q-drawer v-model="left" side="left" bordered><LeftSidebar/></q-drawer>
         <q-drawer v-model="right" side="right" bordered><RightSidebar/></q-drawer>
       </div>

@@ -19,10 +19,12 @@
                     <q-input v-model="password" label="Password" lazy-rules/>
                     <q-input v-model="confirm_password" label="Confirm Password" lazy-rules/>
                     <q-input v-model="confirm_password" label="Confirm Password" lazy-rules/>
-                    <q-select v-model="role" :options="options" label="Iam a" lazy-rules/>
-                    <div>
-                        <q-btn label="Register" type="submit" color="primary"/>
+                    <q-select v-model="role" :options="options" option-value="value" option-label="text" label="Iam a" lazy-rules/>
+                    <div v-if="this.role.value=='Admin'">
+                        <q-select v-model="institute" :options="schoolOptions" option-value="value" option-label="text" label="Select Organisation" lazy-rules/>
+                        <p>Your login will be held till the organisation approves it</p>
                     </div>
+                    <div><q-btn label="Register" type="submit" color="primary"/></div>
                 </q-form>
             </q-card-section>
             </q-card>
@@ -33,7 +35,7 @@
 
 <script type="text/javascript"></script>
 <script>
-    import { mapActions } from 'vuex'
+    import { mapGetters, mapActions } from 'vuex';
     export default {
         data() {
             return {
@@ -41,24 +43,41 @@
                 email: 'amit.khare588@gmail.com',
                 password: '123456789',
                 confirm_password: '123456789',
-                role: 'Admin',
+                role: {'text': '', 'value': ''},
+                institute: '',
                 options: [
-                    'User', 'School Admin', 'Coaching Class',
+                    {'text': 'Student', 'value': 'User'},
+                    {'text': 'Parent', 'value': 'Parent'},
+                    {'text': 'Teacher', 'value': 'Teacher'},
+                    {'text': 'School', 'value': 'Owner'},
+                    {'text': 'College', 'value': 'Owner'},
+                    {'text': 'Coaching Class', 'value': 'Owner'},
+                    {'text': 'School Admin', 'value': 'Admin'},
+                    {'text': 'School Sub Admin', 'value': 'SubAdmin'},
+                    {'text': 'Home Tutor', 'value': 'Tutor'},
                 ],
             }
         },
         methods: {
             onSubmit(e) {
                 e.preventDefault();
+                if(this.role.value=='User' || this.role.value=='Tutor'){
+                    var status = 1
+                }else{
+                    var status = 0
+                }
                 const data = {
                     name: this.name,
                     email: this.email,
                     password: this.password,
                     confirm_password: this.confirm_password,
-                    role: this.role,
+                    role: this.role.value,
+                    status: status,
+                    institute: this.institute.value
                 };
                 this.$store.dispatch('register', data);
             },
+            ...mapActions(['schoolOptions']),
         },
         mounted() {
             particlesJS("particles-js", {
@@ -174,7 +193,13 @@
             // if(typeof(Storage) !== "undefined" && JSON.parse(localStorage.getItem('user'))){
             //     this.setState({ auth: JSON.parse(localStorage.getItem('user')).auth || false })
             // }
-        }
+        },
+        computed: {
+            ...mapGetters(['schoolOptions']),
+        },
+        created() {
+            this.$store.dispatch('schoolOptions');
+        },
     }
 </script>
 

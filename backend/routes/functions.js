@@ -6,8 +6,21 @@ const time = new Date().toISOString().slice(0, 19).replace('T', ' ')
 const transporter = nodemailer.createTransport({ host: "smtpout.secureserver.net", port: 465, secure: true, auth: { user: 'contactus@thetrueloans.com', pass: 'contactus@123',  debug: true }, tls:{ rejectUnauthorized: false, secureProtocol: "TLSv1_method" } });
 const fs = require('fs')
 
-const storage = './public/images/'
 // const storage = '/var/www/amitkk.com/public_html/public/images/'
+const storage = './public/images/'
+
+function getInstitute(id) {
+    return new Promise((resolve, reject) => {
+        let sql =   `SELECT id, name, email, status, updated_at from users WHERE id = ${id}`
+        pool.query(sql, (err, results) => {
+            try{
+                if(err){ throw err }
+                if(results){ resolve(results[0] ) }
+            }catch(e){ logError(e); res.status(500); return; }
+        });
+    });
+}
+
 function printError(mesg){ console.log('mesg', mesg) }
 
 function blogMetaData(id) {
@@ -123,4 +136,4 @@ function logError(e){
     printError(e)
 }
 
-module.exports = { printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs };
+module.exports = { printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute };

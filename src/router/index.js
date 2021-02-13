@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-
 import routes from './routes';
+import store from '../store'
+import { message } from '../store/functions';
 
 Vue.use(VueRouter);
 
@@ -27,19 +28,18 @@ export default function (/* { store, ssrContext } */) {
   });
   
   Router.beforeEach((to, from, next) => {
-    if (to.matched.some((record) => record.meta.auth)) {
-      if (localStorage.getItem('user')){ next(); } else { next({ name: 'blog' }); }
-    } 
-    else if (to.matched.some((record) => record.meta.noAuth)) {
-      if (localStorage.getItem('user')){ next({ name: 'blog' }); } else { next(); }
+    // if (to.matched.some((record) => record.meta.auth)) {
+    //   if(store.getters.isLoggedIn){ next(); return; }else{ message('You are not allowed'); next({ path: '/blog' }); return; }
+    // }
+    if (to.matched.some((record) => record.meta.ss)) { 
+      if(store.getters.user['role'] == 'SS'){ 
+        next(); return; 
+      } else { 
+        message('You are not allowed'); next({ path: '/blog' }); return; 
+      } 
     }
-    else if (to.matched.some((record) => record.meta.admin)) {
-      if (localStorage.getItem('user')){
-        if (localStorage.getItem('user').role !== 'Admin') { next({ name: 'blog' }); } else { next(); }
-      } else { next({ name: 'blog' }); }
-    }
-    else { next(); }
-  });
 
+    next();
+  })
   return Router;
 }

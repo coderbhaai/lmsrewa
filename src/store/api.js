@@ -26,4 +26,7 @@ export default {
   videos: `${url}/admin/videos/`,
   subjects: `${url}/admin/subjects/`,
   addComment: `${url}/admin/addComment`,
+  schoolOptions: `${url}/admin/schoolOptions`,
+  adminInstitutes: `${url}/admin/adminInstitutes`,
+  changeInstituteStatus: `${url}/admin/changeInstituteStatus`,
 };

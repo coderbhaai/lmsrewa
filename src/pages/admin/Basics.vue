@@ -5,42 +5,54 @@
     <div v-if="showAddForm">
       <q-form class="q-gutter-md q-mb-lg" @submit="addSubmit">
         <div class="row">
-          <div class="col-6 q-pr-lg"><q-select emit-value v-model="type" :options="basicOptions" option-value="name" option-label="name" label="Type" lazy-rules required/></div>
-          <div class="col-6 q-pr-lg"><q-input v-model="name" label="Name" lazy-rules required/></div>
-          <div class="col-4 q-pr-lg"><q-input v-model="tab1" label="Tab 1" lazy-rules /></div>
-          <div class="col-4 q-pr-lg"><q-input v-model="tab2" label="Tab 2" lazy-rules /></div>
-          <div class="col-4 q-pr-lg"><q-input v-model="tab3" label="Tab 3" lazy-rules /></div>
+          <div class="col-4 q-pr-lg"><q-select emit-value v-model="type" :options="basicOptions" option-value="name" option-label="name" label="Type" lazy-rules required @input="typeSelected()"/></div>
+          <div class="col-4 q-pr-lg" v-if="this.type=='Subject' || this.type=='Topic' || this.type=='SubTopic'">
+            <q-select emit-value map-options v-model="tab1" :options="classOptions" option-value="id" option-label="name" label="Class" lazy-rules required @input="classSelected()"/>
+          </div>
+          <div class="col-4 q-pr-lg" v-if="this.type=='Topic' || this.type=='SubTopic'">
+            <q-select emit-value map-options v-model="tab2" :options="basicSubjectFilter" option-value="id" option-label="name" label="Subject" lazy-rules required @input="subjectSelected()"/>
+          </div>
+          <div class="col-4 q-pr-lg" v-if="this.type=='SubTopic'">
+            <q-select emit-value map-options v-model="tab3" :options="basicTopicFilter" option-value="id" option-label="name" label="Topic" lazy-rules required/>
+          </div>
+          <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name" lazy-rules required/></div>
         </div>
         <div><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
       </q-form>
     </div>
     <q-dialog v-model="medium" persistent transition-show="scale" transition-hide="scale">
       <q-card style="width: 70vw; max-width: 80vw;">
-        <q-card-section class="modalHead"><div class="text-h6">Update Video</div><q-btn flat label="Close" color="primary" v-close-popup @click="resetData()"/></q-card-section>
+        <q-card-section class="modalHead"><div class="text-h6">Update Basic</div><q-btn flat label="Close" color="primary" v-close-popup @click="resetData()"/></q-card-section>
         <q-card-section class="q-pt-none">
           <q-form class="q-gutter-md" @submit="updateSubmit">
             <div class="row">
-              <div class="col-6 q-pr-lg"><q-select emit-value v-model="type" :options="basicOptions" option-value="name" option-label="name" label="Type" lazy-rules required/></div>
-              <div class="col-6 q-pr-lg"><q-input v-model="name" label="Name" lazy-rules required/></div>
-              <div class="col-4 q-pr-lg"><q-input v-model="tab1" label="Tab 1" lazy-rules /></div>
-              <div class="col-4 q-pr-lg"><q-input v-model="tab2" label="Tab 2" lazy-rules /></div>
-              <div class="col-4 q-pr-lg"><q-input v-model="tab3" label="Tab 3" lazy-rules /></div>
+              <div class="col-4 q-pr-lg"><q-select emit-value v-model="type" :options="basicOptions" option-value="name" option-label="name" label="Type" lazy-rules required @input="typeSelected()"/></div>
+              <div class="col-4 q-pr-lg" v-if="this.type=='Subject' || this.type=='Topic' || this.type=='SubTopic'">
+                <q-select emit-value map-options v-model="tab1" :options="classOptions" option-value="id" option-label="name" label="Class" lazy-rules required @input="classSelected()"/>
+              </div>
+              <div class="col-4 q-pr-lg" v-if="this.type=='Topic' || this.type=='SubTopic'">
+                <q-select emit-value map-options v-model="tab2" :options="basicSubjectFilter" option-value="id" option-label="name" label="Subject" lazy-rules required @input="subjectSelected()"/>
+              </div>
+              <div class="col-4 q-pr-lg" v-if="this.type=='SubTopic'">
+                <q-select emit-value map-options v-model="tab3" :options="basicTopicFilter" option-value="id" option-label="name" label="Topic" lazy-rules required/>
+              </div>
+              <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name" lazy-rules required/></div>
             </div>
             <div class="text-center"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
           </q-form>
         </q-card-section>
       </q-card>
     </q-dialog>
-    <q-table title="Basics" :data="adminBasics" :columns="columns" row-key="id">
+    <q-table title="Basics" :data="adminBasics" :columns="columns" row-key="id" :filter="filter" class="my-sticky-header-table" :pagination.sync="pagination">
       <template v-slot:header="props"><q-tr :props="props"><q-th v-for="col in props.cols" :key="col.name" :props="props">{{ col.label }}</q-th></q-tr></template>
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td key="id" :props="props">{{ props.row.id }}</q-td>
           <q-td key="type" :props="props">{{ props.row.type }}</q-td>
           <q-td key="name" :props="props">{{ props.row.name }}</q-td>
-          <q-td key="tab1" :props="props">{{ props.row.tab1 }}</q-td>
-          <q-td key="tab2" :props="props">{{ props.row.tab2 }}</q-td>
-          <q-td key="tab3" :props="props">{{ props.row.tab3 }}</q-td>
+            <q-td key="tab1" :props="props">{{ props.row.tab1Name }}</q-td>
+          <q-td key="tab2" :props="props">{{ props.row.tab2Name }}</q-td>
+          <q-td key="tab3" :props="props">{{ props.row.tab3Name }}</q-td>
           <q-td key="updated_at" :props="props">{{ props.row.updated_at }}</q-td>
           <q-td><img @click="updateDialog(props.row)" src="/images/icons/edit.svg" class="edit"/></q-td>
         </q-tr>
@@ -63,6 +75,10 @@ export default {
       tab3: '',
       showAddForm: false,
       medium: false,
+      filter: '',
+      pagination: {
+        rowsPerPage: 30 // current rows per page being displayed
+      },
       columns: [
         {
           name: 'id', label: 'Sl No.', align: 'left', field: 'Edit',
@@ -74,13 +90,13 @@ export default {
           name: 'name', label: 'Name', align: 'left', field: 'name', sortable: true,
         },
         {
-          name: 'tab1', label: 'Tab 1', align: 'left', field: 'tab1', sortable: true,
+          name: 'tab1', label: 'Class', align: 'left', field: 'tab1', sortable: true,
         },
         {
-          name: 'tab2', label: 'Tab 2', align: 'left', field: 'tab2', sortable: true,
+          name: 'tab2', label: 'Subject', align: 'left', field: 'tab2', sortable: true,
         },
         {
-          name: 'tab3', label: 'Tab 3', align: 'left', field: 'tab3', sortable: true,
+          name: 'tab3', label: 'Topic', align: 'left', field: 'tab3', sortable: true,
         },
         {
           name: 'updated_at', label: 'Date', align: 'left', field: 'updated_at', sortable: true,
@@ -89,9 +105,6 @@ export default {
           name: 'id', label: 'Edit', align: 'left', field: 'id', sortable: true,
         },
       ],
-      // options: [
-      //   'Basic',
-      // ],
     };
   },
   methods: {
@@ -101,6 +114,25 @@ export default {
     },
     hideForm() {
       this.showAddForm = false;
+    },
+    typeSelected() {
+      this.name = '';
+      this.tab1 = '';
+      this.tab2 = '';
+      this.tab3 = '';
+    },
+    classSelected() {
+      const data={
+        classSelected: this.tab1
+      }
+      this.$store.dispatch('basicClassSelected', data);
+    },
+    subjectSelected() {
+      const data={
+        classSelected: this.tab1,
+        subjectSelected: this.tab2
+      }
+      this.$store.dispatch('basicSubjectSelected', data);
     },
     addSubmit(e) {
       e.preventDefault();
@@ -128,9 +160,15 @@ export default {
       this.id = data.id;
       this.type = data.type;
       this.name = data.name;
-      this.tab1 = data.tab1;
-      this.tab2 = data.tab2;
-      this.tab3 = data.tab3;
+      this.tab1 = parseInt(data.tab1);
+      this.tab2 = parseInt(data.tab2);
+      this.tab3 = parseInt(data.tab3);
+      if(data.type=='Subject' || data.type=='Topic' || data.type=='SubTopic'){
+        this.classSelected()
+      }
+      if(data.type=='Topic' || data.type=='SubTopic'){
+        this.subjectSelected()
+      }
       this.medium = true;
     },
     updateSubmit(e) {
@@ -148,7 +186,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['adminBasics', 'basicOptions']),
+    ...mapGetters(['adminBasics', 'basicOptions', 'classOptions', 'topicOptions', 'basicSubjectFilter', 'basicTopicFilter']),
   },
   created() {
     this.$store.dispatch('adminBasics');

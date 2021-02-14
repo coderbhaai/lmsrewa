@@ -29,4 +29,5 @@ export default {
   schoolOptions: `${url}/admin/schoolOptions`,
   adminInstitutes: `${url}/admin/adminInstitutes`,
   changeInstituteStatus: `${url}/admin/changeInstituteStatus`,
+  questionOptions: `${url}/admin/questionOptions`,
 };

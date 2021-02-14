@@ -59,3 +59,17 @@ img.edit{
 .q-item:hover{
     cursor: pointer;
 }
+.my-sticky-header-table{
+    height: 70vh;
+    thead tr th{
+        position: sticky;
+        z-index: 1;
+    }
+    thead tr:first-child th{
+        top: 0;
+    }
+    .q-table__top,.q-table__bottom,thead tr:first-child th{
+        background-color: $primary;
+        color: #fff;
+    }
+}

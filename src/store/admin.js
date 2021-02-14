@@ -15,7 +15,17 @@ const state = {
   // blogToEdit: [],
   adminVideos: [],
   adminMetas: [],
-  adminInstitutes: []
+  adminInstitutes: [],
+  boardOptions : [],
+  classOptions : [],
+  subjectOptions : [],
+  topicOptions : [],
+  subtopicOptions : [],
+  difficultyOptions : [],
+  basicSubjectFilter: [],
+  basicTopicFilter: [],
+  basicSubTopicFilter : [],
+  typeOptions: [],
 };
 
 const getters = {
@@ -31,14 +41,21 @@ const getters = {
   blogMetaOptions: (state) => state.blogMetaOptions,
   // blogToEdit: (state) => state.blogToEdit,
   adminVideos: (state) => state.adminVideos,
-  adminInstitutes: (state) => state.adminInstitutes
+  adminInstitutes: (state) => state.adminInstitutes,
+  boardOptions : (state) => state.boardOptions,
+  classOptions : (state) => state.classOptions,
+  subjectOptions : (state) => state.subjectOptions,
+  topicOptions : (state) => state.topicOptions,
+  subtopicOptions : (state) => state.subtopicOptions,
+  difficultyOptions : (state) => state.difficultyOptions,
+  basicSubjectFilter : (state) => state.basicSubjectFilter,
+  basicTopicFilter : (state) => state.basicTopicFilter,
+  basicSubTopicFilter : (state) => state.basicSubTopicFilter,
+  typeOptions : (state) => state.typeOptions,
 };
 
 const actions = {
-  async adminBasics({ commit }) {
-    const res = await axios.get(api.adminBasics);
-    commit('ADMINBASICS', res.data.data);
-  },
+  async adminBasics({ commit }) { const res = await axios.get(api.adminBasics); commit('ADMINBASICS', res.data.data); },
   async addBasic({ commit }, form) {
     const res = await axios.post(api.addBasic, form);
     if (res.data.success) {
@@ -53,10 +70,7 @@ const actions = {
     }
     message(res.data.message);
   },
-  async adminBlogMeta({ commit }) {
-    const res = await axios.get(api.adminBlogMeta);
-    commit('BLOGMETA', res.data.data);
-  },
+  async adminBlogMeta({ commit }) { const res = await axios.get(api.adminBlogMeta); commit('BLOGMETA', res.data.data); },
   async addBlogMeta({ commit }, form) {
     const res = await axios.post(api.addBlogMeta, form);
     if (res.data.success) {
@@ -71,14 +85,8 @@ const actions = {
     }
     message(res.data.message);
   },
-  async adminBlogs({ commit }) {
-    const res = await axios.get(api.adminBlogs);
-    commit('ADMINBLOGS', res.data.data);
-  },
-  async blogMetaOptions({ commit }) {
-    const res = await axios.get(api.blogMetaOptions);
-    commit('BLOGMETAOPTIONS', res.data);
-  },
+  async adminBlogs({ commit }) { const res = await axios.get(api.adminBlogs); commit('ADMINBLOGS', res.data.data); },
+  async blogMetaOptions({ commit }) { const res = await axios.get(api.blogMetaOptions); commit('BLOGMETAOPTIONS', res.data); },
   async addBlog({ commit }, form) {
     const res = await axios.post(api.addBlog, form);
     if (res.data.success) {
@@ -101,10 +109,7 @@ const actions = {
     }
     message(res.data.message);
   },
-  async adminVideos({ commit }) {
-    const res = await axios.get(api.adminVideos);
-    commit('ADMINVIDEOS', res.data.data);
-  },
+  async adminVideos({ commit }) { const res = await axios.get(api.adminVideos); commit('ADMINVIDEOS', res.data.data); },
   async addVideo({ commit }, form) {
     const res = await axios.post(api.addVideo, form);
     if (res.data.success) {
@@ -119,10 +124,7 @@ const actions = {
     }
     message(res.data.message);
   },
-  async adminMetas({ commit }) {
-    const res = await axios.get(api.adminMetas);
-    commit('ADMINMETAS', res.data.data);
-  },
+  async adminMetas({ commit }) { const res = await axios.get(api.adminMetas); commit('ADMINMETAS', res.data.data); },
   async addMeta({ commit }, form) {
     const res = await axios.post(api.addMeta, form);
     if (res.data.success) {
@@ -137,10 +139,7 @@ const actions = {
     }
     message(res.data.message);
   },
-  async adminInstitutes({ commit }) {
-    const res = await axios.get(api.adminInstitutes);
-    commit('ADMININSTITUTES', res.data.data);
-  },
+  async adminInstitutes({ commit }) { const res = await axios.get(api.adminInstitutes); commit('ADMININSTITUTES', res.data.data); },
   async changeInstituteStatus({ commit }, form) {
     const res = await axios.post(api.changeInstituteStatus, form);
     if (res.data.success) {
@@ -148,6 +147,10 @@ const actions = {
     }
     message(res.data.message);
   },
+  async questionOptions({ commit }) { const res = await axios.get(api.questionOptions); commit('QUESTIONOPTIONS', res.data.data); },
+  async basicClassSelected({ commit }, form) { commit('BASICCLASSSELECTED', form); },
+  async basicSubjectSelected({ commit }, form) { commit('BASICSUBJECTSELECTED', form); },
+  async basicTopicSelected({ commit }, form) { commit('BASICTOPICSELECTED', form); },
 };
 
 const mutations = {
@@ -156,8 +159,15 @@ const mutations = {
     state.basicOptions = data.filter((i) => i.type === 'Basic');
     state.classOptions = data.filter((i) => i.type === 'Class');
     state.subjectOptions = data.filter((i) => i.type === 'Subject');
+    state.topicOptions = data.filter((i) => i.type === 'Topic');
   },
-  ADDBASIC: (state, data) => { state.adminBasics.unshift(data); },
+  ADDBASIC: (state, data) => { 
+    state.adminBasics.unshift(data); 
+    if(data.type=='Basic'){ state.basicOptions.unshift(data) }
+    if(data.type=='Class'){ state.classOptions.unshift(data) }
+    if(data.type=='Subject'){ state.subjectOptions.unshift(data) }
+    if(data.type=='Topic'){ state.topicOptions.unshift(data) }
+  },
   UPDATEBASIC: (state, data) => {
     const index = state.adminBasics.findIndex((i) => i.id === data.id);
     if (index !== -1) {
@@ -206,8 +216,22 @@ const mutations = {
     const index = state.adminInstitutes.findIndex((i) => i.id === data.id);
     if (index !== -1) { state.adminInstitutes.splice(index, 1, data); }
   },
-
-
+  QUESTIONOPTIONS: (state, data) => {
+    state.boardOptions = data.filter(i=>i.type=='Board');
+    state.classOptions = data.filter(i=>i.type=='Class');
+    state.subjectOptions = data.filter(i=>i.type=='Subject');
+    state.topicOptions = data.filter(i=>i.type=='Topic');
+    state.subtopicOptions = data.filter(i=>i.type=='SubTopic');
+    state.difficultyOptions = data.filter(i=>i.type=='Difficulty');
+    state.typeOptions = data.filter(i=>i.type=='Question Type');
+  },
+  BASICCLASSSELECTED: (state, data) => { state.basicSubjectFilter = state.subjectOptions.filter(i=>parseInt(i.tab1) == data.classSelected); },
+  BASICSUBJECTSELECTED: (state, data) => {
+    state.basicTopicFilter = state.topicOptions.filter(i=>parseInt(i.tab1) == data.classSelected && parseInt(i.tab2) == data.subjectSelected); 
+  },
+  BASICTOPICSELECTED: (state, data) => {
+    state.basicSubTopicFilter = state.subtopicOptions.filter(i=>parseInt(i.tab1) == data.classSelected && parseInt(i.tab2) == data.subjectSelected  && parseInt(i.tab3) == data.topicSelected ); 
+  },
 };
 
 export default {

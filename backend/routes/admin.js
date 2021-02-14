@@ -28,7 +28,8 @@ router.get('/schoolOptions', asyncMiddleware( async(req, res) => {
 }))
 
 router.get('/adminBasics', asyncMiddleware( async(req, res) => {
-    let sql = `SELECT id, type, name, tab1, tab2, tab3, updated_at FROM basics;`
+    let sql = `SELECT a.id, a.type, a.name, a.tab1, a.tab2, a.tab3, a.updated_at, b.name as tab1Name, c.name as tab2Name, d.name as tab3Name FROM basics as a 
+    left join basics as b on b.id = a.tab1 left join basics as c on c.id = a.tab2 left join basics as d on d.id = a.tab3;`
     pool.query(sql, (err, results) => {
         try{
             if(err){ throw err }
@@ -518,7 +519,6 @@ router.get('/adminInstitutes', asyncMiddleware( async(req, res) => {
 }))
 
 router.post('/changeInstituteStatus', asyncMiddleware( async(req, res, next) => {
-    console.log('req.body', req.body)
     let post= {
         "status":                   req.body.status,
         "updated_at":               time,
@@ -534,5 +534,16 @@ router.post('/changeInstituteStatus', asyncMiddleware( async(req, res, next) => 
         }catch(e){ func.logError(e); res.status(500); return; }
     })
 }))
+
+router.get('/questionOptions',  asyncMiddleware( async(req, res) => {
+    let sql = `SELECT id, type, name, tab1, tab2, tab3 FROM basics as a WHERE type IN ('Class', 'Board', 'Subject', 'Topic', 'SubTopic', 'Difficulty', 'Question Type');`
+    pool.query(sql, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ data: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
 
 module.exports = router;

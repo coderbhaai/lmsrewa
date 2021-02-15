@@ -104,7 +104,7 @@
         </div>
         <q-btn @click="addOptions()" class="addOption q-my-sm" rounded glossy color="primary" v-if="this.type == 33">Add Options</q-btn>
       </div>
-      <div><q-btn label="Update Question" type="submit" color="primary"/></div>
+      <div class="text-center"><q-btn label="Update Question" type="submit" color="primary"/></div>
     </q-form>
   </div>
 </template>

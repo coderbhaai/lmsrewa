@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       name: 'adminBlogs',
-      pagination: { rowsPerPage: 30 },
+      pagination: { rowsPerPage: 30 }, 
       columns: [
         {
           name: 'id', label: 'Sl No.', align: 'left', field: 'Edit',

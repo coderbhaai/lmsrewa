@@ -39,6 +39,7 @@ router.get('/adminBasics', asyncMiddleware( async(req, res) => {
 }))
 
 router.post('/addBasic', asyncMiddleware( async(req, res) => {
+    console.log('req.body', req.body)
     let post= {
         'type':                 req.body.type,
         'name':                 req.body.name,
@@ -651,6 +652,136 @@ router.post('/updateQuestion', asyncMiddleware( async(req, res, next) => {
 
 
 
+
+// Change DB
+// router.post('/changeClass', asyncMiddleware( async(req, res, next) => {
+//     var xx = 'XII'
+//     let sql =   `SELECT id, class from test_papers WHERE class = '${xx}';`
+//     pool.query(sql, (err, results) => {
+//         try{
+//             if(err){ throw err }
+//             if(results){ 
+//                 results.forEach(i => {
+//                     const post ={
+//                         'class': 19
+//                     }
+//                     let sql = `UPDATE test_papers SET ? WHERE id = ${i.id}`;
+//                     pool.query(sql, post, async(err, results) => {
+//                         try{
+//                             if(err){ throw err }
+//                             console.log(i.id + ' is updated')
+//                         }catch(e){ func.logError(e); res.status(500); return; }
+//                     })                    
+//                 });
+//             }
+//         }catch(e){ func.logError(e); res.status(500); return; }
+//     })    
+// }))
+
+// router.post('/changeDifficulty', asyncMiddleware( async(req, res, next) => {
+//     // var xx = 'Easy'
+//     let sql =   `SELECT id, difficulty from test_papers WHERE difficulty = 'Easy' OR difficulty = 'Hard';`
+//     pool.query(sql, (err, results) => {
+//         try{
+//             if(err){ throw err }
+//             if(results){ 
+//                 results.forEach(i => {
+//                     if(i.difficulty=='Easy'){ var code = 22 }
+//                     // if(i.difficulty=='Medium'){ var code = 23 }
+//                     if(i.difficulty=='Hard'){ var code = 24 }
+//                     const post ={ 'difficulty': code }
+//                     let sql = `UPDATE test_papers SET ? WHERE id = ${i.id}`;
+//                     pool.query(sql, post, async(err, results) => {
+//                         try{
+//                             if(err){ throw err }
+//                             console.log(i.id + ' is updated')
+//                         }catch(e){ func.logError(e); res.status(500); return; }
+//                     })                    
+//                 });
+//             }
+//         }catch(e){ func.logError(e); res.status(500); return; }
+//     })    
+// }))
+
+// router.post('/changeType', asyncMiddleware( async(req, res, next) => {
+//     let sql =   `SELECT id, type from test_papers;`
+//     pool.query(sql, (err, results) => {
+//         try{
+//             if(err){ throw err }
+//             if(results){ 
+//                 results.forEach(i => {
+//                     if(i.type=='subjective'){ var code = 26 }
+//                     if(i.type=='mcq'){ var code = 25 }
+//                     const post ={ 'type': code }
+//                     let sql = `UPDATE test_papers SET ? WHERE id = ${i.id}`;
+//                     pool.query(sql, post, async(err, results) => {
+//                         try{
+//                             if(err){ throw err }
+//                             console.log(i.id + ' is updated')
+//                         }catch(e){ func.logError(e); res.status(500); return; }
+//                     })                    
+//                 });
+//             }
+//         }catch(e){ func.logError(e); res.status(500); return; }
+//     })    
+// }))
+
+// router.post('/changeSubject', asyncMiddleware( async(req, res, next) => {
+//     let sql =   `SELECT id, class, subject from test_papers;`
+//     pool.query(sql, (err, results) => {
+//         try{
+//             if(err){ throw err }
+//             if(results){ 
+//                 results.forEach(i => {
+//                     if(i.class==20){ var code = 29 }
+//                     if(i.class==19){ var code = 28 }
+//                     const post ={ 'subject': code }
+//                     let sql = `UPDATE test_papers SET ? WHERE id = ${i.id}`;
+//                     pool.query(sql, post, async(err, results) => {
+//                         try{
+//                             if(err){ throw err }
+//                             console.log(i.id + ' is updated')
+//                         }catch(e){ func.logError(e); res.status(500); return; }
+//                     })                    
+//                 });
+//             }
+//         }catch(e){ func.logError(e); res.status(500); return; }
+//     })    
+// }))
+
+router.post('/changeTopic', asyncMiddleware( async(req, res, next) => {
+    // let sql =   `SELECT id, class, subject, topic from test_papers WHERE class= 20 AND subject = 29;`
+    let sql =   `SELECT id, class, subject, topic from test_papers WHERE class= 19 AND subject = 28;`
+    pool.query(sql, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ 
+                results.forEach(i => {
+                    if(i.topic=='electrostatics'){ var code = 39}
+                    if(i.topic=='Current electricity'){ var code = 40}
+                    if(i.topic=='Moving charges and magnetism'){ var code = 41}
+                    if(i.topic=='Electromagnetic waves'){ var code = 42}
+                    if(i.topic=='Modern Physics'){ var code = 43}
+                    if(i.topic=='The Special Theory of Relativity'){ var code = 44}
+                    if(i.topic=='mechanics'){ var code = 45}
+                    if(i.topic=='Electromagnetic Induction'){ var code = 46}
+                    if(i.topic=='Optics'){ var code = 47}
+
+                    const post ={ 'topic': code }
+                    let sql = `UPDATE test_papers SET ? WHERE id = ${i.id}`;
+                    pool.query(sql, post, async(err, results) => {
+                        try{
+                            if(err){ throw err }
+                            console.log(i.id + ' is updated')
+                        }catch(e){ func.logError(e); res.status(500); return; }
+                    })                    
+                });
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })    
+}))
+
+// Change DB
 
 
 

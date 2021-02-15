@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import { NULL } from 'mysql/lib/protocol/constants/types';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
@@ -70,9 +71,9 @@ export default {
       id: '',
       type: '',
       name: '',
-      tab1: '',
-      tab2: '',
-      tab3: '',
+      tab1: null,
+      tab2: null,
+      tab3: null,
       showAddForm: false,
       medium: false,
       filter: '',
@@ -114,10 +115,11 @@ export default {
       this.showAddForm = false;
     },
     typeSelected() {
-      this.name = '';
-      this.tab1 = '';
-      this.tab2 = '';
-      this.tab3 = '';
+      console.log('0000000000')
+      this.name = null;
+      this.tab1 = null;
+      this.tab2 = null;
+      this.tab3 = null;
     },
     classSelected() {
       const data={
@@ -141,16 +143,17 @@ export default {
         tab2: this.tab2,
         tab3: this.tab3,
       };
+      console.log('data', data)
       this.$store.dispatch('addBasic', data);
-      this.resetData();
+      // this.resetData();
     },
     resetData() {
-      this.id = '';
-      this.type = '';
-      this.name = '';
-      this.tab1 = '';
-      this.tab2 = '';
-      this.tab3 = '';
+      this.id = null;
+      this.type = null;
+      this.name = null;
+      this.tab1 = null;
+      this.tab2 = null;
+      this.tab3 = null;
       this.showAddForm = false;
       this.medium = false;
     },

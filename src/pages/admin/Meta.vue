@@ -29,7 +29,7 @@
         </q-card-section>
       </q-card>
     </q-dialog>
-    <q-table title="Meta Tags" :data="adminMetas" :columns="columns" row-key="id">
+    <q-table title="Meta Tags" :data="adminMetas" :columns="columns" row-key="id" class="my-sticky-header-table" :pagination.sync="pagination">
       <template v-slot:header="props"><q-tr :props="props"><q-th v-for="col in props.cols" :key="col.name" :props="props">{{ col.label }}</q-th></q-tr></template>
       <template v-slot:body="props">
         <q-tr :props="props">
@@ -79,10 +79,12 @@ export default {
           name: 'updated_at', label: 'Date', align: 'left', field: 'updated_at', sortable: true,
         },
       ],
+      pagination: { rowsPerPage: 30 },
     };
   },
   methods: {
     ...mapActions(['adminMetas']),
+    
     showForm() {
       this.showAddForm = true;
     },

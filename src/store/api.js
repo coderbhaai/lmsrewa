@@ -30,4 +30,10 @@ export default {
   adminInstitutes: `${url}/admin/adminInstitutes`,
   changeInstituteStatus: `${url}/admin/changeInstituteStatus`,
   questionOptions: `${url}/admin/questionOptions`,
+  adminQuestions: `${url}/admin/adminQuestions`,
+  addQuestion: `${url}/admin/addQuestion`,
+  getQuestion: `${url}/admin/getQuestion/`,
+  updateQuestionFilter: `${url}/admin/updateQuestionFilter/`,
+  updateQuestion: `${url}/admin/updateQuestion`,
+
 };

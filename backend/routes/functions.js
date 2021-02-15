@@ -11,12 +11,24 @@ const storage = './public/images/'
 
 function getInstitute(id) {
     return new Promise((resolve, reject) => {
-        let sql =   `SELECT id, name, email, status, updated_at from users WHERE id = ${id}`
+        let sql =   `SELECT id, name, email, status, updated_at from users WHERE id = '${id}'`
         pool.query(sql, (err, results) => {
             try{
                 if(err){ throw err }
                 if(results){ resolve(results[0] ) }
-            }catch(e){ logError(e); res.status(500); return; }
+            }catch(e){ logError(e); return; }
+        });
+    });
+}
+
+function getQuestion(id) {
+    return new Promise((resolve, reject) => {
+        let sql =   `SELECT id, board, classes, subject, topic, subtopic, question, options, answer, difficulty, type, marks, source, status, owner, updated_at from questionBank WHERE id = '${id}';`
+        pool.query(sql, (err, results) => {
+            try{
+                if(err){ throw err }
+                if(results){ resolve(results[0] ) }
+            }catch(e){ logError(e);return; }
         });
     });
 }
@@ -34,7 +46,7 @@ function blogMetaData(id) {
             try{
                 if(err){ throw err }
                 if(results){ resolve(results ) }
-            }catch(e){ logError(e); res.status(500); return; }
+            }catch(e){ logError(e); return; }
         });
     });
 }
@@ -136,4 +148,4 @@ function logError(e){
     printError(e)
 }
 
-module.exports = { printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute };
+module.exports = { printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion };

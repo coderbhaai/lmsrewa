@@ -76,9 +76,7 @@ export default {
       showAddForm: false,
       medium: false,
       filter: '',
-      pagination: {
-        rowsPerPage: 30 // current rows per page being displayed
-      },
+      pagination: { rowsPerPage: 30 },
       columns: [
         {
           name: 'id', label: 'Sl No.', align: 'left', field: 'Edit',

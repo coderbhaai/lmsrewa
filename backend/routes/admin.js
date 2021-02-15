@@ -545,5 +545,113 @@ router.get('/questionOptions',  asyncMiddleware( async(req, res) => {
     })
 }))
 
+router.get('/adminQuestions', asyncMiddleware( async(req, res) => {
+    let sql =   `SELECT a.id, a.board, a.classes, a.subject, a.topic, a.subtopic, a.question, a.options, a.answer, a.difficulty, a.type, a.marks, a.source, a.status, a.owner, a.updated_at, b.name as className, c.name as subjectName, d.name as topicName, e.name as subTopicName, f.name as difficultyName, g.name as typeName from questionBank as a
+    left join basics as b on b.id = a.classes left join basics as c on c.id = a.subject left join basics as d on d.id = a.topic left join basics as e on e.id = a.subtopic left join basics as f on f.id = a.difficulty left join basics as g on g.id = a.type;`
+    pool.query(sql, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ data: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/addQuestion', asyncMiddleware( async(req, res, next) => {
+    let post= {
+        'board':                    req.body.board,
+        'classes':                  req.body.classes,
+        'subject':                  req.body.subject,
+        'topic':                    req.body.topic,
+        'subtopic':                 req.body.subtopic,
+        'difficulty':               req.body.difficulty,
+        'type':                     req.body.type,
+        'marks':                    req.body.marks,
+        'source':                   req.body.source,
+        'status':                   req.body.status,
+        'owner':                    1,
+        'question':                 req.body.question,
+        'options':                  req.body.options,
+        'question':                 req.body.question,
+        "created_at":               time,
+        "updated_at":               time,
+    }
+    let sql = 'INSERT INTO questionbank SET ?'
+    pool.query(sql, post, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ 
+                const data = await func.getQuestion(results.insertId)
+                res.send({ success: true, data, message: 'Question added successfully' }); 
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.get('/getQuestion/:id', asyncMiddleware( async(req, res) => {
+    let sql =   `SELECT id, board, classes, subject, topic, subtopic, question, options, answer, difficulty, type, marks, source, status, owner from questionBank WHERE id = '${req.params.id}';`
+    pool.query(sql, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ data: results[0] }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.get('/updateQuestionFilter/:id', asyncMiddleware( async(req, res) => {
+    let sql =   `SELECT classes, subject, topic, subtopic from questionBank WHERE id = '${req.params.id}';`
+    pool.query(sql, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){
+                if(results[0]){
+                    let sql2 =   `SELECT id, type, name, tab1, tab2, tab3 from basics WHERE tab1 = '${results[0].classes}';`
+                    pool.query(sql2, (err2, results2) => {
+                        try{
+                            if(err2){ throw err2 }
+                            if(results2){ res.send({ success: true, data: results2, quest: results[0] }); }
+                        }catch(e){ func.logError(e); res.status(500); return; }
+                    })
+                }
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/updateQuestion', asyncMiddleware( async(req, res, next) => {
+    let post= {
+        'board':                    req.body.board,
+        'classes':                  req.body.classes,
+        'subject':                  req.body.subject,
+        'topic':                    req.body.topic,
+        'subtopic':                 req.body.subtopic,
+        'difficulty':               req.body.difficulty,
+        'type':                     req.body.type,
+        'marks':                    req.body.marks,
+        'source':                   req.body.source,
+        'status':                   req.body.status,
+        'owner':                    1,
+        'question':                 req.body.question,
+        'answer':                   req.body.answer,
+        'options':                  req.body.options,
+        'question':                 req.body.question,
+        "created_at":               time,
+        "updated_at":               time,
+    }
+    let sql = `UPDATE questionbank SET ? WHERE id = ${req.body.id}`;
+    pool.query(sql, post, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){
+                const data = await func.getQuestion(req.body.id)
+                res.send({ success: true, data, message: 'Question updated successfully' }); 
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+
+
+
+
 
 module.exports = router;

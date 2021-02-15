@@ -10,7 +10,7 @@
     "test": "echo \"No test specified\" && exit 0",
     "dev": "nodemon backend/server.js",
     "app": "quasar dev -m cordova -T android",
-    "soft": "quasar dev -m electron" 
+    "soft": "quasar dev -m electron"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",

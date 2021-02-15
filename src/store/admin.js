@@ -12,7 +12,6 @@ const state = {
   blogMeta: [],
   adminBlogs: [],
   blogMetaOptions: [],
-  // blogToEdit: [],
   adminVideos: [],
   adminMetas: [],
   adminInstitutes: [],
@@ -26,6 +25,7 @@ const state = {
   basicTopicFilter: [],
   basicSubTopicFilter : [],
   typeOptions: [],
+  adminQuestions: [],
 };
 
 const getters = {
@@ -39,7 +39,6 @@ const getters = {
   tagOptions: (state) => state.tagOptions,
   adminBlogs: (state) => state.adminBlogs,
   blogMetaOptions: (state) => state.blogMetaOptions,
-  // blogToEdit: (state) => state.blogToEdit,
   adminVideos: (state) => state.adminVideos,
   adminInstitutes: (state) => state.adminInstitutes,
   boardOptions : (state) => state.boardOptions,
@@ -52,6 +51,7 @@ const getters = {
   basicTopicFilter : (state) => state.basicTopicFilter,
   basicSubTopicFilter : (state) => state.basicSubTopicFilter,
   typeOptions : (state) => state.typeOptions,
+  adminQuestions : (state) => state.adminQuestions,
 };
 
 const actions = {
@@ -95,12 +95,6 @@ const actions = {
     }
     message(res.data.message);
   },
-  // async getBlog({ commit }, form) {
-  //   const res = await axios.get(api.getBlog + form.id, form);
-  //   if (res.data.success) {
-  //     commit('BLOGTOEDIT', res.data.data);
-  //   }
-  // },
   async updateBlog({ commit }, form) {
     const res = await axios.post(api.updateBlog, form);
     if (res.data.success) {
@@ -151,6 +145,28 @@ const actions = {
   async basicClassSelected({ commit }, form) { commit('BASICCLASSSELECTED', form); },
   async basicSubjectSelected({ commit }, form) { commit('BASICSUBJECTSELECTED', form); },
   async basicTopicSelected({ commit }, form) { commit('BASICTOPICSELECTED', form); },
+
+  async adminQuestions({ commit }) { const res = await axios.get(api.adminQuestions); commit('ADMINQUESTIONS', res.data.data); },
+  async addQuestion({ commit }, form) {
+    const res = await axios.post(api.addQuestion, form);
+    message(res.data.message);
+    if (res.data.success) {
+      commit('ADDQUESTION', res.data.data);
+      this.$router.push({ name: 'QuestionBank' });
+    }
+  },
+  async updateQuestionFilter({ commit }, form) {
+    const res = await axios.get(api.updateQuestionFilter+ form.id);
+    if (res.data.success) { commit('UPDATEQUESTIONFILTER', res.data); }
+  },
+  async updateQuestion({ commit }, form) {
+    const res = await axios.post(api.updateQuestion, form);
+    message(res.data.message);
+    if (res.data.success) {
+      commit('UPDATEQUESTION', res.data.data);
+      this.$router.push({ name: 'QuestionBank' });
+    }
+  },
 };
 
 const mutations = {
@@ -204,7 +220,6 @@ const mutations = {
     state.tagOptions = data.tagOptions;
   },
   ADDBLOG: (state, data) => state.adminBlogs.unshift(data),
-  // BLOGTOEDIT: (state, data) => { state.blogToEdit = data; },
   UPDATEBLOG: (state, data) => {
     const index = state.adminBlogs.findIndex((i) => i.id === data.id);
     if (index !== -1) {
@@ -231,6 +246,19 @@ const mutations = {
   },
   BASICTOPICSELECTED: (state, data) => {
     state.basicSubTopicFilter = state.subtopicOptions.filter(i=>parseInt(i.tab1) == data.classSelected && parseInt(i.tab2) == data.subjectSelected  && parseInt(i.tab3) == data.topicSelected ); 
+  },
+  ADMINQUESTIONS: (state, data) => { state.adminQuestions = data; },
+  ADDQUESTION: (state, data) => { state.adminQuestions.unshift(data) },
+  UPDATEQUESTIONFILTER: (state, data) => {
+    state.basicSubjectFilter = data.data.filter(i=>i.type == 'Subject' && i.tab1 == data.quest.classes);
+    state.basicTopicFilter = data.data.filter(i=>i.type == 'Topic' && i.tab1 == data.quest.classes && i.tab2 == data.quest.subject );
+    state.basicSubTopicFilter = data.data.filter(i=>i.type == 'SubTopic' && i.tab1 == data.quest.classes && i.tab2 == data.quest.subject && i.tab3 == data.quest.topic );    
+  },
+  UPDATEQUESTION: (state, data) => {
+    const index = state.adminQuestions.findIndex((i) => i.id === data.id);
+    if (index !== -1) {
+      state.adminQuestions.splice(index, 1, data);
+    }
   },
 };
 

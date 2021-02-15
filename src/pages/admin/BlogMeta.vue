@@ -27,7 +27,7 @@
         </q-card-section>
       </q-card>
     </q-dialog>
-    <q-table title="Blog Meta" :data="blogMeta" :columns="columns" row-key="id">
+    <q-table title="Blog Meta" :data="blogMeta" :columns="columns" row-key="id" class="my-sticky-header-table" :pagination.sync="pagination">
       <template v-slot:header="props"><q-tr :props="props"><q-th v-for="col in props.cols" :key="col.name" :props="props">{{ col.label }}</q-th></q-tr></template>
       <template v-slot:body="props">
         <q-tr :props="props">
@@ -52,6 +52,7 @@ export default {
       url: '',
       medium: false,
       showAddForm: false,
+      pagination: { rowsPerPage: 30 },
       columns: [
         {
           name: 'name', label: 'Name', align: 'left', field: 'name', sortable: true,

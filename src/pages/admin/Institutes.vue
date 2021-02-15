@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-md">
-    <q-table title="Institutes" :data="adminInstitutes" :columns="columns" row-key="id">
+    <q-table title="Institutes" :data="adminInstitutes" :columns="columns" row-key="id" class="my-sticky-header-table" :pagination.sync="pagination">
       <template v-slot:header="props"><q-tr :props="props"><q-th v-for="col in props.cols" :key="col.name" :props="props">{{ col.label }}</q-th></q-tr></template>
       <template v-slot:body="props">
         <q-tr :props="props">
@@ -22,19 +22,12 @@ import { mapGetters, mapActions } from 'vuex';
 export default {
   data() {
     return {
+      pagination: { rowsPerPage: 30 },
       columns: [
-        {
-          name: 'id', label: 'Sl No.', align: 'left', field: 'Edit',
-        },
-        {
-          name: 'name', label: 'Name', align: 'left', field: 'name', sortable: true,
-        },
-        {
-          name: 'status', label: 'Status', align: 'left', field: 'status', sortable: true,
-        },
-        {
-          name: 'updated_at', label: 'Date', align: 'left', field: 'updated_at', sortable: true,
-        },
+        { name: 'id', label: 'Sl No.', align: 'left', field: 'Edit', },
+        { name: 'name', label: 'Name', align: 'left', field: 'name', sortable: true, },
+        { name: 'status', label: 'Status', align: 'left', field: 'status', sortable: true, },
+        { name: 'updated_at', label: 'Date', align: 'left', field: 'updated_at', sortable: true, },
       ],
     };
   },

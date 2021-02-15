@@ -1,6 +1,7 @@
 <template>
   <div class="q-pa-md">
-    <q-table title="Blogs" :data="adminBlogs" :columns="columns" row-key="id">
+    <a href="/admin/addBlog"><q-btn class="q-mb-lg" rounded glossy color="primary">Add Blog</q-btn></a>
+    <q-table title="Blogs" :data="adminBlogs" :columns="columns" row-key="id" class="my-sticky-header-table" :pagination.sync="pagination">
       <template v-slot:header="props">
         <q-tr :props="props">
           <q-th v-for="col in props.cols" :key="col.name" :props="props">{{ col.label }}</q-th>
@@ -27,6 +28,7 @@ export default {
   data() {
     return {
       name: 'adminBlogs',
+      pagination: { rowsPerPage: 30 },
       columns: [
         {
           name: 'id', label: 'Sl No.', align: 'left', field: 'Edit',

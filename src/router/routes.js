@@ -151,7 +151,7 @@ const routes = [
   {
     path: '/admin/questionBank',
     name: 'QuestionBank',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => { import('layouts/MainLayout.vue') },
     children: [
       { path: '/admin/questionBank', component: () => import('pages/admin/questionBank.vue') },
     ],

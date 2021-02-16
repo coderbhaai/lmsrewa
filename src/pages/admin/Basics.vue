@@ -122,12 +122,15 @@ export default {
       this.tab3 = null;
     },
     classSelected() {
+      this.tab2 = null;
+      this.tab3 = null;
       const data={
         classSelected: this.tab1
       }
       this.$store.dispatch('basicClassSelected', data);
     },
     subjectSelected() {
+      this.tab3 = null;
       const data={
         classSelected: this.tab1,
         subjectSelected: this.tab2

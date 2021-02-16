@@ -54,7 +54,8 @@ router.post('/addBasic', asyncMiddleware( async(req, res) => {
         try{
             if(err){ throw err }
             if(results){
-                let sql = `SELECT id, type, name, tab1, tab2, tab3, updated_at FROM basics ORDER BY id DESC LIMIT 1`
+                let sql = `SELECT a.id, a.type, a.name, a.tab1, a.tab2, a.tab3, a.updated_at, b.name as tab1Name, c.name as tab2Name, d.name as tab3Name FROM basics as a 
+                            left join basics as b on b.id = a.tab1 left join basics as c on c.id = a.tab2 left join basics as d on d.id = a.tab3 ORDER BY a.id DESC LIMIT 1;`
                 pool.query(sql, (err2, results2) => {
                     try{
                         if(err2){ throw err2 }
@@ -82,7 +83,8 @@ router.post('/updateBasic', asyncMiddleware( async(req, res) => {
         try{
             if(err){ throw err }
             if(results){
-                let sql = `SELECT id, type, name, tab1, tab2, tab3, updated_at FROM basics WHERE id = ${req.body.id}`
+                let sql = `SELECT a.id, a.type, a.name, a.tab1, a.tab2, a.tab3, a.updated_at, b.name as tab1Name, c.name as tab2Name, d.name as tab3Name FROM basics as a 
+                            left join basics as b on b.id = a.tab1 left join basics as c on c.id = a.tab2 left join basics as d on d.id = a.tab3 WHERE a.id = ${req.body.id};`
                 pool.query(sql, (err2, results2) => {
                     try{
                         if(err2){ throw err2 }
@@ -655,21 +657,20 @@ router.post('/updateQuestion', asyncMiddleware( async(req, res, next) => {
 
 // Change DB
 // router.post('/changeClass', asyncMiddleware( async(req, res, next) => {
-//     var xx = 'XII'
-//     let sql =   `SELECT id, class from test_papers WHERE class = '${xx}';`
+//     let sql =   `SELECT id, class from test_papers;`
 //     pool.query(sql, (err, results) => {
 //         try{
 //             if(err){ throw err }
 //             if(results){ 
-//                 results.forEach(i => {
-//                     const post ={
-//                         'class': 19
-//                     }
+//                 results.forEach((i, index) => {
+//                     if(i.class=='XII'){ var code = 19 }
+//                     if(i.class=='JEE'){ var code = 20 }
+//                     const post ={ 'class': code }
 //                     let sql = `UPDATE test_papers SET ? WHERE id = ${i.id}`;
 //                     pool.query(sql, post, async(err, results) => {
 //                         try{
 //                             if(err){ throw err }
-//                             console.log(i.id + ' is updated')
+//                             console.log(index + ' is updated')
 //                         }catch(e){ func.logError(e); res.status(500); return; }
 //                     })                    
 //                 });
@@ -679,22 +680,21 @@ router.post('/updateQuestion', asyncMiddleware( async(req, res, next) => {
 // }))
 
 // router.post('/changeDifficulty', asyncMiddleware( async(req, res, next) => {
-//     // var xx = 'Easy'
-//     let sql =   `SELECT id, difficulty from test_papers WHERE difficulty = 'Easy' OR difficulty = 'Hard';`
+//     let sql =   `SELECT id, difficulty from test_papers;`
 //     pool.query(sql, (err, results) => {
 //         try{
 //             if(err){ throw err }
 //             if(results){ 
-//                 results.forEach(i => {
+//                 results.forEach((i, index) => {
 //                     if(i.difficulty=='Easy'){ var code = 22 }
-//                     // if(i.difficulty=='Medium'){ var code = 23 }
+//                     if(i.difficulty=='Medium'){ var code = 23 }
 //                     if(i.difficulty=='Hard'){ var code = 24 }
 //                     const post ={ 'difficulty': code }
 //                     let sql = `UPDATE test_papers SET ? WHERE id = ${i.id}`;
 //                     pool.query(sql, post, async(err, results) => {
 //                         try{
 //                             if(err){ throw err }
-//                             console.log(i.id + ' is updated')
+//                             console.log(index + ' is updated')
 //                         }catch(e){ func.logError(e); res.status(500); return; }
 //                     })                    
 //                 });
@@ -710,8 +710,8 @@ router.post('/updateQuestion', asyncMiddleware( async(req, res, next) => {
 //             if(err){ throw err }
 //             if(results){ 
 //                 results.forEach(i => {
-//                     if(i.type=='subjective'){ var code = 26 }
 //                     if(i.type=='mcq'){ var code = 25 }
+//                     if(i.type=='subjective'){ var code = 26 }
 //                     const post ={ 'type': code }
 //                     let sql = `UPDATE test_papers SET ? WHERE id = ${i.id}`;
 //                     pool.query(sql, post, async(err, results) => {
@@ -732,15 +732,15 @@ router.post('/updateQuestion', asyncMiddleware( async(req, res, next) => {
 //         try{
 //             if(err){ throw err }
 //             if(results){ 
-//                 results.forEach(i => {
-//                     if(i.class==20){ var code = 29 }
+//                 results.forEach((i, index) => {
 //                     if(i.class==19){ var code = 28 }
+//                     if(i.class==20){ var code = 29 }
 //                     const post ={ 'subject': code }
 //                     let sql = `UPDATE test_papers SET ? WHERE id = ${i.id}`;
 //                     pool.query(sql, post, async(err, results) => {
 //                         try{
 //                             if(err){ throw err }
-//                             console.log(i.id + ' is updated')
+//                             console.log(index + ' is updated')
 //                         }catch(e){ func.logError(e); res.status(500); return; }
 //                     })                    
 //                 });
@@ -749,37 +749,224 @@ router.post('/updateQuestion', asyncMiddleware( async(req, res, next) => {
 //     })    
 // }))
 
-router.post('/changeTopic', asyncMiddleware( async(req, res, next) => {
-    // let sql =   `SELECT id, class, subject, topic from test_papers WHERE class= 20 AND subject = 29;`
-    let sql =   `SELECT id, class, subject, topic from test_papers WHERE class= 19 AND subject = 28;`
-    pool.query(sql, (err, results) => {
-        try{
-            if(err){ throw err }
-            if(results){ 
-                results.forEach(i => {
-                    if(i.topic=='electrostatics'){ var code = 39}
-                    if(i.topic=='Current electricity'){ var code = 40}
-                    if(i.topic=='Moving charges and magnetism'){ var code = 41}
-                    if(i.topic=='Electromagnetic waves'){ var code = 42}
-                    if(i.topic=='Modern Physics'){ var code = 43}
-                    if(i.topic=='The Special Theory of Relativity'){ var code = 44}
-                    if(i.topic=='mechanics'){ var code = 45}
-                    if(i.topic=='Electromagnetic Induction'){ var code = 46}
-                    if(i.topic=='Optics'){ var code = 47}
+// router.post('/changeTopic', asyncMiddleware( async(req, res, next) => {
+//     let sql =   `SELECT id, class, subject, topic from test_papers`
+//     pool.query(sql, (err, results) => {
+//         try{
+//             if(err){ throw err }
+//             if(results){ 
+//                 results.forEach((i, index) => {
+//                     if(i.class==20 && i.subject==29 && i.topic== 'electrostatics'){ var code=30 }
+//                     if(i.class==20 && i.subject==29 && i.topic== 'Current electricity'){ var code=31 }
+//                     if(i.class==20 && i.subject==29 && i.topic== 'Moving charges and magnetism'){ var code=32 }
+//                     if(i.class==20 && i.subject==29 && i.topic== 'Electromagnetic waves'){ var code=33 }
+//                     if(i.class==20 && i.subject==29 && i.topic== 'Modern Physics'){ var code=34 }
+//                     if(i.class==20 && i.subject==29 && i.topic== 'The Special Theory of Relativity'){ var code=35 }
+//                     if(i.class==20 && i.subject==29 && i.topic== 'mechanics'){ var code=36 }
+//                     if(i.class==20 && i.subject==29 && i.topic== 'Electromagnetic Induction'){ var code=37 }
+//                     if(i.class==20 && i.subject==29 && i.topic== 'Optics'){ var code=38 }
+//                     if(i.class==19 && i.subject==28 && i.topic== 'electrostatics'){ var code=39 }
+//                     if(i.class==19 && i.subject==28 && i.topic== 'Current electricity'){ var code=40 }
+//                     if(i.class==19 && i.subject==28 && i.topic== 'Moving charges and magnetism'){ var code=41 }
+//                     if(i.class==19 && i.subject==28 && i.topic== 'Electromagnetic waves'){ var code=42 }
+//                     if(i.class==19 && i.subject==28 && i.topic== 'Modern Physics'){ var code=43 }
+//                     if(i.class==19 && i.subject==28 && i.topic== 'The Special Theory of Relativity'){ var code=44 }
+//                     if(i.class==19 && i.subject==28 && i.topic== 'mechanics'){ var code=45 }
+//                     if(i.class==19 && i.subject==28 && i.topic== 'Electromagnetic Induction'){ var code=46 }
+//                     if(i.class==19 && i.subject==28 && i.topic== 'Optics'){ var code=47 }
+//                     if(code){
+//                         const post ={ 'topic': code }
+//                         let sql = `UPDATE test_papers SET ? WHERE id = ${i.id}`;
+//                         pool.query(sql, post, async(err, results) => {
+//                             try{
+//                                 if(err){ throw err }
+//                                 console.log(index + ' is updated')
+//                             }catch(e){ func.logError(e); res.status(500); return; }
+//                         })
+//                     }else{
+//                         console.log('No Match')
+//                     }
+//                 });
+//             }
+//         }catch(e){ func.logError(e); res.status(500); return; }
+//     })    
+// }))
 
-                    const post ={ 'topic': code }
-                    let sql = `UPDATE test_papers SET ? WHERE id = ${i.id}`;
-                    pool.query(sql, post, async(err, results) => {
-                        try{
-                            if(err){ throw err }
-                            console.log(i.id + ' is updated')
-                        }catch(e){ func.logError(e); res.status(500); return; }
-                    })                    
-                });
-            }
-        }catch(e){ func.logError(e); res.status(500); return; }
-    })    
-}))
+// router.post('/changeStatus', asyncMiddleware( async(req, res, next) => {
+//     let sql =   `SELECT id, status from test_papers;`
+//     pool.query(sql, (err, results) => {
+//         try{
+//             if(err){ throw err }
+//             if(results){ 
+//                 results.forEach((i,index) => {
+//                     const post ={ 'status': 1 }
+//                     let sql = `UPDATE test_papers SET ? WHERE id = ${i.id}`;
+//                     pool.query(sql, post, async(err, results) => {
+//                         try{
+//                             if(err){ throw err }
+//                             console.log(index + ' rows updated')
+//                         }catch(e){ func.logError(e); res.status(500); return; }
+//                     })                    
+//                 });
+//             }
+//         }catch(e){ func.logError(e); res.status(500); return; }
+//     })    
+// }))
+
+// router.post('/changeSubTopic', asyncMiddleware( async(req, res, next) => {
+//     let sql =   `SELECT id, class, subject, topic, subTopic from test_papers;`
+//     pool.query(sql, (err, results) => {
+//         try{
+//             if(err){ throw err }
+//             if(results){ 
+//                 results.forEach((i,index) => {
+//                     if(i.class==20 && i.subject==29 && i.topic==30 && i.subTopic=="Electric  Field and Potential"){ var code =	48 }
+//                     if(i.class==20 && i.subject==29 && i.topic==30 && i.subTopic=="Gauss law"){ var code =	49 }
+//                     if(i.class==20 && i.subject==29 && i.topic==30 && i.subTopic=="Capacitor"){ var code =	50 }
+//                     if(i.class==20 && i.subject==29 && i.topic==31 && i.subTopic=="Electric Current in Conductors"){ var code =	58 }
+//                     if(i.class==20 && i.subject==29 && i.topic==32 && i.subTopic=="Magnetic Field"){ var code =	68 }
+//                     if(i.class==20 && i.subject==29 && i.topic==32 && i.subTopic=="Magnetic Field due to a Current"){ var code =	69 }
+//                     if(i.class==20 && i.subject==29 && i.topic==31 && i.subTopic=="Alternating Current"){ var code =	59 }
+//                     if(i.class==20 && i.subject==29 && i.topic==33 && i.subTopic=="Electromagnetic waves"){ var code =	75 }
+//                     if(i.class==20 && i.subject==29 && i.topic==34 && i.subTopic=="Electric Current Through Gases"){ var code =	76 }
+//                     if(i.class==20 && i.subject==29 && i.topic==34 && i.subTopic=="Photoelectric Effect and Wave-Particle Duality"){ var code =	77 }
+//                     if(i.class==20 && i.subject==29 && i.topic==34 && i.subTopic=="Bhor's Model and Physics of the Atom"){ var code =	78 }
+//                     if(i.class==20 && i.subject==29 && i.topic==34 && i.subTopic=="X-Rays"){ var code =	79 }
+//                     if(i.class==20 && i.subject==29 && i.topic==34 && i.subTopic=="Semiconductors and Semiconductor Devices"){ var code =	80 }
+//                     if(i.class==20 && i.subject==29 && i.topic==34 && i.subTopic=="The Nucleus"){ var code =	81 }
+//                     if(i.class==20 && i.subject==29 && i.topic==35 && i.subTopic=="The Special Theory of Relativity"){ var code =	82 }
+//                     if(i.class==20 && i.subject==29 && i.topic==36 && i.subTopic=="Rest and Motion: Kinematics"){ var code =	83 }
+//                     if(i.class==20 && i.subject==29 && i.topic==36 && i.subTopic=="Laws of motion"){ var code =	84 }
+//                     if(i.class==20 && i.subject==29 && i.topic==31 && i.subTopic=="Thermal and Chemical Effects of Electric Current"){ var code =	60 }
+//                     if(i.class==20 && i.subject==29 && i.topic==32 && i.subTopic=="Permanent Magnets"){ var code =	70 }
+//                     if(i.class==20 && i.subject==29 && i.topic==32 && i.subTopic=="Magnetic Properties of Matter"){ var code =	71 }
+//                     if(i.class==20 && i.subject==29 && i.topic==36 && i.subTopic=="FRICTION"){ var code =	85 }
+//                     if(i.class==20 && i.subject==29 && i.topic==36 && i.subTopic=="CIRCULAR MOTION"){ var code =	86 }
+//                     if(i.class==20 && i.subject==29 && i.topic==38 && i.subTopic=="Light Waves"){ var code =	99 }
+//                     if(i.class==20 && i.subject==29 && i.topic==38 && i.subTopic=="Geometrical Optics"){ var code =	100 }
+//                     if(i.class==20 && i.subject==29 && i.topic==36 && i.subTopic=="Work and Energy"){ var code =	87 }
+//                     if(i.class==20 && i.subject==29 && i.topic==38 && i.subTopic=="Optical Instruments"){ var code =	101 }
+//                     if(i.class==20 && i.subject==29 && i.topic==38 && i.subTopic=="Dispersion and Spectra"){ var code =	102 }
+//                     if(i.class==20 && i.subject==29 && i.topic==38 && i.subTopic=="Speed of Light"){ var code =	103 }
+//                     if(i.class==20 && i.subject==29 && i.topic==38 && i.subTopic=="Photometry"){ var code =	104 }
+//                     if(i.class==20 && i.subject==29 && i.topic==36 && i.subTopic=="Center of Mass Linear Momentum, Collision"){ var code =	88 }
+//                     if(i.class==20 && i.subject==29 && i.topic==36 && i.subTopic=="ROTATIONAL MECHANICS"){ var code =	89 }
+//                     if(i.class==20 && i.subject==29 && i.topic==36 && i.subTopic=="Introduction to Physics"){ var code =	90 }
+//                     if(i.class==20 && i.subject==29 && i.topic==36 && i.subTopic=="Gravitation"){ var code =	91 }
+//                     if(i.class==20 && i.subject==29 && i.topic==36 && i.subTopic=="Simple Harmonic Motion"){ var code =	92 }
+//                     if(i.class==20 && i.subject==29 && i.topic==36 && i.subTopic=="Fluid Mechanics"){ var code =	93 }
+//                     if(i.class==20 && i.subject==29 && i.topic==30 && i.subTopic=="Charge and Coulomb’s Law"){ var code =	52 }
+//                     if(i.class==20 && i.subject==29 && i.topic==36 && i.subTopic=="Some Mechanical property of Matter"){ var code =	94 }
+//                     if(i.class==20 && i.subject==29 && i.topic==30 && i.subTopic=="Electric Dipole"){ var code =	53 }
+//                     if(i.class==20 && i.subject==29 && i.topic==30 && i.subTopic=="Grouping of Capacitors"){ var code =	54 }
+//                     if(i.class==20 && i.subject==29 && i.topic==30 && i.subTopic=="Critical Thinking Questions"){ var code =	55 }
+//                     if(i.class==20 && i.subject==29 && i.topic==30 && i.subTopic=="Graphical Questions"){ var code =	56 }
+//                     if(i.class==20 && i.subject==29 && i.topic==30 && i.subTopic=="Assertion & Reason"){ var code =	57 }
+//                     if(i.class==20 && i.subject==29 && i.topic==36 && i.subTopic=="Wave Motion Waves on a Strin"){ var code =	95 }
+//                     if(i.class==20 && i.subject==29 && i.topic==36 && i.subTopic=="Sound Waves"){ var code =	96 }
+//                     if(i.class==20 && i.subject==29 && i.topic==31 && i.subTopic=="Grouping of Resistances"){ var code =	61 }
+//                     if(i.class==20 && i.subject==29 && i.topic==31 && i.subTopic=="Kirchhoff's Law, Cells"){ var code =	62 }
+//                     if(i.class==20 && i.subject==29 && i.topic==31 && i.subTopic=="Different Measuring Instruments"){ var code =	63 }
+//                     if(i.class==20 && i.subject==29 && i.topic==31 && i.subTopic=="Critical Thinking Objective Question"){ var code =	64 }
+//                     if(i.class==20 && i.subject==29 && i.topic==31 && i.subTopic=="Thermo - Electricity"){ var code =	67 }
+//                     if(i.class==20 && i.subject==29 && i.topic==32 && i.subTopic=="Motion of Charged Particle In Magnetic Field"){ var code =	72 }
+//                     if(i.class==20 && i.subject==29 && i.topic==32 && i.subTopic=="Force and Torque on a Current Carrying Conductor"){ var code =	73 }
+//                     if(i.class==20 && i.subject==29 && i.topic==32 && i.subTopic=="Critical Thinking"){ var code =	74 }
+//                     if(i.class==19 && i.subject==28 && i.topic==39 && i.subTopic=="Electric  Field and Potential"){ var code =	105 }
+//                     if(i.class==19 && i.subject==28 && i.topic==39 && i.subTopic=="Gauss law"){ var code =	106 }
+//                     if(i.class==19 && i.subject==28 && i.topic==39 && i.subTopic=="Capacitor"){ var code =	107 }
+//                     if(i.class==19 && i.subject==28 && i.topic==40 && i.subTopic=="Electric Current in Conductors"){ var code =	108 }
+//                     if(i.class==19 && i.subject==28 && i.topic==40 && i.subTopic=="Thermal and Chemical Effects of Electric Current"){ var code =	109 }
+//                     if(i.class==19 && i.subject==28 && i.topic==41 && i.subTopic=="Magnetic Field"){ var code =	110 }
+//                     if(i.class==19 && i.subject==28 && i.topic==41 && i.subTopic=="Magnetic Field due to a Current"){ var code =	111 }
+//                     if(i.class==19 && i.subject==28 && i.topic==41 && i.subTopic=="Permanent Magnets"){ var code =	112 }
+//                     if(i.class==19 && i.subject==28 && i.topic==41 && i.subTopic=="Magnetic Properties of Matter"){ var code =	113 }
+//                     if(i.class==19 && i.subject==28 && i.topic==46 && i.subTopic=="Electromagnetic Induction"){ var code =	114 }
+//                     if(i.class==19 && i.subject==28 && i.topic==40 && i.subTopic=="Alternating Current"){ var code =	115 }
+//                     if(i.class==19 && i.subject==28 && i.topic==42 && i.subTopic=="Electromagnetic waves"){ var code =	116 }
+//                     if(i.class==19 && i.subject==28 && i.topic==43 && i.subTopic=="Electric Current Through Gases"){ var code =	117 }
+//                     if(i.class==19 && i.subject==28 && i.topic==43 && i.subTopic=="Photoelectric Effect and Wave-Particle Duality"){ var code =	118 }
+//                     if(i.class==19 && i.subject==28 && i.topic==43 && i.subTopic=="Bhor's Model and Physics of the Atom"){ var code =	119 }
+//                     if(i.class==19 && i.subject==28 && i.topic==43 && i.subTopic=="X-Rays"){ var code =	120 }
+//                     if(i.class==19 && i.subject==28 && i.topic==43 && i.subTopic=="Semiconductors and Semiconductor Devices"){ var code =	121 }
+//                     if(i.class==19 && i.subject==28 && i.topic==43 && i.subTopic=="The Nucleus"){ var code =	122 }
+//                     if(i.class==19 && i.subject==28 && i.topic==44 && i.subTopic=="The Special Theory of Relativity"){ var code =	123 }
+//                     if(i.class==19 && i.subject==28 && i.topic==47 && i.subTopic=="Light Waves"){ var code =	124 }
+//                     if(i.class==19 && i.subject==28 && i.topic==47 && i.subTopic=="Geometrical Optics"){ var code =	125 }
+//                     if(i.class==19 && i.subject==28 && i.topic==47 && i.subTopic=="Optical Instruments"){ var code =	126 }
+//                     if(i.class==19 && i.subject==28 && i.topic==47 && i.subTopic=="Dispersion and Spectra"){ var code =	127 }
+//                     if(i.class==19 && i.subject==28 && i.topic==47 && i.subTopic=="Speed of Light"){ var code =	128 }
+//                     if(i.class==19 && i.subject==28 && i.topic==47 && i.subTopic=="Photometry"){ var code =	129 }
+//                     if(code){
+//                         const post ={ 'subTopic': code }
+//                         let sql = `UPDATE test_papers SET ? WHERE id = ${i.id}`;
+//                         pool.query(sql, post, async(err, results) => {
+//                             try{
+//                                 if(err){ throw err }
+//                                 console.log(index + ' - '+  code + ' rows updated')
+//                             }catch(e){ func.logError(e); res.status(500); return; }
+//                         })
+//                     }else{
+//                         console.log('No Match')
+//                     }
+//                 });
+//             }
+//         }catch(e){ func.logError(e); res.status(500); return; }
+//     })    
+// }))
+
+
+// router.post('/changeSubTopic', asyncMiddleware( async(req, res, next) => {
+//     let sql =   `SELECT id, class, subject, topic, subTopic from test_papers WHERE subTopic LIKE '%Electric%';`
+//     pool.query(sql, (err, results) => {
+//         try{
+//             if(err){ throw err }
+//             if(results){ 
+//                 results.forEach((i,index) => {
+//                     if(i.class==20 && i.subject==29 && i.topic==30){ var code =	48 }
+//                     if(i.class==19 && i.subject==28 && i.topic==39){ var code =	105 }
+//                     if(code){
+//                         const post ={ 'subTopic': code }
+//                         let sql = `UPDATE test_papers SET ? WHERE id = ${i.id}`;
+//                         pool.query(sql, post, async(err, results) => {
+//                             try{
+//                                 if(err){ throw err }
+//                                 console.log(index + ' - '+  code + ' rows updated')
+//                             }catch(e){ func.logError(e); res.status(500); return; }
+//                         })
+//                     }else{
+//                         console.log('No Match')
+//                     }
+//                 });
+//             }
+//         }catch(e){ func.logError(e); res.status(500); return; }
+//     })    
+// }))
+
+
+// router.post('/changeBoard', asyncMiddleware( async(req, res, next) => {
+//     let sql =   `SELECT id from test_papers;`
+//     pool.query(sql, (err, results) => {
+//         try{
+//             if(err){ throw err }
+//             if(results){ 
+//                 results.forEach((i,index) => {
+//                         const post ={ 'board': '[9,10,11,12]' }
+//                         let sql = `UPDATE test_papers SET ? WHERE id = ${i.id}`;
+//                         pool.query(sql, post, async(err, results) => {
+//                             try{
+//                                 if(err){ throw err }
+//                                 console.log(index + ' -  rows updated')
+//                             }catch(e){ func.logError(e); res.status(500); return; }
+//                         })
+//                 });
+//             }
+//         }catch(e){ func.logError(e); res.status(500); return; }
+//     })    
+// }))
+
+
+
 
 // Change DB
 

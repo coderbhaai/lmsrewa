@@ -163,9 +163,11 @@ export default {
         data['answer'] = this.answer,
         data['options'] = JSON.stringify(this.options)
       }
-      this.$store.dispatch('addQuestion', data);
+      
+      // this.$store.dispatch('addQuestion', data);
     },
     classSelected() {
+      console.log('JSON.stringify(this.board)', JSON.stringify(this.board))
       this.subject = ''
       this.topic = ''
       this.subtopic = ''

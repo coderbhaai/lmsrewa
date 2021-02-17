@@ -48,6 +48,14 @@ const routes = [
       { path: '/video-tutorials/:id', component: () => import('pages/index/videos.vue') },
     ],
   },
+  {
+    path: '/online-test-series',
+    name: 'onlineTestSeries',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/online-test-series', component: () => import('pages/index/onlineTestSeries.vue') },
+    ],
+  },
   // Admin Routes
   {
     path: '/admin/addBlog',
@@ -157,7 +165,15 @@ const routes = [
     ],
     meta: { auth: true, ss: true },
   },
-
+  {
+    path: '/admin/institutes',
+    name: 'institutes',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/admin/institutes', component: () => import('pages/admin/institutes.vue') },
+    ],
+    meta: { auth: true, ss: true },
+  },
   // Admin Routes
   {
     path: '*',

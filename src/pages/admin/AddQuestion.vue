@@ -156,18 +156,15 @@ export default {
         'owner': owner,
         'question': this.qeditor,
         'question': this.qeditor,
-        // 'answer': this.answer,
-        // 'options': JSON.stringify(this.options),
       }
       if(this.type==33){
         data['answer'] = this.answer,
         data['options'] = JSON.stringify(this.options)
       }
       
-      // this.$store.dispatch('addQuestion', data);
+      this.$store.dispatch('addQuestion', data);
     },
     classSelected() {
-      console.log('JSON.stringify(this.board)', JSON.stringify(this.board))
       this.subject = ''
       this.topic = ''
       this.subtopic = ''

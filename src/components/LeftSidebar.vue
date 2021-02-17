@@ -6,20 +6,20 @@
                 <q-item-section avatar><q-icon name="schedule" /></q-item-section>
                 <q-item-section><q-item-label>Basics</q-item-label></q-item-section>
               </q-item>
-                <q-expansion-item expand-separator icon="mail" label="Blogs" caption="Add &amp; Update Blogs" default-closed >
-                    <q-item clickable tag="a" href="/admin/addBlog">
-                        <q-item-section avatar><q-icon name="schedule" /></q-item-section>
-                        <q-item-section><q-item-label>Add Blog</q-item-label></q-item-section>
-                    </q-item>
-                    <q-item clickable tag="a" href="/admin/blogs">
-                        <q-item-section avatar><q-icon name="schedule" /></q-item-section>
-                        <q-item-section><q-item-label>Blog Lists</q-item-label></q-item-section>
-                    </q-item>
-                    <q-item clickable tag="a" href="/admin/blogMeta">
-                        <q-item-section avatar><q-icon name="schedule" /></q-item-section>
-                        <q-item-section><q-item-label>Blog Meta</q-item-label></q-item-section>
-                    </q-item>
-                </q-expansion-item>
+              <q-expansion-item expand-separator icon="mail" label="Blogs" caption="Add &amp; Update Blogs" default-closed >
+                  <q-item clickable tag="a" href="/admin/addBlog">
+                      <q-item-section avatar><q-icon name="schedule" /></q-item-section>
+                      <q-item-section><q-item-label>Add Blog</q-item-label></q-item-section>
+                  </q-item>
+                  <q-item clickable tag="a" href="/admin/blogs">
+                      <q-item-section avatar><q-icon name="schedule" /></q-item-section>
+                      <q-item-section><q-item-label>Blog Lists</q-item-label></q-item-section>
+                  </q-item>
+                  <q-item clickable tag="a" href="/admin/blogMeta">
+                      <q-item-section avatar><q-icon name="schedule" /></q-item-section>
+                      <q-item-section><q-item-label>Blog Meta</q-item-label></q-item-section>
+                  </q-item>
+              </q-expansion-item>
             </q-list>
             <q-item clickable tag="a" href="/admin/videos">
               <q-item-section avatar><q-icon name="schedule"/></q-item-section><q-item-section><q-item-label>Videos</q-item-label></q-item-section>
@@ -36,9 +36,20 @@
             <q-item clickable tag="a" href="/admin/institutes">
               <q-item-section avatar><q-icon name="schedule"/></q-item-section><q-item-section><q-item-label>Institutes</q-item-label></q-item-section>
             </q-item>
-            <q-item clickable tag="a" href="/admin/questionBank">
-              <q-item-section avatar><q-icon name="schedule"/></q-item-section><q-item-section><q-item-label>Question Bank</q-item-label></q-item-section>
-            </q-item>
+            <q-expansion-item expand-separator icon="mail" label="Question Bank" caption="Add &amp; Update Questions" default-closed >
+              <q-item clickable tag="a" href="/admin/questionBank">
+                  <q-item-section avatar><q-icon name="schedule" /></q-item-section>
+                  <q-item-section><q-item-label>Question Bank</q-item-label></q-item-section>
+              </q-item>
+              <q-item clickable tag="a" href="/admin/addQuestion">
+                  <q-item-section avatar><q-icon name="schedule" /></q-item-section>
+                  <q-item-section><q-item-label>Add Question</q-item-label></q-item-section>
+              </q-item>
+              <q-item clickable tag="a" href="/admin/questionSummary">
+                  <q-item-section avatar><q-icon name="schedule" /></q-item-section>
+                  <q-item-section><q-item-label>Question Summary</q-item-label></q-item-section>
+              </q-item>
+            </q-expansion-item>
             <q-item>
               <q-item-section avatar><q-icon name="schedule"/></q-item-section><q-item-section @click="logOut"><q-item-label>Log Out</q-item-label></q-item-section>
             </q-item>

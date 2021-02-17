@@ -39,7 +39,6 @@ router.get('/adminBasics', asyncMiddleware( async(req, res) => {
 }))
 
 router.post('/addBasic', asyncMiddleware( async(req, res) => {
-    console.log('req.body', req.body)
     let post= {
         'type':                 req.body.type,
         'name':                 req.body.name,
@@ -539,7 +538,7 @@ router.post('/changeInstituteStatus', asyncMiddleware( async(req, res, next) => 
 }))
 
 router.get('/questionOptions',  asyncMiddleware( async(req, res) => {
-    let sql = `SELECT id, type, name, tab1, tab2, tab3 FROM basics as a WHERE type IN ('Class', 'Board', 'Subject', 'Topic', 'SubTopic', 'Difficulty', 'Question Type');`
+    let sql = `SELECT id, type, name, tab1, tab2, tab3 FROM basics as a WHERE type IN ('Class', 'Board', 'Subject', 'Topic', 'SubTopic', 'Difficulty', 'Type');`
     pool.query(sql, (err, results) => {
         try{
             if(err){ throw err }
@@ -652,7 +651,32 @@ router.post('/updateQuestion', asyncMiddleware( async(req, res, next) => {
     })
 }))
 
+router.get('/questionSummary', asyncMiddleware( async(req, res) => {
+    let sql =   `SELECT id,	classes, subject, topic, subTopic, difficulty, type, count, updated_at FROM questsummary;`
+    pool.query(sql, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ data: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
 
+router.post('/changeQuestionStatus', asyncMiddleware( async(req, res, next) => {
+    let post= {
+        "status":                   req.body.status,
+        "updated_at":               time,
+    }
+    let sql = `UPDATE questionbank SET ? WHERE id = ${req.body.id}`
+    pool.query(sql, post, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ 
+                const data = await func.getQuestion(req.body.id)
+                res.send({ success: true, data, message: 'Question status changed successfully' }); 
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
 
 
 // Change DB
@@ -965,9 +989,61 @@ router.post('/updateQuestion', asyncMiddleware( async(req, res, next) => {
 //     })    
 // }))
 
+router.post('/count', asyncMiddleware( async(req, res, next) => {
+    let sql =   `SELECT DISTINCT id, name FROM basics WHERE type= 'Class';
+                SELECT DISTINCT id, name FROM basics WHERE type= 'Difficulty';
+                SELECT DISTINCT id, name FROM basics WHERE type= 'Type';
+                SELECT DISTINCT id, name, tab1 FROM basics WHERE type= 'Subject';
+                SELECT DISTINCT id, name, tab1, tab2 FROM basics WHERE type= 'Topic';
+                SELECT DISTINCT id, name, tab1, tab2, tab3 FROM basics WHERE type= 'SubTopic';
+                SELECT DISTINCT id, class, subject, topic, subTopic, difficulty, type FROM test_papers;
+                `
+    pool.query(sql, [1,2,3,4,5,6,7], async(err, results) => {
+        try{
+            if(err){ throw err }
+            console.log('results', results)
+            if(results){ 
+                // results[0].forEach(i => {
+                //     results[1].forEach(j => {
+                //         results[2].forEach(k => {
+                //             results[3].filter(l=>l.tab1 == i.id).forEach(l => {
+                //                 results[4].filter(m=>m.tab1 == i.id && m.tab2 == l.id).forEach(m => {
+                //                     results[5].filter(n=>n.tab1 == i.id && n.tab2 == l.id && n.tab3 == m.id ).forEach((n, index) => {
+                //                         if(n.id){
+                //                         var xx = results[6].filter(o=>o.class==i.id && o.difficulty==j.id && i.type==k.id && o.subject == l.id && o.topic == m.id && o.subTopic == n.id).length
+                //                         console.log('xx', xx)
+                //                             let post={
+                //                                 'classes': i.id,
+                //                                 'subject': l.id,
+                //                                 'difficulty': j.id,
+                //                                 'type': k.id,
+                //                                 'topic': m.id,
+                //                                 'subTopic': n.id
+                //                             }
+                //                             let sql = `INSERT INTO questsummary SET ?`
+                //                             console.log('sql - '+ index, sql)
+                //                         }else{
+                //                             console.log('No Data')
+                //                         }
+                //                     });
+                //                 });
+                //             });
+                //         });
+                //     });
+                // });
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })    
+}))
 
-
-
+// const post ={ 'board': '[9,10,11,12]' }
+//                         let sql = `UPDATE test_papers SET ? WHERE id = ${i.id}`;
+//                         pool.query(sql, post, async(err, results) => {
+//                             try{
+//                                 if(err){ throw err }
+//                                 console.log(index + ' -  rows updated')
+//                             }catch(e){ func.logError(e); res.status(500); return; }
+//                         })
 // Change DB
 
 

@@ -115,7 +115,6 @@ export default {
       this.showAddForm = false;
     },
     typeSelected() {
-      console.log('0000000000')
       this.name = null;
       this.tab1 = null;
       this.tab2 = null;
@@ -146,7 +145,6 @@ export default {
         tab2: this.tab2,
         tab3: this.tab3,
       };
-      console.log('data', data)
       this.$store.dispatch('addBasic', data);
       // this.resetData();
     },

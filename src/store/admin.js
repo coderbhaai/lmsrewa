@@ -26,6 +26,7 @@ const state = {
   basicSubTopicFilter : [],
   typeOptions: [],
   adminQuestions: [],
+  questionSummary: [],
 };
 
 const getters = {
@@ -52,6 +53,7 @@ const getters = {
   basicSubTopicFilter : (state) => state.basicSubTopicFilter,
   typeOptions : (state) => state.typeOptions,
   adminQuestions : (state) => state.adminQuestions,
+  questionSummary : (state) => state.questionSummary,
 };
 
 const actions = {
@@ -167,6 +169,14 @@ const actions = {
       this.$router.push({ name: 'QuestionBank' });
     }
   },
+  async changeQuestionStatus({ commit }, form) {
+    const res = await axios.post(api.changeQuestionStatus, form);
+    if (res.data.success) {
+      commit('CHANGEQUESTIONSTATUS', res.data.data);
+    }
+    message(res.data.message);
+  },
+  async questionSummary({ commit }) { const res = await axios.get(api.questionSummary); commit('QUESTIONSUMMARY', res.data.data); },
 };
 
 const mutations = {
@@ -238,7 +248,7 @@ const mutations = {
     state.topicOptions = data.filter(i=>i.type=='Topic');
     state.subtopicOptions = data.filter(i=>i.type=='SubTopic');
     state.difficultyOptions = data.filter(i=>i.type=='Difficulty');
-    state.typeOptions = data.filter(i=>i.type=='Question Type');
+    state.typeOptions = data.filter(i=>i.type=='Type');
   },
   BASICCLASSSELECTED: (state, data) => { state.basicSubjectFilter = state.subjectOptions.filter(i=>parseInt(i.tab1) == data.classSelected); },
   BASICSUBJECTSELECTED: (state, data) => {
@@ -260,6 +270,11 @@ const mutations = {
       state.adminQuestions.splice(index, 1, data);
     }
   },
+  CHANGEQUESTIONSTATUS: (state, data) => {
+    const index = state.adminQuestions.findIndex((i) => i.id === data.id);
+    if (index !== -1) { state.adminQuestions.splice(index, 1, data); }
+  },
+  QUESTIONSUMMARY: (state, data) => { state.questionSummary = data; },
 };
 
 export default {

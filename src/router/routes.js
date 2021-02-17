@@ -120,6 +120,15 @@ const routes = [
       { path: '/admin/questionBank', component: () => import('pages/admin/questionBank.vue') },
     ],
     meta: { auth: true, ss: true },
+  },  
+  {
+    path: '/admin/questionSummary',
+    name: 'questionSummary',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/admin/questionSummary', component: () => import('pages/admin/questionSummary.vue') },
+    ],
+    meta: { auth: true, ss: true },
   },
   {
     path: '/admin/addQuestion',
@@ -148,15 +157,7 @@ const routes = [
     ],
     meta: { auth: true, ss: true },
   },
-  {
-    path: '/admin/questionBank',
-    name: 'QuestionBank',
-    component: () => { import('layouts/MainLayout.vue') },
-    children: [
-      { path: '/admin/questionBank', component: () => import('pages/admin/questionBank.vue') },
-    ],
-    meta: { auth: true, ss: true },
-  },
+
   // Admin Routes
   {
     path: '*',

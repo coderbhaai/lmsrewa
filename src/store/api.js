@@ -35,5 +35,6 @@ export default {
   getQuestion: `${url}/admin/getQuestion/`,
   updateQuestionFilter: `${url}/admin/updateQuestionFilter/`,
   updateQuestion: `${url}/admin/updateQuestion`,
-
+  changeQuestionStatus: `${url}/admin/changeQuestionStatus`,
+  questionSummary: `${url}/admin/questionSummary`,
 };

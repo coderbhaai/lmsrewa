@@ -23,7 +23,8 @@ function getInstitute(id) {
 
 function getQuestion(id) {
     return new Promise((resolve, reject) => {
-        let sql =   `SELECT id, board, classes, subject, topic, subtopic, question, options, answer, difficulty, type, marks, source, status, owner, updated_at from questionBank WHERE id = '${id}';`
+        let sql =   `SELECT a.id, a.board, a.classes, a.subject, a.topic, a.subtopic, a.question, a.options, a.answer, a.difficulty, a.type, a.marks, a.source, a.status, a.owner, a.updated_at, b.name as className, c.name as subjectName, d.name as topicName, e.name as subTopicName, f.name as difficultyName, g.name as typeName from questionBank as a
+                    left join basics as b on b.id = a.classes left join basics as c on c.id = a.subject left join basics as d on d.id = a.topic left join basics as e on e.id = a.subtopic left join basics as f on f.id = a.difficulty left join basics as g on g.id = a.type WHERE a.id = '${id}';`
         pool.query(sql, (err, results) => {
             try{
                 if(err){ throw err }

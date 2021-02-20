@@ -37,4 +37,10 @@ export default {
   updateQuestion: `${url}/admin/updateQuestion`,
   changeQuestionStatus: `${url}/admin/changeQuestionStatus`,
   questionSummary: `${url}/admin/questionSummary`,
+  onlineTestSeries: `${url}/admin/onlineTestSeries`,
+  testTopicSelected: `${url}/user/testTopicSelected`,
+  createTest: `${url}/user/createTest`,
+  checkQuestSummary: `${url}/user/checkQuestSummary`,
+  testPaper: `${url}/user/testPaper`,
+  submitTest: `${url}/user/submitTest`,
 };

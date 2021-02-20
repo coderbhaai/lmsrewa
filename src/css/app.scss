@@ -1,4 +1,8 @@
 // app global css in SCSS form
+.container{
+ width: 80%;
+ max-width: 80%;   
+}
 h1,h2,h3,h4,h5,h6{
     font-size: 1rem;
     margin: 10px 0;
@@ -17,6 +21,9 @@ a{
 img{
     width: 100%;
     height: auto;
+}
+.w-100{
+    width: 100%;
 }
 .text-white{
     color: #fff;
@@ -132,14 +139,8 @@ img.edit{
         }
     }
 }
-// .child {
-//     position: relative;
-//     margin: 2em 0;
-//     >div {
-//         height: 0;
-//         display: none;
-//         padding: 1em 2em;
-//         background: #fff;
-//         border-radius: 5px;
-//     }
-// }
+.optionItemDetail, .question{
+    p{
+        margin-bottom: 0
+    }
+}

@@ -21,12 +21,16 @@ const state = {
   topicOptions : [],
   subtopicOptions : [],
   difficultyOptions : [],
+  paperOptions: [],
   basicSubjectFilter: [],
   basicTopicFilter: [],
   basicSubTopicFilter : [],
   typeOptions: [],
   adminQuestions: [],
-  questionSummary: [],
+  questSummary: [],
+  questSummaryFilter: [],
+  questCount: '',
+  testSubTopicFilter: []  
 };
 
 const getters = {
@@ -48,28 +52,28 @@ const getters = {
   topicOptions : (state) => state.topicOptions,
   subtopicOptions : (state) => state.subtopicOptions,
   difficultyOptions : (state) => state.difficultyOptions,
+  paperOptions : (state) => state.paperOptions,
   basicSubjectFilter : (state) => state.basicSubjectFilter,
   basicTopicFilter : (state) => state.basicTopicFilter,
   basicSubTopicFilter : (state) => state.basicSubTopicFilter,
   typeOptions : (state) => state.typeOptions,
   adminQuestions : (state) => state.adminQuestions,
-  questionSummary : (state) => state.questionSummary,
+  questSummary : (state) => state.questSummary,
+  questSummaryFilter : (state) => state.questSummaryFilter,
+  questCount : (state) => state.questCount,
+  testSubTopicFilter : (state) => state.testSubTopicFilter,  
 };
 
 const actions = {
   async adminBasics({ commit }) { const res = await axios.get(api.adminBasics); commit('ADMINBASICS', res.data.data); },
   async addBasic({ commit }, form) {
     const res = await axios.post(api.addBasic, form);
-    if (res.data.success) {
-      commit('ADDBASIC', res.data.data);
-    }
+    if (res.data.success) { commit('ADDBASIC', res.data.data); }
     message(res.data.message);
   },
   async updateBasic({ commit }, form) {
     const res = await axios.post(api.updateBasic, form);
-    if (res.data.success) {
-      commit('UPDATEBASIC', res.data.data);
-    }
+    if (res.data.success) { commit('UPDATEBASIC', res.data.data); }
     message(res.data.message);
   },
   async adminBlogMeta({ commit }) { const res = await axios.get(api.adminBlogMeta); commit('BLOGMETA', res.data.data); },
@@ -147,6 +151,8 @@ const actions = {
   async basicClassSelected({ commit }, form) { commit('BASICCLASSSELECTED', form); },
   async basicSubjectSelected({ commit }, form) { commit('BASICSUBJECTSELECTED', form); },
   async basicTopicSelected({ commit }, form) { commit('BASICTOPICSELECTED', form); },
+  async testTopicSelected({ commit }, form) { commit('TESTTOPICSELECTED', form); },
+  async testSubTopicSelected({ commit }, form) { commit('TESTSUBTOPICSELECTED', form); },
 
   async adminQuestions({ commit }) { const res = await axios.get(api.adminQuestions); commit('ADMINQUESTIONS', res.data.data); },
   async addQuestion({ commit }, form) {
@@ -176,7 +182,11 @@ const actions = {
     }
     message(res.data.message);
   },
-  async questionSummary({ commit }) { const res = await axios.get(api.questionSummary); commit('QUESTIONSUMMARY', res.data.data); },
+  async onlineTestSeries({ commit }) { const res = await axios.get(api.onlineTestSeries); commit('ONLINETESTSERIES', res.data.data); },
+  async checkQuestSummary({ commit }, form) {
+    const res = await axios.post(api.checkQuestSummary, form); 
+    commit('QUESTSUMMARY', res.data.data);
+  },  
 };
 
 const mutations = {
@@ -186,6 +196,7 @@ const mutations = {
     state.classOptions = data.filter((i) => i.type === 'Class');
     state.subjectOptions = data.filter((i) => i.type === 'Subject');
     state.topicOptions = data.filter((i) => i.type === 'Topic');
+    state.paperOptions = data.filter((i) => i.type === 'PaperOptions');
   },
   ADDBASIC: (state, data) => { 
     state.adminBasics.unshift(data); 
@@ -193,12 +204,11 @@ const mutations = {
     if(data.type=='Class'){ state.classOptions.unshift(data) }
     if(data.type=='Subject'){ state.subjectOptions.unshift(data) }
     if(data.type=='Topic'){ state.topicOptions.unshift(data) }
+    if(data.type=='PaperOptions'){ state.paperOptions.unshift(data) }
   },
   UPDATEBASIC: (state, data) => {
     const index = state.adminBasics.findIndex((i) => i.id === data.id);
-    if (index !== -1) {
-      state.adminBasics.splice(index, 1, data);
-    }
+    if (index !== -1) { state.adminBasics.splice(index, 1, data); }
   },
   BLOGMETA: (state, data) => { state.blogMeta = data; },
   ADDBLOGMETA: (state, data) => state.blogMeta.unshift(data),
@@ -257,6 +267,19 @@ const mutations = {
   BASICTOPICSELECTED: (state, data) => {
     state.basicSubTopicFilter = state.subtopicOptions.filter(i=>parseInt(i.tab1) == data.classSelected && parseInt(i.tab2) == data.subjectSelected  && parseInt(i.tab3) == data.topicSelected ); 
   },
+  TESTTOPICSELECTED: (state, data) => {
+    state.testSubTopicFilter = state.subtopicOptions.filter(i=>parseInt(i.tab1) == data.classSelected && parseInt(i.tab2) == data.subjectSelected  && data.topicSelected.includes(parseInt(i.tab3)) ); 
+    state.questSummaryFilter = state.questSummary.filter(i=>data.topicSelected.includes(parseInt(i.topic)) );
+    var count = 0;
+    state.questSummary.filter(i=>data.topicSelected.includes(parseInt(i.topic)) ).map(i=>( count = count + i.count ));
+    state.questCount = count
+  },
+  TESTSUBTOPICSELECTED: (state, data) => {
+    console.log('data', data)
+    var count = 0;
+    state.questSummary.filter(i=>data.subTopicSelected.includes(parseInt(i.subTopic)) ).map(i=>( count = count + i.count ));
+    state.questCount = count
+  },
   ADMINQUESTIONS: (state, data) => { state.adminQuestions = data; },
   ADDQUESTION: (state, data) => { state.adminQuestions.unshift(data) },
   UPDATEQUESTIONFILTER: (state, data) => {
@@ -274,7 +297,22 @@ const mutations = {
     const index = state.adminQuestions.findIndex((i) => i.id === data.id);
     if (index !== -1) { state.adminQuestions.splice(index, 1, data); }
   },
-  QUESTIONSUMMARY: (state, data) => { state.questionSummary = data; },
+  ONLINETESTSERIES: (state, data) => {
+    state.adminBasics = data;
+    state.basicOptions = data.filter((i) => i.type === 'Basic');
+    state.boardOptions = data.filter(i=>i.type=='Board');
+    state.classOptions = data.filter(i=>i.type=='Class');
+    state.subjectOptions = data.filter(i=>i.type=='Subject');
+    state.topicOptions = data.filter(i=>i.type=='Topic');
+    state.subtopicOptions = data.filter(i=>i.type=='SubTopic');
+    state.difficultyOptions = data.filter(i=>i.type=='Difficulty');
+    state.typeOptions = data.filter(i=>i.type=='Type');
+    state.paperOptions = data.filter(i=>i.type=='PaperOptions');
+  },
+  QUESTSUMMARY: (state, data) => { 
+    state.questSummary = data; 
+    state.questSummaryFilter = data;
+  },
 };
 
 export default {

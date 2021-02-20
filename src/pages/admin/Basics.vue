@@ -16,6 +16,9 @@
             <q-select emit-value map-options v-model="tab3" :options="basicTopicFilter" option-value="id" option-label="name" label="Topic" lazy-rules required/>
           </div>
           <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name" lazy-rules required/></div>
+          <div class="col-4 q-pr-lg" v-if="this.type=='PaperOptions'">
+            <q-input v-model="tab1" label="Number of Questions" lazy-rules required/>
+          </div>
         </div>
         <div><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
       </q-form>
@@ -50,7 +53,8 @@
           <q-td key="id" :props="props">{{ props.row.id }}</q-td>
           <q-td key="type" :props="props">{{ props.row.type }}</q-td>
           <q-td key="name" :props="props">{{ props.row.name }}</q-td>
-            <q-td key="tab1" :props="props">{{ props.row.tab1Name }}</q-td>
+          <q-td key="tab1" :props="props" v-if="props.row.type!== 'PaperOptions'">{{ props.row.tab1Name }}</q-td>
+          <q-td key="tab1" :props="props" v-else>{{ props.row.tab1 }}</q-td>
           <q-td key="tab2" :props="props">{{ props.row.tab2Name }}</q-td>
           <q-td key="tab3" :props="props">{{ props.row.tab3Name }}</q-td>
           <q-td key="updated_at" :props="props">{{ props.row.updated_at }}</q-td>
@@ -62,7 +66,6 @@
 </template>
 
 <script>
-import { NULL } from 'mysql/lib/protocol/constants/types';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {

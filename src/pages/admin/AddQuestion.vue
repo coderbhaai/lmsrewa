@@ -101,8 +101,7 @@
             />
             <span class="material-icons" @click="deleteOption(index)" style="color:red">delete</span>
           </div>
-        </div>
-        
+        </div>        
         <q-btn @click="addOptions()" class="addOption q-my-sm" rounded glossy color="primary" v-if="this.type == 33">Add Options</q-btn>
       </div>
       <div class="text-center"><q-btn label="Add Question" type="submit" color="primary"/></div>

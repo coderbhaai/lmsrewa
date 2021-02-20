@@ -678,6 +678,17 @@ router.post('/changeQuestionStatus', asyncMiddleware( async(req, res, next) => {
     })
 }))
 
+router.get('/onlineTestSeries', asyncMiddleware( async(req, res) => {
+    let sql = `SELECT a.id, a.type, a.name, a.tab1, a.tab2, a.tab3, a.updated_at, b.name as tab1Name, c.name as tab2Name, d.name as tab3Name FROM basics as a 
+    left join basics as b on b.id = a.tab1 left join basics as c on c.id = a.tab2 left join basics as d on d.id = a.tab3 WHERE a.type IN ('Class', 'Board', 'Subject', 'Topic', 'SubTopic', 'Difficulty', 'Type', 'PaperOptions');`
+    pool.query(sql, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ data: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
 
 // Change DB
 // router.post('/changeClass', asyncMiddleware( async(req, res, next) => {

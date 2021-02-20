@@ -56,6 +56,15 @@ const routes = [
       { path: '/online-test-series', component: () => import('pages/index/onlineTestSeries.vue') },
     ],
   },
+  {
+    path: '/test-paper/:id',
+    name: 'TestPaper',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/test-paper/:id', component: () => import('pages/index/TestPaper.vue') },
+    ],
+    meta: { auth: true },
+  },
   // Admin Routes
   {
     path: '/admin/addBlog',

@@ -77,17 +77,18 @@ router.post('/login', asyncMiddleware( async(req, res, next) => {
         try{
             if(err){ throw err }
             if(results && results.length){
-                if(results[0]){
+                if(results[0]){                    
                     if(results[0].status !== 1){
                         res.send({ success: false, message: "You have not been approved yet" })
                     }else 
                     if(results[0].institute){
+                        var balance = await func.getBalance(results[0].institute)
                         const check = await checkStatusOfInstitute(results[0].institute)
                         if(check){
                             const login = await initiateLogin(req.body.email, req.body.password)
                             if(login[0]){
                                 res.cookie('token', login[1].token)
-                                res.send({ success: true, user: login[1], message: login[2] }) 
+                                res.send({ success: true, user: login[1], balance, message: login[2] }) 
                             }else{
                                 res.send({ success: false, message: login[2] })
                             }
@@ -96,9 +97,10 @@ router.post('/login', asyncMiddleware( async(req, res, next) => {
                         }
                     }else{
                         const login = await initiateLogin(req.body.email, req.body.password)
+                        var balance = await func.getBalance(results[0].id)
                         if(login[0]){
                             res.cookie('token', login[1].token)
-                            res.send({ success: true, user: login[1], message: login[2] }) 
+                            res.send({ success: true, user: login[1], balance, message: login[2] }) 
                         }else{
                             res.send({ success: false, message: login[2] })
                         }

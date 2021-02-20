@@ -8,14 +8,16 @@ import { message } from './functions';
 const state = {
   user: LocalStorage.getItem('user'),
   isLoggedIn: false,
-  role: ''
+  role: '',
+  balance: LocalStorage.getItem('balance'),
 };
 
 const getters = {
   user: (state) => state.user,
   isLoggedIn: (state)=>state.isLoggedIn,
   role: (state)=>state.role,
-  schoolOptions: (state) => state.schoolOptions
+  schoolOptions: (state) => state.schoolOptions,
+  balance: (state)=>state.balance,
 };
 
 const actions = {
@@ -33,7 +35,7 @@ const actions = {
   async login({ commit }, form) {
     const res = await axios.post(api.login, form);
     if (res.data.success) {
-      commit('LOGIN', res.data.user);
+      commit('LOGIN', res.data);
       setAxiosHeaders(state);
       this.$router.push({ name: 'home' });
     }
@@ -50,15 +52,17 @@ const actions = {
 };
 
 const mutations = {
-  LOGIN: (state, user) => {
-    state.user = user;
+  LOGIN: (state, data) => {
+    state.user = data.user;
     state.isLoggedIn = true;
-    state.role = user.role;
-    LocalStorage.set('user', user);
+    state.role = data.user.role;
+    LocalStorage.set('user', data.user);
+    LocalStorage.set('balance', data.balance);
     setAxiosHeaders(state);
   },
   LOGOUT: (state) => {
     state.user = null;
+    state.balance = null;
     state.isLoggedIn = false;
     state.role = '';
     LocalStorage.clear();

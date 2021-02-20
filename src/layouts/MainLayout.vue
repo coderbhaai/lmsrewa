@@ -19,8 +19,9 @@
           <q-route-tab to="/register" label="Register"/>
           <q-route-tab to="/login" label="Login"/>
         </div>
-        <q-route-tab to="/blog" label="Blog" />
-        <q-route-tab to="/video-tutorials/All" label="Video Tutorials" />
+        <q-route-tab to="/blog" label="Blog"/>
+        <q-route-tab to="/video-tutorials/All" label="Video Tutorials"/>
+        <q-route-tab to="/online-test-series" label="Online Test"/>
       </q-tabs>
     </q-header>
     <div v-if="user">

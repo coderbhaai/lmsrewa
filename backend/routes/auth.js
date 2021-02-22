@@ -146,7 +146,7 @@ function initiateLogin(email, password){
                                     pool.query(sql2, (err2, results2) => {
                                         try{
                                             if(err2){ throw err2 }
-                                            if(results2){ resolve([true, user, "Welcome to Pujarambh"]) }
+                                            if(results2){ resolve([true, user, "Welcome to Study Spectrum"]) }
                                         }catch(e){ func.logError(e); res.status(500); return; }
                                     })
                                 })

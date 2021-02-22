@@ -19,7 +19,6 @@
                                         <q-btn flat round color="red" icon="favorite" />
                                         <q-btn flat round color="accent" icon="bookmark" />
                                         <q-btn flat round color="primary" icon="share" />
-                                        <!-- <p class="marks">{{marks[index]}} <strong>Marks</strong></p> -->
                                     </q-card-actions>
                                     <div class="w-100">
                                         <div v-html="i.question" class="question"></div>

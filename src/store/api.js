@@ -43,4 +43,8 @@ export default {
   checkQuestSummary: `${url}/user/checkQuestSummary`,
   testPaper: `${url}/user/testPaper`,
   submitTest: `${url}/user/submitTest`,
+  submitAnswer: `${url}/user/submitAnswer`,
+  dailyPracticeData: `${url}/user/dailyPracticeData`,
+  startDailyPractice: `${url}/user/startDailyPractice`,
+  nextQuestion: `${url}/user/nextQuestion`,
 };

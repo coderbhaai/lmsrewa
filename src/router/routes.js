@@ -65,6 +65,14 @@ const routes = [
     ],
     meta: { auth: true },
   },
+  {
+    path: '/daily-practice',
+    name: 'dailyPractice',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/daily-practice', component: () => import('pages/index/dailyPractice.vue') },
+    ],
+  },
   // Admin Routes
   {
     path: '/admin/addBlog',
@@ -109,7 +117,7 @@ const routes = [
     children: [
       { path: '/admin/basics', component: () => import('pages/admin/basics.vue') },
     ],
-    meta: { auth: true, ss: true },
+    // meta: { ss: true },
   },
   {
     path: '/admin/meta',

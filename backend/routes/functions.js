@@ -2,6 +2,7 @@ var mysql = require('mysql')
 const jwt = require('jsonwebtoken')
 const nodemailer = require("nodemailer");
 var pool = require('./mysqlConnector')
+let today = new Date().toISOString().slice(0, 10)
 const time = new Date().toISOString().slice(0, 19).replace('T', ' ')
 const transporter = nodemailer.createTransport({ host: "smtpout.secureserver.net", port: 465, secure: true, auth: { user: 'contactus@thetrueloans.com', pass: 'contactus@123',  debug: true }, tls:{ rejectUnauthorized: false, secureProtocol: "TLSv1_method" } });
 const fs = require('fs')
@@ -103,6 +104,126 @@ function calculateScore(solution, answer, marks) {
     })
 }
 
+function sameQuestion(id) {
+    return new Promise((resolve, reject) => {
+        let sql =   `SELECT id, question, options, answer as solution, marks from questionBank WHERE id=${id};`
+        pool.query(sql, (err, results) => {
+            try{
+                if(err){ throw err }
+                if(results){ resolve(results[0]) }
+            }catch(e){ logError(e);return; }
+        });
+    });
+}
+
+function increaseScore(id, marks) {
+    console.log('id', id)
+    console.log('marks', marks)
+    return new Promise((resolve, reject) => {
+        let sql =   `UPDATE dailypractice SET score = score + ${marks} WHERE id=${id};`
+        pool.query(sql, (err, results) => {
+            try{
+                if(err){ throw err }
+                if(results){ resolve(results[0]) }
+            }catch(e){ logError(e);return; }
+        });
+    });
+}
+
+function getNewQuestion(subTopic, exclude) {
+    console.log('subTopic', subTopic)
+    console.log('exclude', exclude)
+    if(exclude.length){
+        var excludeCheck = `AND id NOT IN (${exclude})`
+    }else{
+        var excludeCheck = ''
+    }
+    
+    return new Promise((resolve, reject) => {
+        let sql =   `SELECT id, question, options, answer as solution, marks from questionBank WHERE subTopic IN (${subTopic}) AND type=25 ${excludeCheck} ORDER by RAND() LIMIT 1;`
+        pool.query(sql, (err, results) => {
+            try{
+                if(err){ throw err }
+                if(results){ resolve(results[0] ) }
+            }catch(e){ logError(e);return; }
+        });
+    });
+}
+
+function insertPractice(userId, data) {
+    console.log('userId', userId)
+    console.log('data', data)
+    return new Promise((resolve, reject) => {
+        let post= {
+            'userId':                   userId,
+            'date':                     today,
+            'questions':                JSON.stringify([data[0]]),
+            'solution':                 JSON.stringify([data[1]]),
+            'marks':                    JSON.stringify([data[2]]),
+            'total':                    data[2],
+            "created_at":               time,
+            "updated_at":               time,
+        }
+        let sql = `INSERT INTO dailypractice SET ?`
+        pool.query(sql, post, (err, results) => {
+            try{
+                if(err){ throw err }
+                if(results){ resolve(results ) }
+            }catch(e){ logError(e); return; }
+        });
+    });
+}
+
+function updatePractice(id, data) {
+    console.log('id in updatePractice', id)
+    console.log('data in updatePractice', data)
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT questions, solution, marks, total FROM dailypractice WHERE id=${id};`
+        pool.query(sql, async(err, results) => {
+            try{
+                if(err){ throw err }
+                if(results && results[0]){
+                    console.log('results[0]', results[0])
+                    var questions = JSON.parse(results[0].questions); questions.push(data[0])
+                    var solution = JSON.parse(results[0].solution); solution.push(data[1])
+                    var marks = JSON.parse(results[0].marks); marks.push(data[2])
+                    var total = results[0].total + data[2]
+                    let post= {
+                        'questions':                JSON.stringify(questions),
+                        'solution':                 JSON.stringify(solution),
+                        'marks':                    JSON.stringify(marks),
+                        'total':                    total,
+                        "updated_at":               time,
+                    }
+                    console.log('post', post)
+                    let sql = `UPDATE dailypractice SET ? WHERE id = '${id}'`;
+                    pool.query(sql, post, (err, results) => {
+                        try{
+                            if(err){ throw err }
+                            if(results){ resolve([questions, solution, marks] )
+                            }
+                        }catch(e){ logError(e);return; }
+                    });
+                }else{
+                    resolve([]) 
+                }
+            }catch(e){ logError(e); return; }
+        });
+    })
+}
+
+function getdpDetails(id) {
+    console.log('id in getdpDetails', id)
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT questions, solution, marks, answer, total, score FROM dailypractice WHERE id=${id};`
+        pool.query(sql, async(err, results) => {
+            try{
+                if(err){ throw err }
+                if(results && results[0]){resolve(results[0])}else{ resolve([]) }
+            }catch(e){ logError(e); return; }
+        });
+    })
+}
 
 function blogMetaData(id) {
     return new Promise((resolve, reject) => {
@@ -217,4 +338,4 @@ function logError(e){
     printError(e)
 }
 
-module.exports = { getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore };
+module.exports = { getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails };

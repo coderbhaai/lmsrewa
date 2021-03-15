@@ -23,6 +23,7 @@
         <q-route-tab to="/video-tutorials/All" label="Video Tutorials"/>
         <q-route-tab to="/online-test-series" label="Online Test"/>
         <q-route-tab to="/daily-practice" label="Daily Practice"/>
+        <q-route-tab to="/hire-a-tutor" label="Hire A Tutor"/>
       </q-tabs>
     </q-header>
     <div v-if="user">

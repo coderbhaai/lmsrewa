@@ -9,11 +9,11 @@
                     <q-card-section>
                         <q-form class="q-gutter-md q-mb-lg" @submit="addSubmit">
                             <div class="row" v-if="!this.user">
-                                <div class="col-6 q-pr-lg"><q-input v-model="name" label="Name" lazy-rules /></div>
-                                <div class="col-6 q-pr-lg"><q-input v-model="email" label="Email" lazy-rules /></div>
+                                <div class="col-6 q-pr-lg"><q-input v-model="name" label="Name"  /></div>
+                                <div class="col-6 q-pr-lg"><q-input v-model="email" label="Email"  /></div>
                             </div>
                             <div class="row">
-                                <div class="col-12 q-pr-lg"><q-input v-model="comment" label="Comment" type="textarea" lazy-rules /></div>
+                                <div class="col-12 q-pr-lg"><q-input v-model="comment" label="Comment" type="textarea"  /></div>
                             </div>
                             <div class="text-center"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
                         </q-form>
@@ -41,11 +41,11 @@
                     <div v-if="i.id === commentId">
                         <q-form class="q-gutter-md q-mb-lg" @submit="replyComment">
                             <div class="row" v-if="!user">
-                              <div class="col-6 q-pr-lg"><q-input v-model="name" label="Name" lazy-rules /></div>
-                              <div class="col-6 q-pr-lg"><q-input v-model="email" label="Email" lazy-rules /></div>
+                              <div class="col-6 q-pr-lg"><q-input v-model="name" label="Name"  /></div>
+                              <div class="col-6 q-pr-lg"><q-input v-model="email" label="Email"  /></div>
                             </div>
                             <div class="row">
-                              <div class="col-12 q-pr-lg"><q-input v-model="newComment" label="Comment" type="textarea" lazy-rules /></div>
+                              <div class="col-12 q-pr-lg"><q-input v-model="newComment" label="Comment" type="textarea"  /></div>
                             </div>
                             <q-card-actions>
                               <q-btn color="primary" label="Submit Your Views" type="submit"/>

@@ -5,9 +5,9 @@
     <div v-if="showAddForm">
       <q-form class="q-gutter-md q-mb-lg" @submit="addSubmit">
         <div class="row">
-          <div class="col-4 q-pr-lg"><q-select v-model="type" :options="options" label="Type" lazy-rules/></div>
-          <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name" lazy-rules /></div>
-          <div class="col-4 q-pr-lg"><q-input v-model="url" label="URL" lazy-rules /></div>
+          <div class="col-4 q-pr-lg"><q-select v-model="type" :options="options" label="Type" /></div>
+          <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name"  /></div>
+          <div class="col-4 q-pr-lg"><q-input v-model="url" label="URL"  /></div>
         </div>
         <div><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg"/></div>
       </q-form>
@@ -18,9 +18,9 @@
         <q-card-section class="q-pt-none">
           <q-form class="q-gutter-md" @submit="updateSubmit">
             <div class="row">
-              <div class="col-4 q-pr-lg"><q-select v-model="type" :options="options" label="Type" lazy-rules/></div>
-              <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name" lazy-rules /></div>
-              <div class="col-4 q-pr-lg"><q-input v-model="url" label="URL" lazy-rules /></div>
+              <div class="col-4 q-pr-lg"><q-select v-model="type" :options="options" label="Type" /></div>
+              <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name"  /></div>
+              <div class="col-4 q-pr-lg"><q-input v-model="url" label="URL"  /></div>
             </div>
             <div class="text-center"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
           </q-form>

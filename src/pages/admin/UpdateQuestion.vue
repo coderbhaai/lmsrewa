@@ -4,15 +4,15 @@
     <q-form class="q-gutter-md" @submit="onSubmit">
       <div class="row q-pb-lg">
         <div class="col-4 q-pr-lg q-mb-lg"><q-select filled map-options emit-value multiple v-model="board" :options="boardOptions" option-value="id" option-label="name" label="Select Boards" required/></div>
-        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="classes" :options="classOptions" option-value="id" option-label="name" label="Class" lazy-rules required @input="classSelected()"/></div>
-        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="subject" :options="basicSubjectFilter" option-value="id" option-label="name" label="Subject" lazy-rules required @input="subjectSelected()"/></div>
-        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="topic" :options="basicTopicFilter" option-value="id" option-label="name" label="Topic" lazy-rules required @input="topicSelected()"/></div>
-        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="subtopic" :options="basicSubTopicFilter" option-value="id" option-label="name" label="SubTopic" lazy-rules required/></div>
-        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="difficulty" :options="difficultyOptions" option-value="id" option-label="name" label="Difficulty" lazy-rules required/></div>
-        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="type" :options="typeOptions" option-value="id" option-label="name" label="Type" lazy-rules required @input="typeSelected()"/></div>
-        <div class="col-4 q-pr-lg q-mb-lg"><q-input v-model="marks" label="Marks" lazy-rules required/></div>
-        <div class="col-4 q-pr-lg q-mb-lg" v-if="this.type=='33'"><q-input v-model="answer" label="Answer" lazy-rules required/></div>
-        <div class="col-12 q-pr-lg q-mb-lg"><q-input v-model="source" label="Source" lazy-rules required/></div>
+        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="classes" :options="classOptions" option-value="id" option-label="name" label="Class"  required @input="classSelected()"/></div>
+        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="subject" :options="basicSubjectFilter" option-value="id" option-label="name" label="Subject"  required @input="subjectSelected()"/></div>
+        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="topic" :options="basicTopicFilter" option-value="id" option-label="name" label="Topic"  required @input="topicSelected()"/></div>
+        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="subtopic" :options="basicSubTopicFilter" option-value="id" option-label="name" label="SubTopic"  required/></div>
+        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="difficulty" :options="difficultyOptions" option-value="id" option-label="name" label="Difficulty"  required/></div>
+        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="type" :options="typeOptions" option-value="id" option-label="name" label="Type"  required @input="typeSelected()"/></div>
+        <div class="col-4 q-pr-lg q-mb-lg"><q-input v-model="marks" label="Marks"  required/></div>
+        <div class="col-4 q-pr-lg q-mb-lg" v-if="this.type=='33'"><q-input v-model="answer" label="Answer"  required/></div>
+        <div class="col-12 q-pr-lg q-mb-lg"><q-input v-model="source" label="Source"  required/></div>
       </div>
       <div class="row q-pb-lg">
         <div class="col-12">

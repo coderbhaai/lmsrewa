@@ -86,19 +86,10 @@ function createTest(data) {
 }
 
 function calculateScore(solution, answer, marks) {
-    console.log('solution', solution)
-    console.log('answer', answer)
-    console.log('marks', marks)
     return new Promise((resolve, reject) => {
         var score = 0
         solution.forEach((i,index) => {
-            if(i==answer[index]){ 
-                score = score + marks[index]
-                console.log("right Answer", index+1 )
-            }else{
-                console.log('wrong answer', index+1)
-            }
-            console.log('score', score)
+            if(i==answer[index]){ score = score + marks[index] }
         });
         resolve(score)
     })
@@ -117,8 +108,6 @@ function sameQuestion(id) {
 }
 
 function increaseScore(id, marks) {
-    console.log('id', id)
-    console.log('marks', marks)
     return new Promise((resolve, reject) => {
         let sql =   `UPDATE dailypractice SET score = score + ${marks} WHERE id=${id};`
         pool.query(sql, (err, results) => {
@@ -131,14 +120,11 @@ function increaseScore(id, marks) {
 }
 
 function getNewQuestion(subTopic, exclude) {
-    console.log('subTopic', subTopic)
-    console.log('exclude', exclude)
     if(exclude.length){
         var excludeCheck = `AND id NOT IN (${exclude})`
     }else{
         var excludeCheck = ''
-    }
-    
+    }    
     return new Promise((resolve, reject) => {
         let sql =   `SELECT id, question, options, answer as solution, marks from questionBank WHERE subTopic IN (${subTopic}) AND type=25 ${excludeCheck} ORDER by RAND() LIMIT 1;`
         pool.query(sql, (err, results) => {
@@ -150,9 +136,19 @@ function getNewQuestion(subTopic, exclude) {
     });
 }
 
+function dpPreview(id) {
+    return new Promise((resolve, reject) => {
+        let sql =   `SELECT id, question, options, answer as solution, marks from questionBank WHERE id = ${id};`
+        pool.query(sql, (err, results) => {
+            try{
+                if(err){ throw err }
+                if(results){ resolve(results[0] ) }
+            }catch(e){ logError(e);return; }
+        });
+    });
+}
+
 function insertPractice(userId, data) {
-    console.log('userId', userId)
-    console.log('data', data)
     return new Promise((resolve, reject) => {
         let post= {
             'userId':                   userId,
@@ -174,16 +170,13 @@ function insertPractice(userId, data) {
     });
 }
 
-function updatePractice(id, data) {
-    console.log('id in updatePractice', id)
-    console.log('data in updatePractice', data)
+function updatePractice(userId, data) {
     return new Promise((resolve, reject) => {
-        let sql = `SELECT questions, solution, marks, total FROM dailypractice WHERE id=${id};`
+        let sql = `SELECT questions, solution, marks, total FROM dailypractice WHERE userId=${userId} AND date = '${today}';`
         pool.query(sql, async(err, results) => {
             try{
                 if(err){ throw err }
                 if(results && results[0]){
-                    console.log('results[0]', results[0])
                     var questions = JSON.parse(results[0].questions); questions.push(data[0])
                     var solution = JSON.parse(results[0].solution); solution.push(data[1])
                     var marks = JSON.parse(results[0].marks); marks.push(data[2])
@@ -195,8 +188,7 @@ function updatePractice(id, data) {
                         'total':                    total,
                         "updated_at":               time,
                     }
-                    console.log('post', post)
-                    let sql = `UPDATE dailypractice SET ? WHERE id = '${id}'`;
+                    let sql = `UPDATE dailypractice SET ?  WHERE userId=${userId} AND date = '${today}';`
                     pool.query(sql, post, (err, results) => {
                         try{
                             if(err){ throw err }
@@ -213,7 +205,6 @@ function updatePractice(id, data) {
 }
 
 function getdpDetails(id) {
-    console.log('id in getdpDetails', id)
     return new Promise((resolve, reject) => {
         let sql = `SELECT questions, solution, marks, answer, total, score FROM dailypractice WHERE id=${id};`
         pool.query(sql, async(err, results) => {
@@ -338,4 +329,4 @@ function logError(e){
     printError(e)
 }
 
-module.exports = { getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails };
+module.exports = { getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails, dpPreview };

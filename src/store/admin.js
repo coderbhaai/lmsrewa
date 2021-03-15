@@ -5,8 +5,6 @@ import api from './api';
 const state = {
   adminBasics: [],
   basicOptions: [],
-  classOptions: [],
-  subjectOptions: [],
   catOptions: [],
   tagOptions: [],
   blogMeta: [],
@@ -17,7 +15,9 @@ const state = {
   adminInstitutes: [],
   boardOptions : [],
   classOptions : [],
+  subjectCopy:  [],
   subjectOptions : [],
+  modeOptions : [],
   topicOptions : [],
   subtopicOptions : [],
   difficultyOptions : [],
@@ -48,7 +48,9 @@ const getters = {
   adminInstitutes: (state) => state.adminInstitutes,
   boardOptions : (state) => state.boardOptions,
   classOptions : (state) => state.classOptions,
+  subjectCopy : (state) => state.subjectCopy,
   subjectOptions : (state) => state.subjectOptions,
+  modeOptions : (state) => state.modeOptions,
   topicOptions : (state) => state.topicOptions,
   subtopicOptions : (state) => state.subtopicOptions,
   difficultyOptions : (state) => state.difficultyOptions,
@@ -183,10 +185,18 @@ const actions = {
     message(res.data.message);
   },
   async onlineTestSeries({ commit }) { const res = await axios.get(api.onlineTestSeries); commit('ONLINETESTSERIES', res.data.data); },
-  async checkQuestSummary({ commit }, form) {
-    const res = await axios.post(api.checkQuestSummary, form); 
-    commit('QUESTSUMMARY', res.data.data);
-  },  
+  async checkQuestSummary({ commit }, form) { const res = await axios.post(api.checkQuestSummary, form); commit('QUESTSUMMARY', res.data.data); },
+
+  async hireATutor({ commit }) { const res = await axios.get(api.hireATutor); commit('HIREATUTOR', res.data.data); },
+  async hireClassSelected({ commit }, form) { commit('HIRECLASSSELECTED', form); },
+  async postRequirement({ commit }, form) {
+    const res = await axios.post(api.postRequirement, form);
+    if (res.data.success) { 
+      commit('POSTREQUIREMENT'); 
+      this.$router.push({ name: 'About' }); 
+    }
+    message(res.data.message);
+  },
 };
 
 const mutations = {
@@ -275,7 +285,6 @@ const mutations = {
     state.questCount = count
   },
   TESTSUBTOPICSELECTED: (state, data) => {
-    console.log('data', data)
     var count = 0;
     state.questSummary.filter(i=>data.subTopicSelected.includes(parseInt(i.subTopic)) ).map(i=>( count = count + i.count ));
     state.questCount = count
@@ -313,6 +322,16 @@ const mutations = {
     state.questSummary = data; 
     state.questSummaryFilter = data;
   },
+  HIREATUTOR: (state, data) => {
+    state.boardOptions = data.filter(i=>i.type=='Board')
+    state.classOptions = data.filter(i=>i.type=='Class')
+    state.subjectCopy = data.filter(i=>i.type=='Subject')
+    state.modeOptions = data.filter(i=>i.type=='Mode')
+  },
+  HIRECLASSSELECTED: (state, data) => { state.subjectOptions = state.subjectCopy.filter(i=>parseInt(i.tab1) == data.classSelected); },
+
+
+
 };
 
 export default {

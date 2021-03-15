@@ -32,7 +32,7 @@
 
 <script>
 export default {
-  name: 'PageIndex',
+  name: 'Home',
   data() {
     return {
       slide: 'first',

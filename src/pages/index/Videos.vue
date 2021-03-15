@@ -2,8 +2,8 @@
   <div class="q-pa-md">
     <h1 class="heading">{{this.title}}</h1>
     <div class="row q-mb-lg">
-      <div class="col-4 q-pr-lg"><q-select emit-value @input="classSelected($event)"  v-model="classx" :options="activeClasses" label="Class" option-label="video_class" option-value="video_class" lazy-rules required/></div>
-      <div class="col-4 q-pr-lg"><q-select emit-value @input="subSelected($event)" v-model="subject" :options="activeSubjects" label="Subject" option-label="video_sub" option-value="video_sub" lazy-rules required/></div>
+      <div class="col-4 q-pr-lg"><q-select emit-value @input="classSelected($event)"  v-model="classx" :options="activeClasses" label="Class" option-label="video_class" option-value="video_class"  required/></div>
+      <div class="col-4 q-pr-lg"><q-select emit-value @input="subSelected($event)" v-model="subject" :options="activeSubjects" label="Subject" option-label="video_sub" option-value="video_sub"  required/></div>
     </div>
     <q-table title="Videos" :data="filterVideos" :columns="columns" row-key="id">
       <template v-slot:header="props"><q-tr :props="props"><q-th v-for="col in props.cols" :key="col.name" :props="props">{{ col.label }}</q-th></q-tr></template>

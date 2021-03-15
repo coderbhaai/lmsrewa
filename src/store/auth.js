@@ -28,7 +28,7 @@ const actions = {
   async register({ commit }, form) {
     const res = await axios.post(api.register, form);
     if (res.data.success) {
-      this.$router.push({ name: 'login' });
+      this.$router.push({ name: 'Login' });
     }
     message(res.data.message);
   },
@@ -37,7 +37,7 @@ const actions = {
     if (res.data.success) {
       commit('LOGIN', res.data);
       setAxiosHeaders(state);
-      this.$router.push({ name: 'home' });
+      this.$router.push({ name: 'Home' }); 
     }
     message(res.data.message);
   },
@@ -47,7 +47,7 @@ const actions = {
       commit('LOGOUT', res.data.message);
     }
     message(res.data.message);
-    this.$router.push({ name: 'login' });
+    this.$router.push({ name: 'Login' });
   },
 };
 

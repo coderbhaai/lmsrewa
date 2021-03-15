@@ -17,9 +17,9 @@
             <div class="container page py-3" v-if="allowPractice && !startPractice">
                 <q-form class="q-gutter-md" @submit="onSubmit">
                     <div class="row">
-                        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="subject" :options="dpSubject" option-value="id" option-label="name" label="Subject" lazy-rules required @input="subjectSelected()"/></div>
-                        <div class="col-4 q-pr-lg q-mb-lg"><q-select multiple emit-value map-options v-model="topic" :options="dpTopicFilter" option-value="id" option-label="name" label="Topics" lazy-rules required @input="topicSelected()"/></div>
-                        <div class="col-4 q-pr-lg q-mb-lg"><q-select multiple emit-value map-options v-model="subTopic" :options="dpSubTopicFilter" option-value="id" option-label="name" label="Sub Topics" lazy-rules required/></div>
+                        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="subject" :options="dpSubject" option-value="id" option-label="name" label="Subject"  required @input="subjectSelected()"/></div>
+                        <div class="col-4 q-pr-lg q-mb-lg"><q-select multiple emit-value map-options v-model="topic" :options="dpTopicFilter" option-value="id" option-label="name" label="Topics"  required @input="topicSelected()"/></div>
+                        <div class="col-4 q-pr-lg q-mb-lg"><q-select multiple emit-value map-options v-model="subTopic" :options="dpSubTopicFilter" option-value="id" option-label="name" label="Sub Topics"  required/></div>
                     </div>
                     <!-- <p class="text-center" v-if="this.topic.length && questCount< this.paper"><strong>Note: </strong>We are in the process of adding more questions to our database. Till then you need to add more topics and subtopics in it to create a test paper.</p>  -->
                     <div class="text-center"><q-btn label="Start Practice" type="submit" color="primary"/></div>
@@ -41,7 +41,7 @@
                                 <div class="q-mb-sm">
                                     <div class="q-mb-sm option" v-for='(j, index) in JSON.parse(activeData.options)' :key='index'>
                                         <div class="optionItem"><span>{{index+1}} </span><div v-html="j" class="optionItemDetail"></div></div>
-                                        <div><q-radio :disable="isDisabled" v-model="answerList[activeIndex]" :val="index+1" color="teal" @input="submitOption(index+1)"/></div>
+                                        <div><q-radio :disable="dpIsDisabled" v-model="dpAnswerList[dpActiveIndex-1]" :val="index+1" color="teal" @input="submitOption(index+1)"/></div>
                                     </div>
                                 </div>
                                 <p class="marks">{{activeData.marks}} <strong>Marks</strong></p>
@@ -49,13 +49,37 @@
                         </q-card-section>
                         <q-separator/>
                         <q-card-section v-if="dpSolved" class="row prevSubmit">
-                            <q-btn color="primary" glossy label="Previous Question" @click="prevQuestion()"/>
+                            <q-btn color="primary" glossy label="Previous Question1" v-if="dpActiveIndex>0" @click="prevQuestion()"/>
                             <q-btn color="deep-orange" glossy label="Next Question" @click="nextQuestion()"/>
                         </q-card-section>
                         <q-card-section v-else class="row prevSubmit">
-                            <q-btn color="primary" glossy label="Previous Question" @click="prevQuestion()"/>
+                            <q-btn color="primary" glossy label="Previous Question2" v-if="dpActiveIndex>1" @click="prevQuestion()"/>
                             <q-btn color="deep-orange" glossy label="Submit Answer" @click="submitAnswer()"/>
                         </q-card-section>
+                        <div class="q-px-md" v-if="dpSolved">
+                            <div v-if="this.dpAnswerList[this.dpActiveIndex-1] == this.activeData.solution">
+                                <h3>Rightly Answered</h3>
+                            </div>
+                            <div v-else>
+                                <div class="answer">
+                                    <h3>Wrongly Answered</h3>
+                                    <p>The right answer is {{this.activeData.solution}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="q-px-md row" v-if="dpTotal">
+                            <div class="col-sm-6">
+                                <h3><strong>Questions Number</strong> : 
+                                <span v-if="this.dpActiveIndex!=this.dpQuestions.length">{{this.dpActiveIndex}}</span>
+                                <span v-else>{{this.dpQuestions.length}}</span>
+                                
+                                <!-- {{this.dpActiveIndex}}{{this.dpQuestions.length}} -->
+                                </h3>
+                            </div>
+                            <div class="col-sm-6">
+                                <h3 class="text-right"><strong>Score</strong>: {{this.dpScore}} / {{this.dpTotal}}</h3>
+                            </div>
+                        </div>
                     </q-card>
                 </div>
             </div>
@@ -76,11 +100,7 @@ export default {
             subject: 28,
             topic: [[39,40,41,42,43,44,45,46,47]],
             subTopic: [105,106,107,108,109,110,111,112,113,114,115,116,117,118],
-            isDisabled: this.$store.getters.dpIsDisabled,
-            answerList: this.$store.getters.dpAnswerList,
-            solutionList: this.$store.getters.dpSolutionList,
-            activeIndex: this.$store.getters.activeIndex,
-            filters: this.$store.getters.dpFilters,
+            review: false,
         }
     },
     methods: {
@@ -110,63 +130,64 @@ export default {
             this.$store.dispatch('dpTopicSelected', data);
         },
         submitOption(index){
-            console.log('index', index)
             this.$store.dispatch('dpSubmitOption', index);
-            this.answerList = this.$store.getters.dpAnswerList
         },
         submitAnswer(){
-            console.log('Submit Answer')
-            this.isDisabled = true
-            const data={
-                'userId': this.user.id,
-                'dpId': this.filters.id,
-                'answerList': JSON.stringify(this.answerList),
-                'answer': this.answerList[this.activeIndex],
-                'solution': this.activeData.solution,
-                'marks': this.activeData.marks,
+            if(this.dpAnswerList[this.dpActiveIndex-1]){
+                const data={
+                    'userId': this.user.id,
+                    'dpId': this.dpFilters.id,
+                    'answerList': JSON.stringify(this.dpAnswerList),
+                    'answer': this.dpAnswerList[this.dpActiveIndex-1],
+                    'solution': this.activeData.solution,
+                    'marks': this.activeData.marks,
+                }
+                this.$store.dispatch('dpSubmitAnswer', data);
+            }else{
+                message('Please answer first');
             }
-            this.$store.dispatch('dpSubmitAnswer', data);
-            this.isDisabled = this.$store.getters.dpIsDisabled
         },
         prevQuestion(){
-            console.log('Previous Question')
+            if(this.dpAnswerList.length== this.dpQuestions.length){
+                if(this.dpActiveIndex!= 0){
+                    message('Showing you the preview from Prev');
+                    this.dpPreview(this.dpActiveIndex-1)
+                }else{
+                    message('You have reached the end');
+                }
+            }else{
+                message('Please answer this quetion first');
+            }
         },
         nextQuestion(){
-            console.log('Next Question')
-            const data={
-                'exclude': this.$store.getters.dpData,
-                'subTopic': this.subTopic
+            if(this.dpAnswerList.length== this.dpQuestions.length && this.activeData.id== this.dpQuestions.slice(-1)[0]){
+                const data={
+                    'userId': this.user.id,
+                    'dpId': this.dpFilters.id,
+                    'exclude': this.dpQuestions,
+                    'subTopic': this.subTopic
+                }
+                this.$store.dispatch('dpNextQuestion', data);
+            }else{
+                this.dpPreview(this.dpActiveIndex+1)
+                message('Showing you the preview from next');
             }
-            this.$store.dispatch('dpNextQuestion', data);
         },
-        // startPractice(){
-        //     if(!this.subject){
-        //         message('Please select Subject');
-        //     }else if(!this.topic.length){
-        //         message('Please select Topic');
-        //     }else if(!this.subTopic.length){
-        //         console.log('1')
-        //         message('Please select  Sub Topics');
-        //     }else{
-        //         console.log('ok')
-        //         const data={
-        //             'userId': this.user.id,
-        //             'subject': this.subject,
-        //             'topic': this.topic,
-        //             'subTopic': this.subTopic,
-        //         }
-        //         this.$store.dispatch('startPractice', data);
-        //     }
-        // },
+        dpPreview(id){
+            const data={
+                'question': this.dpQuestions[id],
+                'index': id
+            }
+            this.$store.dispatch('dpPreview', data);
+                
+        },
         onSubmit(e) {
             e.preventDefault();
-            console.log('On Submit')
             if(!this.subject){
                 message('Please select Subject');
             }else if(!this.topic.length){
                 message('Please select Topic');
             }else if(!this.subTopic.length){
-                console.log('1')
                 message('Please select  Sub Topics');
             }else{
                 const data={
@@ -180,17 +201,16 @@ export default {
         },
     },
     computed: {
-        ...mapGetters(['user', 'allowPractice', 'startPractice', 'dpSubject', 'dpTopicFilter', 'dpSubTopicFilter', 'dpData','dpAnswerList', 'activeData', 'activeIndex', 'dpSolved', 'dpFilters']),
-        mycomputed() {
-            this.answerList = this.$store.getters.dpAnswerList
-            this.activeIndex= this.$store.getters.activeIndex
-            this.isDisabled = this.$store.getters.dpIsDisabled
-            this.filters = this.$store.getters.dpFilters
-            this.solutionList = this.$store.getters.dpSolutionList
-        },
+        ...mapGetters(['user', 'allowPractice', 'startPractice', 'dpSubject', 'dpTopicFilter', 'dpSubTopicFilter', 'dpQuestions','dpAnswerList', 'activeData', 'dpActiveIndex', 'dpSolved', 'dpFilters', 'dpIsDisabled', 'dpTotal', 'dpScore']),
     },
     created() {
-        this.$store.dispatch('dailyPractice');
+        const data={
+            'dpId': this.dpFilters.id
+        }
+        this.$store.dispatch('initializeDp', data);
+        if(this.activeData.id != this.dpQuestions.slice(-1)[0]){
+            this.dpPreview(this.dpQuestions.length-1)
+        }
     },
 };
 </script>
@@ -222,4 +242,12 @@ export default {
     .prevSubmit
         align-items: center
         justify-content: space-between
+    .answer
+        display: flex
+        align-items: center
+        justify-content: space-between
+        p
+            margin: 0
+            line-height: unset
+
 </style>

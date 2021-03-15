@@ -47,4 +47,8 @@ export default {
   dailyPracticeData: `${url}/user/dailyPracticeData`,
   startDailyPractice: `${url}/user/startDailyPractice`,
   nextQuestion: `${url}/user/nextQuestion`,
+  dpPreview: `${url}/user/dpPreview`,
+  initializeDp: `${url}/user/initializeDp`,
+  hireATutor: `${url}/user/hireATutor`,
+  postRequirement: `${url}/user/postRequirement`,
 };

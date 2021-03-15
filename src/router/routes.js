@@ -1,7 +1,7 @@
 const routes = [
   {
     path: '/',
-    name: 'home',
+    name: 'Home',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/Index.vue') },
@@ -9,6 +9,7 @@ const routes = [
   },
   {
     path: '/register',
+    name: 'Register',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '/register', component: () => import('pages/auth/Register.vue') },
@@ -17,7 +18,7 @@ const routes = [
   },
   {
     path: '/login',
-    name: 'login',
+    name: 'Login',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '/login', component: () => import('pages/auth/Login.vue') },
@@ -26,34 +27,34 @@ const routes = [
   },
   {
     path: '/blog',
-    name: 'blog',
+    name: 'Blog',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/blog', component: () => import('pages/blog/blog.vue') },
+      { path: '/blog', component: () => import('pages/blog/Blog.vue') },
     ],
   },
   {
     path: '/blog/:url',
-    name: 'single',
+    name: 'Single',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/blog/:url', component: () => import('pages/blog/single.vue') },
+      { path: '/blog/:url', component: () => import('pages/blog/Single.vue') },
     ],
   },
   {
     path: '/video-tutorials/:id',
-    name: 'videos',
+    name: 'Videos',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/video-tutorials/:id', component: () => import('pages/index/videos.vue') },
+      { path: '/video-tutorials/:id', component: () => import('pages/index/Videos.vue') },
     ],
   },
   {
     path: '/online-test-series',
-    name: 'onlineTestSeries',
+    name: 'OnlineTestSeries',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/online-test-series', component: () => import('pages/index/onlineTestSeries.vue') },
+      { path: '/online-test-series', component: () => import('pages/index/OnlineTestSeries.vue') },
     ],
   },
   {
@@ -67,16 +68,25 @@ const routes = [
   },
   {
     path: '/daily-practice',
-    name: 'dailyPractice',
+    name: 'DailyPractice',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/daily-practice', component: () => import('pages/index/dailyPractice.vue') },
+      { path: '/daily-practice', component: () => import('pages/index/DailyPractice.vue') },
     ],
+  },  
+  {
+    path: '/hire-a-tutor',
+    name: 'HireATutor',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/hire-a-tutor', component: () => import('pages/index/HireATutor.vue') },
+    ],
+    meta: {},
   },
   // Admin Routes
   {
     path: '/admin/addBlog',
-    name: 'addBlog',
+    name: 'AddBlog',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '/admin/addBlog', component: () => import('pages/admin/AddBlog.vue') },
@@ -85,7 +95,7 @@ const routes = [
   },
   {
     path: '/admin/updateBlog/:id',
-    name: 'updateBlog',
+    name: 'UpdateBlog',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '/admin/updateBlog/:id', component: () => import('pages/admin/UpdateBlog.vue') },
@@ -94,106 +104,98 @@ const routes = [
   },
   {
     path: '/admin/blogMeta',
-    name: 'blogMeta',
+    name: 'BlogMeta',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/admin/blogMeta', component: () => import('pages/admin/blogMeta.vue') },
+      { path: '/admin/blogMeta', component: () => import('pages/admin/BlogMeta.vue') },
     ],
     meta: { auth: true, ss: true },
   },
   {
     path: '/admin/blogs',
-    name: 'adminBlogs',
+    name: 'AdminBlogs',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/admin/blogs', component: () => import('pages/admin/blogs.vue') },
+      { path: '/admin/blogs', component: () => import('pages/admin/Blogs.vue') },
     ],
     meta: { auth: true, ss: true },
   },
   {
     path: '/admin/basics',
-    name: 'basics',
+    name: 'Basics',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/admin/basics', component: () => import('pages/admin/basics.vue') },
+      { path: '/admin/basics', component: () => import('pages/admin/Basics.vue') },
     ],
     // meta: { ss: true },
   },
   {
     path: '/admin/meta',
-    name: 'meta',
+    name: 'Meta',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/admin/meta', component: () => import('pages/admin/meta.vue') },
+      { path: '/admin/meta', component: () => import('pages/admin/Meta.vue') },
     ],
     meta: { auth: true, ss: true },
   },
   {
     path: '/admin/videos',
-    name: 'videos',
+    name: 'Videos',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/admin/videos', component: () => import('pages/admin/videos.vue') },
+      { path: '/admin/videos', component: () => import('pages/admin/Videos.vue') },
     ],
     meta: { auth: true, ss: true },
   },
   {
     path: '/admin/questionBank',
-    name: 'questionBank',
+    name: 'QuestionBank',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/admin/questionBank', component: () => import('pages/admin/questionBank.vue') },
+      { path: '/admin/questionBank', component: () => import('pages/admin/QuestionBank.vue') },
     ],
     meta: { auth: true, ss: true },
   },  
   {
     path: '/admin/questionSummary',
-    name: 'questionSummary',
+    name: 'QuestionSummary',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/admin/questionSummary', component: () => import('pages/admin/questionSummary.vue') },
+      { path: '/admin/questionSummary', component: () => import('pages/admin/QuestionSummary.vue') },
     ],
     meta: { auth: true, ss: true },
   },
   {
     path: '/admin/addQuestion',
-    name: 'addQuestion',
+    name: 'AddQuestion',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/admin/addQuestion', component: () => import('pages/admin/addQuestion.vue') },
+      { path: '/admin/addQuestion', component: () => import('pages/admin/AddQuestion.vue') },
     ],
     meta: { auth: true, ss: true },
   },
   {
     path: '/admin/updateQuestion/:id',
-    name: 'updateQuestion',
+    name: 'UpdateQuestion',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/admin/updateQuestion/:id', component: () => import('pages/admin/updateQuestion.vue') },
+      { path: '/admin/updateQuestion/:id', component: () => import('pages/admin/UpdateQuestion.vue') },
     ],
     meta: { auth: true, ss: true },
   },
   {
     path: '/admin/institutes',
-    name: 'institutes',
+    name: 'Institutes',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/admin/institutes', component: () => import('pages/admin/institutes.vue') },
-    ],
-    meta: { auth: true, ss: true },
-  },
-  {
-    path: '/admin/institutes',
-    name: 'institutes',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
-      { path: '/admin/institutes', component: () => import('pages/admin/institutes.vue') },
+      { path: '/admin/institutes', component: () => import('pages/admin/Institutes.vue') },
     ],
     meta: { auth: true, ss: true },
   },
   // Admin Routes
   {
     path: '*',
+    name: '404',
     component: () => import('pages/404.vue'),
   },
 ];

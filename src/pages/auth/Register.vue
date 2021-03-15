@@ -14,14 +14,14 @@
             </q-card-section>
             <q-card-section>
                 <q-form class="q-gutter-md" @submit="onSubmit">
-                    <q-input v-model="name" label="Name" lazy-rules />
-                    <q-input v-model="email" label="Email" lazy-rules/>
-                    <q-input v-model="password" label="Password" lazy-rules/>
-                    <q-input v-model="confirm_password" label="Confirm Password" lazy-rules/>
-                    <q-input v-model="confirm_password" label="Confirm Password" lazy-rules/>
-                    <q-select v-model="role" :options="options" option-value="value" option-label="text" label="Iam a" lazy-rules/>
+                    <q-input v-model="name" label="Name"  />
+                    <q-input v-model="email" label="Email" />
+                    <q-input v-model="password" label="Password" />
+                    <q-input v-model="confirm_password" label="Confirm Password" />
+                    <q-input v-model="confirm_password" label="Confirm Password" />
+                    <q-select v-model="role" :options="options" option-value="value" option-label="text" label="Iam a" />
                     <div v-if="this.role.value=='Admin'">
-                        <q-select v-model="institute" :options="schoolOptions" option-value="value" option-label="text" label="Select Organisation" lazy-rules/>
+                        <q-select v-model="institute" :options="schoolOptions" option-value="value" option-label="text" label="Select Organisation" />
                         <p>Your login will be held till the organisation approves it</p>
                     </div>
                     <div><q-btn label="Register" type="submit" color="primary"/></div>

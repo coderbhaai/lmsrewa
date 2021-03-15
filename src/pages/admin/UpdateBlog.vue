@@ -4,10 +4,10 @@
     <q-form class="q-gutter-md" @submit="onSubmit">
       <div class="row q-pb-lg">
         <div class="col-4 q-pr-lg">
-          <q-input v-model="title" label="Blog Title" lazy-rules/>
+          <q-input v-model="title" label="Blog Title" />
         </div>
         <div class="col-4 q-pr-lg">
-          <q-input v-model="url" label="Blog URL" lazy-rules />
+          <q-input v-model="url" label="Blog URL"  />
         </div>
         <div class="col-4 previewImg">
           <q-file v-model="image" label="Blog Image" />

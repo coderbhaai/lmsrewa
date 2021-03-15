@@ -14,8 +14,8 @@
             </q-card-section>
             <q-card-section>
                 <q-form class="q-gutter-md" @submit="onSubmit">
-                    <q-input v-model="email" label="Email" lazy-rules/>
-                    <q-input v-model="password" label="Password" lazy-rules/>
+                    <q-input v-model="email" label="Email" />
+                    <q-input v-model="password" label="Password" />
                     <div>
                         <q-btn label="Login" type="submit" color="primary"/>
                     </div>

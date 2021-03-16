@@ -50,5 +50,11 @@ export default {
   dpPreview: `${url}/user/dpPreview`,
   initializeDp: `${url}/user/initializeDp`,
   hireATutor: `${url}/user/hireATutor`,
-  postRequirement: `${url}/user/postRequirement`,
+  postRequirement: `${url}/user/postRequirement`,  
+  schoolBasics: `${url}/school/schoolBasics/`,
+  addSchoolBasic: `${url}/school/addSchoolBasic`,
+  updateSchoolBasic: `${url}/school/updateSchoolBasic`,
+
+
+
 };

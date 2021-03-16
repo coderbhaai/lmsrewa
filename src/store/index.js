@@ -7,6 +7,7 @@ import auth from './auth';
 import blog from './blog';
 import video from './video';
 import admin from './admin';
+import school from './school';
 
 Vue.use(Vuex);
 
@@ -18,6 +19,7 @@ export default function (/* { ssrContext } */) {
       blog,
       video,
       admin,
+      school,
     },
     plugins: [createPersistedState()]
   })

@@ -144,3 +144,11 @@ img.edit{
         margin-bottom: 0
     }
 }
+.filterRow{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .filterBy{
+        min-width: 250px;
+    }
+}

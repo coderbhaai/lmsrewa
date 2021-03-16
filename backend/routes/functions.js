@@ -1,12 +1,12 @@
 var mysql = require('mysql')
 const jwt = require('jsonwebtoken')
+const {decode} = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 var pool = require('./mysqlConnector')
 let today = new Date().toISOString().slice(0, 10)
 const time = new Date().toISOString().slice(0, 19).replace('T', ' ')
 const transporter = nodemailer.createTransport({ host: "smtpout.secureserver.net", port: 465, secure: true, auth: { user: 'contactus@thetrueloans.com', pass: 'contactus@123',  debug: true }, tls:{ rejectUnauthorized: false, secureProtocol: "TLSv1_method" } });
 const fs = require('fs')
-
 const storage = './public/images/'
 
 function printError(mesg){ console.log('mesg', mesg) }
@@ -308,6 +308,29 @@ function blogMetaName(type, data) {
     });
 }
 
+// School Functions
+
+function getSchoolBasic(id) {
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT a.id, a.schoolId, a.type, a.name, a.tab1, a.tab2, a.tab3, a.updated_at, b.name as tab1Name, c.name as tab2Name, d.name as tab3Name 
+        FROM schoolbasics as a left join schoolbasics as b on b.id = a.tab1 left join schoolbasics as c on c.id = a.tab2 left join schoolbasics as d on d.id = a.tab3 
+        WHERE a.id = ${id};`
+        pool.query(sql, (err, results) => {
+            try{
+                if(err){ throw err }
+                if(results){ resolve(results[0] ) }
+            }catch(e){ logError(e);return; }
+        });
+    });
+}
+
+
+
+
+// School Functions
+
+// Generic Functions
+
 function sendMailOnError(e) {
     const mailBody =`
         <h2><strong>Hi</h2>
@@ -329,4 +352,64 @@ function logError(e){
     printError(e)
 }
 
-module.exports = { getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails, dpPreview };
+function verifyToken(req, res, next){
+    const bearerHeader = req.headers['authorization'];
+    if(bearerHeader) {
+        const bearer = bearerHeader.split(' ');
+        const bearerToken = bearer[1];
+        const exp  = decode(bearerHeader)
+        req.token = bearerToken;
+        next();
+    }else {
+        res.redirect('/login?e=' + encodeURIComponent('LoggedOut'));
+    }
+}
+    
+function verifyAdmin(req, res, next){
+    const bearerHeader = req.headers['authorization'];
+    if(bearerHeader) {
+        try{
+            const bearer = bearerHeader.split(' ');
+            const bearerToken = bearer[1];
+            const user = jwt.verify(bearerToken,'secretkey')
+            if (user.user.role=='Admin'){ next(); }
+            else{ res.redirect('/blog'); res.end(); return; }
+        } catch(e){ logError(e); res.redirect('/blog'); return; }
+    }else {
+        res.redirect('/blog');
+    }
+}
+
+function verifyInsti(req, res, next){
+    const bearerHeader = req.headers['authorization'];
+    if(bearerHeader) {
+        try{
+            const bearer = bearerHeader.split(' ');
+            const bearerToken = bearer[1];
+            const user = jwt.verify(bearerToken,'secretkey')
+            if (user.user.role=='School'){ next(); }
+            else{ res.redirect('/blog'); res.end(); return; }
+        } catch(e){ logError(e); res.redirect('/blog'); return; }
+    }else {
+        res.redirect('/blog');
+    }
+}
+
+function getUserId(req, res, next){
+    if(req.cookies.jwt){
+    const bearerHeader = req.cookies.jwt
+    try{
+        const user = jwt.verify(bearerHeader,'secretkey')
+        if (user.user.role!=='Admin'){
+            res.redirect('/blog')
+            res.end()
+            return;
+        }
+        next();
+        } catch(e){ logError(e, 'Function verifyAdmin in Index'); res.status(403); return; }
+    }else{
+        res.redirect('/login?e=' + encodeURIComponent('LoggedOut'));
+    }
+}
+
+module.exports = {verifyToken, verifyAdmin, verifyInsti, getUserId, getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails, dpPreview, getSchoolBasic };

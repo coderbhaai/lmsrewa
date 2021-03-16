@@ -193,6 +193,18 @@ const routes = [
     meta: { auth: true, ss: true },
   },
   // Admin Routes
+
+  // School Routes
+  {
+    path: '/school/basics',
+    name: 'SchoolBasics',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/school/basics', component: () => import('pages/school/Basics.vue') },
+    ],
+    meta: { auth: true },
+  },
+  // School Routes
   {
     path: '*',
     name: '404',

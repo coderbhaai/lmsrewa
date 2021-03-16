@@ -150,18 +150,10 @@ export default {
             const data={ classSelected: this.classes }
             this.$store.dispatch('hireClassSelected', data);
         },
-        startForm(){
-            console.log('Show Hiring')
-            this.showForm = true
-        },
-        hideForm(){
-            console.log('Hide Hiring')
-            this.showForm = false
-        },
+        startForm(){ this.showForm = true },
+        hideForm(){ this.showForm = false },
         onSubmit(e){
             e.preventDefault();
-            console.log('On Submit')
-            // console.log(this.$v)
             // if (this.$v.$anyError) {
             //     this.$q.notify({
             //     color: 'red-4',

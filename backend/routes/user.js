@@ -199,7 +199,6 @@ router.post('/initializeDp', asyncMiddleware(async(req, res) => {
 
 router.get('/hireATutor', asyncMiddleware(async(req, res) => {
     let sql = `SELECT id, type, name, tab1 FROM basics WHERE type IN('Board', 'Class', 'Subject', 'Mode');`
-    console.log('sql', sql)
     pool.query(sql, async(err, results) => {
         try{           
             if(err){ throw err }

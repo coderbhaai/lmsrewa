@@ -8,6 +8,7 @@ const nodemailer = require("nodemailer");
 router.use('/auth', require('./auth'))
 router.use('/admin', require('./admin'))
 router.use('/user', require('./user'))
+router.use('/school', require('./school'))
 
 const transporter = nodemailer.createTransport({ host: "smtpout.secureserver.net", port: 465, secure: true, auth: { user: 'contactus@thetrueloans.com', pass: 'contactus@123',  debug: true }, tls:{ rejectUnauthorized: false, secureProtocol: "TLSv1_method" } });
 

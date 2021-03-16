@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export default function setAxiosHeaders(state) {
-  axios.defaults.headers.common.Authorization = state.user
-    ? `Bearer  + ${state.user.token}`
-    : '';
+  if(state.user){
+    axios.defaults.headers.common.Authorization = `Bearer + ${state.user.token}`;
+  }
 }

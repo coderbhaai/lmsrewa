@@ -9,7 +9,7 @@
       <q-form class="q-gutter-md q-mb-lg" @submit="addSubmit">
         <div class="row">
           <div class="col-4 q-pr-lg"><q-select emit-value v-model="type" :options="schoolBasicOptions" option-value="name" option-label="name" label="Type"  required @input="typeSelected()"/></div>
-          <div class="col-4 q-pr-lg" v-if="this.type=='Student'">
+          <div class="col-4 q-pr-lg" v-if="this.type=='Student' || this.type=='Subject'">
             <q-select emit-value map-options v-model="tab1" :options="schoolClassOptions" option-value="id" option-label="name" label="Class"  required @input="classSelected()"/>
           </div>
           <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name"  required/></div>
@@ -24,7 +24,7 @@
           <q-form class="q-gutter-md" @submit="updateSubmit">
             <div class="row">
               <div class="col-4 q-pr-lg"><q-select emit-value v-model="type" :options="schoolBasicOptions" option-value="name" option-label="name" label="Type"  required @input="typeSelected()"/></div>
-              <div class="col-4 q-pr-lg" v-if="this.type=='Student'">
+              <div class="col-4 q-pr-lg" v-if="this.type=='Student' || this.type=='Subject'">
                 <q-select emit-value map-options v-model="tab1" :options="schoolClassOptions" option-value="id" option-label="name" label="Class"  required @input="classSelected()"/>
               </div>
               <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name"  required/></div>

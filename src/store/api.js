@@ -54,7 +54,9 @@ export default {
   schoolBasics: `${url}/school/schoolBasics/`,
   addSchoolBasic: `${url}/school/addSchoolBasic`,
   updateSchoolBasic: `${url}/school/updateSchoolBasic`,
-
+  schoolAttendance: `${url}/school/schoolAttendance/`,
+  schoolGroups: `${url}/school/schoolGroups/`,
+  addSchoolGroup: `${url}/school/addSchoolGroup`,
 
 
 };

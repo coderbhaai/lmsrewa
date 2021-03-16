@@ -8,6 +8,8 @@ const state = {
   schoolBasicOptions: [],
   schoolClassOptions:  [],
   schoolStudentOptions:  [],
+  schoolSubjectOptions: [],
+  schoolGroups: [],
 };
 
 const getters = {
@@ -16,6 +18,8 @@ const getters = {
   schoolBasicOptions: (state) => state.schoolBasicOptions,
   schoolClassOptions: (state) => state.schoolClassOptions,
   schoolStudentOptions: (state) => state.schoolStudentOptions,
+  schoolSubjectOptions: (state) => state.schoolSubjectOptions,
+  schoolGroups: (state) => state.schoolGroups,
 };
 
 const actions = {
@@ -33,6 +37,16 @@ const actions = {
   async filterSchoolBasic({ commit }, form) {
     commit('FILTERSCHOOLBASIC', form);
     message('Data filtered successfully');
+  },
+
+  async schoolAttendance({ commit }, form) { const res = await axios.get(api.schoolAttendance+form.schoolId); commit('SCHOOLATTENDANCE', res.data.data); },
+  async attendanceClassSelected({ commit }, form) { commit('ATTENDANCECLASSSELECTED', form); },
+
+  async schoolGroups({ commit }, form) { const res = await axios.get(api.schoolGroups+form.schoolId); commit('SCHOOLGROUPS', res.data.data); },
+  async addSchoolGroup({ commit }, form) {
+    const res = await axios.post(api.addSchoolGroup, form);
+    if (res.data.success) { commit('ADDSCHOOLGROUP', res.data.data); }
+    message(res.data.message);
   },
 };
 
@@ -63,6 +77,18 @@ const mutations = {
     }else{
       state.schoolBasics = state.schoolBasicsCopy;
     }
+  },
+  SCHOOLATTENDANCE: (state, data) => {
+    state.schoolBasicsCopy = data
+    state.schoolClassOptions = data.filter((i) => i.type === 'Class' );
+  },
+  ATTENDANCECLASSSELECTED: (state, data) => {
+    console.log(`state.schoolBasicsCopy`, state.schoolBasicsCopy)
+    state.schoolSubjectOptions = state.schoolBasicsCopy.filter(i => i.tab1 == data.classes && i.type=='Subject' );
+  },
+  SCHOOLGROUPS: (state, data) => { state.schoolGroups = data; },
+  ADDSCHOOLGROUP: (state, data) => { 
+    state.schoolGroups.unshift(data); 
   },
 };
 

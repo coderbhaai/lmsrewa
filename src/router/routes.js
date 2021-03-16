@@ -204,6 +204,34 @@ const routes = [
     ],
     meta: { auth: true },
   },
+  {
+    path: '/school/attendance',
+    name: 'SchoolAttendance',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/school/attendance', component: () => import('pages/school/Attendance.vue') },
+    ],
+    meta: { auth: true },
+  },
+  {
+    path: '/school/takeAttendance',
+    name: 'SchoolTakeAttendance',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/school/takeAttendance', component: () => import('pages/school/TakeAttendance.vue') },
+    ],
+    meta: { auth: true },
+  },
+  {
+    path: '/school/groups',
+    name: 'SchoolGroups',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/school/groups', component: () => import('pages/school/Groups.vue') },
+    ],
+    meta: { auth: true },
+  },
+
   // School Routes
   {
     path: '*',

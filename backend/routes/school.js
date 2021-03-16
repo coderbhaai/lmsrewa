@@ -74,7 +74,47 @@ router.post('/updateSchoolBasic', asyncMiddleware( async(req, res) => {
     })
 }))
 
+router.get('/schoolAttendance/:id', asyncMiddleware( async(req, res) => {
+    console.log(`req.params.id`, req.params.id)
+    let sql = `SELECT a.id, a.schoolId, a.type, a.name, a.tab1, b.name as tab1Name FROM schoolbasics as a 
+    left join schoolbasics as b on b.id = a.tab1 WHERE a.type IN ('Class', 'Subject') AND a.schoolId = '${req.params.id}';`
+    pool.query(sql, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ data: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
 
+router.get('/schoolGroups/:id', asyncMiddleware( async(req, res) => {
+    console.log(`req.params.id`, req.params.id)
+    let sql = `SELECT id, name, schoolId, students, teachers FROM groups WHERE schoolId = '${req.params.id}';`
+    pool.query(sql, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ data: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/addSchoolGroup', asyncMiddleware( async(req, res) => {
+    let post= {
+        'schoolId':             req.body.schoolId,
+        'name':                 req.body.name,
+        "created_at":           time,
+        "updated_at":           time,
+    }
+    let sql = `INSERT INTO groups SET ?`
+    pool.query(sql, post, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){
+                const data = await func.getSchoolGroup(results.insertId)
+                res.send({ success: true, data, message: 'Group created successfuly' });
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
 
 
 module.exports = router;

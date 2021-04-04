@@ -10,6 +10,14 @@ const state = {
   schoolStudentOptions:  [],
   schoolSubjectOptions: [],
   schoolGroups: [],
+  schoolStudents: [],
+  schoolStudentFilter: [],
+  teacherAttendance: [],
+  teacherAttendanceFilter: [],
+  teacherClassOptions:  [],
+  teacherSubjectOptions:  [],
+  present:  [],
+  absent:  [],
 };
 
 const getters = {
@@ -20,6 +28,14 @@ const getters = {
   schoolStudentOptions: (state) => state.schoolStudentOptions,
   schoolSubjectOptions: (state) => state.schoolSubjectOptions,
   schoolGroups: (state) => state.schoolGroups,
+  schoolStudents: (state) => state.schoolStudents,
+  schoolStudentFilter: (state) => state.schoolStudentFilter,
+  teacherAttendance: (state) => state.teacherAttendance,
+  teacherAttendanceFilter: (state) => state.teacherAttendanceFilter,
+  teacherClassOptions: (state) => state.teacherClassOptions,
+  teacherSubjectOptions: (state) => state.teacherSubjectOptions,
+  present: (state) => state.present,
+  absent: (state) => state.absent,
 };
 
 const actions = {
@@ -41,13 +57,40 @@ const actions = {
 
   async schoolAttendance({ commit }, form) { const res = await axios.get(api.schoolAttendance+form.schoolId); commit('SCHOOLATTENDANCE', res.data.data); },
   async attendanceClassSelected({ commit }, form) { commit('ATTENDANCECLASSSELECTED', form); },
+  async attendanceSubjectSelected({ commit }, form) { const res = await axios.post(api.schoolAttendanceStudents, form); commit('ATTENDANCESUBJECTSELECTED', res.data.data); },
+  async submitAttendance({ commit }, form) { 
+    const res = await axios.post(api.submitAttendance, form); 
+    if (res.data.success) { commit('SUBMITATTENDANCE'); }
+    message(res.data.message);
+    this.$router.push({ name: 'TeacherAttendance' });
+  },
 
-  async schoolGroups({ commit }, form) { const res = await axios.get(api.schoolGroups+form.schoolId); commit('SCHOOLGROUPS', res.data.data); },
+  async schoolGroups({ commit }, form) { const res = await axios.get(api.schoolGroups+form.schoolId); commit('SCHOOLGROUPS', res.data); },
   async addSchoolGroup({ commit }, form) {
     const res = await axios.post(api.addSchoolGroup, form);
     if (res.data.success) { commit('ADDSCHOOLGROUP', res.data.data); }
     message(res.data.message);
   },
+  async updateGroupName({ commit }, form) {
+    const res = await axios.post(api.updateGroupName, form);
+    if (res.data.success) { commit('UPDATEGROUPNAME', res.data.data); }
+    message(res.data.message);
+  },
+  async updateGroupStudents({ commit }, form) {
+    const res = await axios.post(api.updateGroupStudents, form);
+    if (res.data.success) { commit('UPDATEGROUPSTUDENTS', res.data.data); }
+    message(res.data.message);
+  },
+
+  async teacherAttendance({ commit }, form) { const res = await axios.post(api.teacherAttendance, form); commit('TEACHERATTENDANCE', res.data); },
+  async filterAttendance({ commit }, form) { commit('FILTERATTENDANCE', form); },
+  async resetAttendance({ commit }) { commit('RESETATTENDANCE'); },
+  async showAttendance({ commit }, form) { const res = await axios.post(api.showAttendance, form); 
+    console.log(`res`, res)
+    
+    commit('SHOWATTENDANCE', res.data); },
+  async clearPresentAbsent({ commit }) { commit('CLEARPRESENTABSENT'); },
+  
 };
 
 const mutations = {
@@ -79,17 +122,58 @@ const mutations = {
     }
   },
   SCHOOLATTENDANCE: (state, data) => {
+    state.schoolStudentFilter = []
     state.schoolBasicsCopy = data
     state.schoolClassOptions = data.filter((i) => i.type === 'Class' );
   },
-  ATTENDANCECLASSSELECTED: (state, data) => {
-    console.log(`state.schoolBasicsCopy`, state.schoolBasicsCopy)
-    state.schoolSubjectOptions = state.schoolBasicsCopy.filter(i => i.tab1 == data.classes && i.type=='Subject' );
+  ATTENDANCECLASSSELECTED: (state, data) => { 
+    state.schoolSubjectOptions = state.schoolBasicsCopy.filter(i => i.tab1 == data.classes && i.type=='Subject' ); 
+    state.schoolStudentFilter = []
   },
-  SCHOOLGROUPS: (state, data) => { state.schoolGroups = data; },
-  ADDSCHOOLGROUP: (state, data) => { 
-    state.schoolGroups.unshift(data); 
+  ATTENDANCESUBJECTSELECTED: (state, data) => { state.schoolStudentFilter = data },
+  SUBMITATTENDANCE: (state) => { 
+    state.schoolStudentFilter = []
   },
+
+  SCHOOLGROUPS: (state, data) => {
+    state.schoolGroups = data.groups;
+    state.schoolStudents = data.students;
+  },
+  ADDSCHOOLGROUP: (state, data) => { state.schoolGroups.unshift(data); },
+  UPDATEGROUPNAME: (state, data) => { const index = state.schoolGroups.findIndex((i) => i.id === data.id); if (index !== -1) { state.schoolGroups.splice(index, 1, data); } },
+  UPDATEGROUPSTUDENTS: (state, data) => { const index = state.schoolGroups.findIndex((i) => i.id === data.id); if (index !== -1) { state.schoolGroups.splice(index, 1, data); } },
+
+  TEACHERATTENDANCE: (state, data) => {
+    state.teacherAttendanceFilter = data.attendance; 
+    state.teacherAttendance = data.attendance; 
+    // var classes = []
+    // data.attendance.map(i=>(
+    //   classes.push({id: i.class, value: i.className})
+    // ))
+    // console.log(`classes`, classes)
+    state.teacherClassOptions = data.classes; 
+    state.teacherSubjectOptions = data.subject; 
+    state.present = []; 
+    state.absent = [];
+  },
+  FILTERATTENDANCE: (state, data) => {
+    if(data.classes && data.subject){ state.teacherAttendanceFilter =  state.teacherAttendance.filter((i) => i.class == data.classes).filter((i) => i.subject == data.subject); }else
+    if(data.subject){ state.teacherAttendanceFilter =  state.teacherAttendance.filter((i) => i.subject == data.subject); }else
+    if(data.classes){ state.teacherAttendanceFilter =  state.teacherAttendance.filter((i) => i.class == data.classes) }
+  },
+  RESETATTENDANCE: (state) => {
+    state.teacherAttendanceFilter =  state.teacherAttendance
+  },
+  SHOWATTENDANCE: (state, data) => {
+    console.log(`data.present`, data.present)
+    state.present = data.present; 
+    state.absent = data.absent; 
+  },
+  CLEARPRESENTABSENT: (state) => {
+    state.present = []; 
+    state.absent = [];
+  },
+
 };
 
 export default { state, getters, actions, mutations, };

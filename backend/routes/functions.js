@@ -336,6 +336,21 @@ function getSchoolGroup(id) {
     });
 }
 
+function getNames(data) {
+    return new Promise((resolve, reject) => {
+        if(JSON.parse(data).length){
+            let sql = `SELECT id, name FROM schoolbasics WHERE id IN (${JSON.parse(data)});`
+            pool.query(sql, (err, results) => {
+                try{
+                    if(err){ throw err }
+                    if(results){ resolve(results ) }
+                }catch(e){ logError(e);return; }
+            });
+        }else{
+            resolve([])
+        }
+        });
+}
 
 // School Functions
 
@@ -422,4 +437,4 @@ function getUserId(req, res, next){
     }
 }
 
-module.exports = {verifyToken, verifyAdmin, verifyInsti, getUserId, getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails, dpPreview, getSchoolBasic, getSchoolGroup };
+module.exports = {verifyToken, verifyAdmin, verifyInsti, getUserId, getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails, dpPreview, getSchoolBasic, getSchoolGroup, getNames };

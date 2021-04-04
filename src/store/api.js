@@ -57,6 +57,10 @@ export default {
   schoolAttendance: `${url}/school/schoolAttendance/`,
   schoolGroups: `${url}/school/schoolGroups/`,
   addSchoolGroup: `${url}/school/addSchoolGroup`,
-
-
+  updateGroupName: `${url}/school/updateGroupName`,
+  updateGroupStudents: `${url}/school/updateGroupStudents`,
+  schoolAttendanceStudents: `${url}/school/schoolAttendanceStudents`,
+  submitAttendance: `${url}/school/submitAttendance`,
+  teacherAttendance: `${url}/school/teacherAttendance`,
+  showAttendance: `${url}/school/showAttendance`,
 };

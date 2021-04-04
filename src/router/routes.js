@@ -214,6 +214,15 @@ const routes = [
     meta: { auth: true },
   },
   {
+    path: '/school/teacherAttendance',
+    name: 'TeacherAttendance',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/school/teacherAttendance', component: () => import('pages/school/TeacherAttendance.vue') },
+    ],
+    meta: { auth: true },
+  },
+  {
     path: '/school/takeAttendance',
     name: 'SchoolTakeAttendance',
     component: () => import('layouts/MainLayout.vue'),

@@ -95,7 +95,6 @@
                     present: value.present,
                     absent: value.absent,
                 }
-                console.log(`data`, data)
                 this.$store.dispatch('showAttendance', data);
                 this.medium = true;
                 this.modalClass = value.className;

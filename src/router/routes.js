@@ -196,6 +196,15 @@ const routes = [
 
   // School Routes
   {
+    path: '/school/leadManagement',
+    name: 'LeadManagement',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/school/leadManagement', component: () => import('pages/school/LeadManagement.vue') },
+    ],
+    meta: { auth: true },
+  },
+  {
     path: '/school/basics',
     name: 'SchoolBasics',
     component: () => import('layouts/MainLayout.vue'),

@@ -204,21 +204,88 @@ router.post('/showAttendance', asyncMiddleware( async(req, res) => {
     const present = await func.getNames(req.body.present)
     const absent = await func.getNames(req.body.absent)
     res.send({ present, absent });
-    // let sql = `SELECT id, name FROM schoolbasics WHERE id IN (${JSON.parse(req.body.present)});
-    //            SELECT id, name FROM schoolbasics WHERE id IN (${JSON.parse(req.body.absent)});`
-    // pool.query(sql, [1,2], async(err, results) => {
-    //     try{
-    //         if(err){ throw err }
-    //         if(results){
-    //             console.log(`results`, results)
-    //             res.send({ 
-    //                 present: results[0],
-    //                 absent: results[1],
-    //             });
-    //         }
-    //     }
-    //     catch(e){ func.logError(e); res.status(500); return; }
-    // })
+}))
+
+router.post('/getLeads', asyncMiddleware( async(req, res) => {
+    let sql = `SELECT * FROM leads WHERE schoolId = '${req.body.schoolId}';`
+    pool.query(sql, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ data: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/addLead', asyncMiddleware( async(req, res) => {
+    let post= {
+        'schoolId':             req.body.schoolId,
+        'name':                 req.body.name,
+        'email':                req.body.email,
+        'phone':                req.body.phone,
+        'source':               req.body.source,
+        'status':               req.body.status,
+        "created_at":           time,
+        "updated_at":           time,
+    }
+    let sql = `INSERT INTO leads SET ?`
+    pool.query(sql, post, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ 
+                const data = await func.getSingleLead(results.insertId) 
+                res.send({ data, message: "Lead added successfully" }); 
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/updateLead', asyncMiddleware( async(req, res) => {
+    let post= {
+        'name':                 req.body.name,
+        'email':                req.body.email,
+        'phone':                req.body.phone,
+        'source':               req.body.source,
+        'status':               req.body.status,
+        "updated_at":           time,
+    }
+    let sql = `UPDATE leads SET ? WHERE id = '${req.body.id}'`;
+    pool.query(sql, post, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ 
+                const data = await func.getSingleLead(req.body.id) 
+                res.send({ data, message: "Lead updated successfully" }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/uploadExcelUsers', asyncMiddleware( async(req, res) => {
+    var values = [];
+    for(var i=0; i< req.body.jsonData.length; i++)
+    values.push([
+        req.body.jsonData[i].schoolId,
+        req.body.jsonData[i].name,
+        req.body.jsonData[i].email,
+        req.body.jsonData[i].phone,
+        req.body.jsonData[i].status,
+        req.body.jsonData[i].source,
+        time, 
+        time
+    ]);
+    pool.query(`INSERT INTO leads (schoolId, name, email, phone, status, source, created_at, updated_at) VALUES ?`, [values], async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){
+                let sql2 = `SELECT * FROM leads ORDER BY id DESC LIMIT ${results.affectedRows};`
+                pool.query(sql2, async(err2, results2) => {
+                    try{
+                        if(err2){ throw err2 }
+                        if(results2){ res.send({ success: true, data: results2, message: "Leads uploaded successfully" }); }
+                    }catch(e){ func.logError(e); res.status(500); return; }
+                })
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
 }))
 
 module.exports = router;

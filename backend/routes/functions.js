@@ -308,6 +308,8 @@ function blogMetaName(type, data) {
     });
 }
 
+
+
 // School Functions
 
 function getSchoolBasic(id) {
@@ -349,7 +351,19 @@ function getNames(data) {
         }else{
             resolve([])
         }
+    });
+}
+
+function getSingleLead(id) {
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT * FROM leads WHERE id = ${id};`
+        pool.query(sql, (err, results) => {
+            try{
+                if(err){ throw err }
+                if(results){ resolve(results[0] ) }
+            }catch(e){ logError(e);return; }
         });
+    });
 }
 
 // School Functions
@@ -437,4 +451,4 @@ function getUserId(req, res, next){
     }
 }
 
-module.exports = {verifyToken, verifyAdmin, verifyInsti, getUserId, getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails, dpPreview, getSchoolBasic, getSchoolGroup, getNames };
+module.exports = {verifyToken, verifyAdmin, verifyInsti, getUserId, getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails, dpPreview, getSchoolBasic, getSchoolGroup, getNames, getSingleLead };

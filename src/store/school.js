@@ -18,6 +18,8 @@ const state = {
   teacherSubjectOptions:  [],
   present:  [],
   absent:  [],
+  leads:  [],
+  leadsFilter:  [],
 };
 
 const getters = {
@@ -36,6 +38,8 @@ const getters = {
   teacherSubjectOptions: (state) => state.teacherSubjectOptions,
   present: (state) => state.present,
   absent: (state) => state.absent,
+  leads: (state) => state.leads,
+  leadsFilter: (state) => state.leadsFilter,
 };
 
 const actions = {
@@ -85,11 +89,17 @@ const actions = {
   async teacherAttendance({ commit }, form) { const res = await axios.post(api.teacherAttendance, form); commit('TEACHERATTENDANCE', res.data); },
   async filterAttendance({ commit }, form) { commit('FILTERATTENDANCE', form); },
   async resetAttendance({ commit }) { commit('RESETATTENDANCE'); },
-  async showAttendance({ commit }, form) { const res = await axios.post(api.showAttendance, form); 
-    console.log(`res`, res)
-    
-    commit('SHOWATTENDANCE', res.data); },
+  async showAttendance({ commit }, form) { const res = await axios.post(api.showAttendance, form); commit('SHOWATTENDANCE', res.data); },
   async clearPresentAbsent({ commit }) { commit('CLEARPRESENTABSENT'); },
+  
+  async getLeads({ commit }, form) { const res = await axios.post(api.getLeads, form); commit('GETLEADS', res.data.data); },
+  async addLead({ commit }, form) { const res = await axios.post(api.addLead, form); commit('ADDLEAD', res.data.data); },
+  async updateLead({ commit }, form) { const res = await axios.post(api.updateLead, form); commit('UPDATELEAD', res.data.data); },
+  async uploadExcelUsers({ commit }, form) { 
+    const res = await axios.post(api.uploadExcelUsers, form);
+    if (res.data.success) { commit('UPLOADEXCELUSERS', res.data.data);  }
+    message(res.data.message);    
+  },
   
 };
 
@@ -150,7 +160,6 @@ const mutations = {
     // data.attendance.map(i=>(
     //   classes.push({id: i.class, value: i.className})
     // ))
-    // console.log(`classes`, classes)
     state.teacherClassOptions = data.classes; 
     state.teacherSubjectOptions = data.subject; 
     state.present = []; 
@@ -165,7 +174,6 @@ const mutations = {
     state.teacherAttendanceFilter =  state.teacherAttendance
   },
   SHOWATTENDANCE: (state, data) => {
-    console.log(`data.present`, data.present)
     state.present = data.present; 
     state.absent = data.absent; 
   },
@@ -173,6 +181,20 @@ const mutations = {
     state.present = []; 
     state.absent = [];
   },
+
+  GETLEADS: (state, data) => {
+    state.leads = data;
+    state.leadsFilter = data;
+  },
+  ADDLEAD: (state, data) => {
+    // state.leads.unshift(data); 
+    state.leadsFilter.unshift(data); 
+  },
+  UPDATELEAD: (state, data) => {
+    // const index = state.leads.findIndex((i) => i.id === data.id); if (index !== -1) { state.leads.splice(index, 1, data); }
+    const index2 = state.leadsFilter.findIndex((i) => i.id === data.id); if (index2 !== -1) { state.leadsFilter.splice(index2, 1, data); }
+  },
+  UPLOADEXCELUSERS: (state, data) => { data.map(i=>( state.leadsFilter.unshift(i) )) },
 
 };
 

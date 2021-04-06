@@ -63,4 +63,8 @@ export default {
   submitAttendance: `${url}/school/submitAttendance`,
   teacherAttendance: `${url}/school/teacherAttendance`,
   showAttendance: `${url}/school/showAttendance`,
+  getLeads: `${url}/school/getLeads`,
+  addLead: `${url}/school/addLead`,
+  updateLead: `${url}/school/updateLead`,
+  uploadExcelUsers: `${url}/school/uploadExcelUsers`,
 };

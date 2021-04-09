@@ -151,7 +151,7 @@ export default {
         tab3: this.tab3,
       };
       this.$store.dispatch('addBasic', data);
-      // this.resetData();
+      this.resetData();
     },
     resetData() {
       this.id = null;

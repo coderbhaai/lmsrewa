@@ -28,6 +28,8 @@ export default {
   addComment: `${url}/admin/addComment`,
   schoolOptions: `${url}/admin/schoolOptions`,
   adminInstitutes: `${url}/admin/adminInstitutes`,
+  addInstitute: `${url}/admin/addInstitute`,
+  updateInstitute: `${url}/admin/updateInstitute`,
   changeInstituteStatus: `${url}/admin/changeInstituteStatus`,
   questionOptions: `${url}/admin/questionOptions`,
   adminQuestions: `${url}/admin/adminQuestions`,

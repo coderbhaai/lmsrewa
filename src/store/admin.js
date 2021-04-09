@@ -142,11 +142,16 @@ const actions = {
     message(res.data.message);
   },
   async adminInstitutes({ commit }) { const res = await axios.get(api.adminInstitutes); commit('ADMININSTITUTES', res.data.data); },
+  async addInstitute({ commit }, form) {
+    const res = await axios.post(api.addInstitute, form); if (res.data.success) { commit('ADDINSTITUTE', res.data.data); }
+    message(res.data.message);
+  },
+  async updateInstitute({ commit }, form) {
+    const res = await axios.post(api.updateInstitute, form); if (res.data.success) { commit('UPDATEINSTITUTE', res.data.data); }
+    message(res.data.message);
+  },
   async changeInstituteStatus({ commit }, form) {
-    const res = await axios.post(api.changeInstituteStatus, form);
-    if (res.data.success) {
-      commit('CHANGEINSTITUTESTATUS', res.data.data);
-    }
+    const res = await axios.post(api.changeInstituteStatus, form); if (res.data.success) { commit('CHANGEINSTITUTESTATUS', res.data.data); }
     message(res.data.message);
   },
   async questionOptions({ commit }) { const res = await axios.get(api.questionOptions); commit('QUESTIONOPTIONS', res.data.data); },
@@ -257,10 +262,17 @@ const mutations = {
     }
   },
   ADMININSTITUTES: (state, data) => { state.adminInstitutes = data; },
-  CHANGEINSTITUTESTATUS: (state, data) => {
+  ADDINSTITUTE: (state, data) => state.adminInstitutes.unshift(data),
+  UPDATEINSTITUTE: (state, data) => {
     const index = state.adminInstitutes.findIndex((i) => i.id === data.id);
     if (index !== -1) { state.adminInstitutes.splice(index, 1, data); }
   },
+  CHANGEINSTITUTESTATUS: (state, data) => {
+    console.log(`data`, data)
+    const index = state.adminInstitutes.findIndex((i) => i.id === data.id);
+    if (index !== -1) { state.adminInstitutes.splice(index, 1, data); }
+  },
+
   QUESTIONOPTIONS: (state, data) => {
     state.boardOptions = data.filter(i=>i.type=='Board');
     state.classOptions = data.filter(i=>i.type=='Class');

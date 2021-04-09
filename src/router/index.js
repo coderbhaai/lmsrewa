@@ -32,11 +32,11 @@ export default function (/* { store, ssrContext } */) {
     //   if(store.getters.isLoggedIn){ next(); return; }else{ message('You are not allowed'); next({ path: '/blog' }); return; }
     // }
     if (to.matched.some((record) => record.meta.ss)) { 
-      if(store.getters.user['role'] == 'SS'){ 
+      // if(store.getters.user['role'] == 'SS'){
         next(); return; 
-      } else { 
-        message('You are not allowed'); next({ path: '/blog' }); return; 
-      } 
+      // } else { 
+      //   message('You are not allowed'); next({ path: '/blog' }); return; 
+      // } 
     }
 
     next();

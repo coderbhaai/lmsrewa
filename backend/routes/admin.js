@@ -511,11 +511,54 @@ router.get('/adminComments', asyncMiddleware( async(req, res) => {
 }))
 
 router.get('/adminInstitutes', asyncMiddleware( async(req, res) => {
-    let sql = `SELECT id, name, email, status, updated_at from users WHERE role='Owner';`
+    let sql = `SELECT id, type, name, email, phone, status, updated_at from institutes`
     pool.query(sql, (err, results) => {
         try{
             if(err){ throw err }
             if(results){ res.send({ data: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/addInstitute', asyncMiddleware( async(req, res, next) => {
+    let post= {
+        'type':                     req.body.type,
+        'name':                     req.body.name,
+        'email':                    req.body.email,
+        'phone':                    req.body.phone,
+        'status':                   req.body.status,
+        "created_at":               time,
+        "updated_at":               time,
+    }
+    let sql = 'INSERT INTO institutes SET ?'
+    pool.query(sql, post, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ 
+                const data = await func.getInstitute(results.insertId)
+                res.send({ success: true, data, message: 'Institute added successfully' }); 
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/updateInstitute', asyncMiddleware( async(req, res, next) => {
+    let post= {
+        'type':                     req.body.type,
+        'name':                     req.body.name,
+        'email':                    req.body.email,
+        'phone':                    req.body.phone,
+        'status':                   req.body.status,
+        "updated_at":               time,
+    }
+    let sql = `UPDATE institutes SET ? WHERE id = ${req.body.id}`;
+    pool.query(sql, post, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){
+                const data = await func.getInstitute(req.body.id)
+                res.send({ success: true, data, message: 'Institute updated successfully' }); 
+            }
         }catch(e){ func.logError(e); res.status(500); return; }
     })
 }))
@@ -525,7 +568,7 @@ router.post('/changeInstituteStatus', asyncMiddleware( async(req, res, next) => 
         "status":                   req.body.status,
         "updated_at":               time,
     }
-    let sql = `UPDATE users SET ? WHERE id = ${req.body.id}`
+    let sql = `UPDATE institutes SET ? WHERE id = ${req.body.id}`
     pool.query(sql, post, async(err, results) => {
         try{
             if(err){ throw err }

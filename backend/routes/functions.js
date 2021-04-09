@@ -25,7 +25,7 @@ function getBalance(id) {
 
 function getInstitute(id) {
     return new Promise((resolve, reject) => {
-        let sql =   `SELECT id, name, email, status, updated_at from users WHERE id = '${id}'`
+        let sql =   `SELECT id, type, name, email, phone, status, updated_at from institutes WHERE id = '${id}'`
         pool.query(sql, (err, results) => {
             try{
                 if(err){ throw err }

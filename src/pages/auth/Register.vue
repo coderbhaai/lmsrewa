@@ -20,7 +20,7 @@
                     <q-input v-model="confirm_password" label="Confirm Password" />
                     <q-input v-model="confirm_password" label="Confirm Password" />
                     <q-select v-model="role" :options="options" option-value="value" option-label="text" label="Iam a" />
-                    <div v-if="this.role.value=='Admin'">
+                    <div v-if="this.role.value=='CheckUser'">
                         <q-select v-model="institute" :options="schoolOptions" option-value="value" option-label="text" label="Select Organisation" />
                         <p>Your login will be held till the organisation approves it</p>
                     </div>
@@ -48,13 +48,9 @@
                 options: [
                     {'text': 'Student', 'value': 'User'},
                     {'text': 'Parent', 'value': 'Parent'},
-                    {'text': 'Teacher', 'value': 'Teacher'},
-                    {'text': 'School', 'value': 'Owner'},
-                    {'text': 'College', 'value': 'Owner'},
-                    {'text': 'Coaching Class', 'value': 'Owner'},
-                    {'text': 'School Admin', 'value': 'Admin'},
-                    {'text': 'School Sub Admin', 'value': 'SubAdmin'},
                     {'text': 'Home Tutor', 'value': 'Tutor'},
+                    {'text': 'Teacher', 'value': 'Teacher'},
+                    {'text': 'Institute Admin', 'value': 'CheckUser'},
                 ],
             }
         },

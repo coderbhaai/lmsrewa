@@ -128,7 +128,7 @@ function checkStatusOfInstitute(id){
 
 function initiateLogin(email, password){
     return new Promise((resolve, reject) => {
-        let sql = `SELECT id, name, email, role, password, status from users WHERE email = '${email}'`
+        let sql = `SELECT id, name, email, role, password, status, institute from users WHERE email = '${email}'`
         pool.query(sql, async(err, results) => {
             try{
                 if(err){ throw err }
@@ -137,7 +137,7 @@ function initiateLogin(email, password){
                         bcrypt.compare(password, results[0].password)
                         .then(isMatch=>{
                             if(isMatch){
-                                const user={ id: results[0].id, name: results[0].name, email: results[0].email, role: results[0].role }
+                                const user={ id: results[0].id, name: results[0].name, email: results[0].email, role: results[0].role, institute: results[0].institute }
                                 jwt.sign({ user }, 'secretkey', (err, token)=>{
                                     if(err) throw err;
                                     user.token = token
@@ -158,16 +158,6 @@ function initiateLogin(email, password){
         })
     });
 }
-
-
-
-
-
-
-
-
-
-
 
 router.post('/forgotPassword', asyncMiddleware( async(req, res, next) => {
     let sql =   `SELECT id, name FROM users WHERE email='${req.body.email}';

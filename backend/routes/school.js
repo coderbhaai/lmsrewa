@@ -288,4 +288,37 @@ router.post('/uploadExcelUsers', asyncMiddleware( async(req, res) => {
     })
 }))
 
+router.post('/getTeam', asyncMiddleware( async(req, res) => {
+    let sql = `SELECT a.id, a.name, a.email, a.status, a.institute, a.role, a.updated_at, b.id as teamId FROM users as a left JOIN team as b on b.userid = a.id WHERE a.institute = '${req.body.id}' AND b.id IS NULL;`
+    pool.query(sql, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ data: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/addToTeam', asyncMiddleware( async(req, res) => {
+    console.log(`req.body`, req.body)
+    let post= {
+        'schoolId' :            req.body.schoolId,
+        'changeroles' :         req.body.changeroles,
+        'sendemail' :           req.body.sendemail,
+        'sendsms' :             req.body.sendsms,
+        'sendwhatsapp' :        req.body.sendwhatsapp,
+        'status':               req.body.status,
+        "updated_at":           time,
+    }
+    let sql = `INSERT INTO team SET ?`
+    pool.query(sql, post, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ data: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+
+
+
 module.exports = router;

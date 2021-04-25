@@ -11,7 +11,7 @@
     "dev": "nodemon backend/server.js",
     "app": "quasar dev -m cordova -T android",
     "soft": "quasar dev -m electron",
-    "git": "git commit -a -m 'commit' && git push"
+    "git": "git add . && git commit -a -m `commit` && git push"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",

@@ -20,6 +20,7 @@ const state = {
   absent:  [],
   leads:  [],
   leadsFilter:  [],
+  team:   [],
 };
 
 const getters = {
@@ -40,6 +41,7 @@ const getters = {
   absent: (state) => state.absent,
   leads: (state) => state.leads,
   leadsFilter: (state) => state.leadsFilter,
+  team: (state) => state.team,
 };
 
 const actions = {
@@ -100,7 +102,14 @@ const actions = {
     if (res.data.success) { commit('UPLOADEXCELUSERS', res.data.data);  }
     message(res.data.message);    
   },
-  
+
+  async getTeam({ commit }, form) { const res = await axios.post(api.getTeam, form); commit('GETTEAM', res.data.data); },
+  async addToTeam({ commit }, form) {
+    const res = await axios.post(api.addToTeam, form);
+    if (res.data.success) { commit('ADDTOTEAM', res.data.data); }
+    message(res.data.message);
+  },
+
 };
 
 const mutations = {
@@ -170,9 +179,7 @@ const mutations = {
     if(data.subject){ state.teacherAttendanceFilter =  state.teacherAttendance.filter((i) => i.subject == data.subject); }else
     if(data.classes){ state.teacherAttendanceFilter =  state.teacherAttendance.filter((i) => i.class == data.classes) }
   },
-  RESETATTENDANCE: (state) => {
-    state.teacherAttendanceFilter =  state.teacherAttendance
-  },
+  RESETATTENDANCE: (state) => { state.teacherAttendanceFilter =  state.teacherAttendance },
   SHOWATTENDANCE: (state, data) => {
     state.present = data.present; 
     state.absent = data.absent; 
@@ -195,6 +202,12 @@ const mutations = {
     const index2 = state.leadsFilter.findIndex((i) => i.id === data.id); if (index2 !== -1) { state.leadsFilter.splice(index2, 1, data); }
   },
   UPLOADEXCELUSERS: (state, data) => { data.map(i=>( state.leadsFilter.unshift(i) )) },
+  
+  GETTEAM: (state, data) => { state.team = data; },
+  ADDTOTEAM: (state, data) => {
+    const index = state.leadsFilter.findIndex((i) => i.id === data.id); if (index !== -1) { state.leadsFilter.splice(index, 1, data); }
+  },
+
 
 };
 

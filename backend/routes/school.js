@@ -289,11 +289,15 @@ router.post('/uploadExcelUsers', asyncMiddleware( async(req, res) => {
 }))
 
 router.post('/getTeam', asyncMiddleware( async(req, res) => {
-    let sql = `SELECT a.id, a.name, a.email, a.status, a.institute, a.role, a.updated_at, b.id as teamId FROM users as a left JOIN team as b on b.userid = a.id WHERE a.institute = '${req.body.id}' AND b.id IS NULL;`
+    let sql = `SELECT a.id, a.name, a.email, a.status, a.institute, a.role, a.updated_at, b.id as teamId FROM users as a left JOIN team as b on b.userid = a.id WHERE a.institute = '${req.body.id}' AND b.id IS NULL;
+    SELECT a.id as teamId, a.schoolId, a.userId, a.changeroles, a.sendemail, a.sendsms, a.sendwhatsapp, a.status as teamStatus, a.updated_at, b.name, b.email, b.role, b.status FROM team as a left JOIN users as b on b.id = a.userId WHERE a.schoolId = '${req.body.id}';`
     pool.query(sql, async(err, results) => {
         try{
             if(err){ throw err }
-            if(results){ res.send({ data: results }); }
+            if(results){ res.send({ 
+                users: results[0],
+                team: results[1],
+            }); }
         }catch(e){ func.logError(e); res.status(500); return; }
     })
 }))
@@ -302,6 +306,30 @@ router.post('/addToTeam', asyncMiddleware( async(req, res) => {
     console.log(`req.body`, req.body)
     let post= {
         'schoolId' :            req.body.schoolId,
+        'userId' :              req.body.userId,
+        'changeroles' :         req.body.changeroles,
+        'sendemail' :           req.body.sendemail,
+        'sendsms' :             req.body.sendsms,
+        'sendwhatsapp' :        req.body.sendwhatsapp,
+        'status':               req.body.status,
+        "created_at":           time,
+        "updated_at":           time,
+    }
+    let sql = `INSERT INTO team SET ?`
+    pool.query(sql, post, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ 
+                await func.changeUserStatus(req.body.userId, req.body.status )
+                const data = await func.getTeamMember(results.insertId )
+                res.send({ success: true, data, message: 'Member added to team Succesfully' }); 
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/updateTeam', asyncMiddleware( async(req, res) => {
+    let post= {
         'changeroles' :         req.body.changeroles,
         'sendemail' :           req.body.sendemail,
         'sendsms' :             req.body.sendsms,
@@ -309,16 +337,18 @@ router.post('/addToTeam', asyncMiddleware( async(req, res) => {
         'status':               req.body.status,
         "updated_at":           time,
     }
-    let sql = `INSERT INTO team SET ?`
+    let sql = `UPDATE team SET ? WHERE id = '${req.body.id}'`;
     pool.query(sql, post, async(err, results) => {
         try{
             if(err){ throw err }
-            if(results){ res.send({ data: results }); }
+            if(results){
+                await func.updateRole(req.body.userId, req.body.role)
+                const data = await func.getTeamMember(req.body.id)
+                res.send({ success: true, data, message: 'Team updated successfuly' });
+            }
         }catch(e){ func.logError(e); res.status(500); return; }
     })
 }))
-
-
 
 
 module.exports = router;

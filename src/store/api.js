@@ -71,4 +71,5 @@ export default {
   uploadExcelUsers: `${url}/school/uploadExcelUsers`,
   getTeam: `${url}/school/getTeam`,
   addToTeam: `${url}/school/addToTeam`,
+  updateTeam: `${url}/school/updateTeam`,
 };

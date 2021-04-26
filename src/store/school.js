@@ -21,6 +21,7 @@ const state = {
   leads:  [],
   leadsFilter:  [],
   team:   [],
+  teamPending:   [],
 };
 
 const getters = {
@@ -42,6 +43,7 @@ const getters = {
   leads: (state) => state.leads,
   leadsFilter: (state) => state.leadsFilter,
   team: (state) => state.team,
+  teamPending: (state) => state.teamPending,
 };
 
 const actions = {
@@ -103,10 +105,14 @@ const actions = {
     message(res.data.message);    
   },
 
-  async getTeam({ commit }, form) { const res = await axios.post(api.getTeam, form); commit('GETTEAM', res.data.data); },
+  async getTeam({ commit }, form) { const res = await axios.post(api.getTeam, form); commit('GETTEAM', res.data); },
   async addToTeam({ commit }, form) {
     const res = await axios.post(api.addToTeam, form);
     if (res.data.success) { commit('ADDTOTEAM', res.data.data); }
+    message(res.data.message);
+  },
+  async updateTeam({ commit }, form) {
+    const res = await axios.post(api.updateTeam, form); if (res.data.success) { commit('UPDATETEAM', res.data.data); }
     message(res.data.message);
   },
 
@@ -203,10 +209,16 @@ const mutations = {
   },
   UPLOADEXCELUSERS: (state, data) => { data.map(i=>( state.leadsFilter.unshift(i) )) },
   
-  GETTEAM: (state, data) => { state.team = data; },
-  ADDTOTEAM: (state, data) => {
-    const index = state.leadsFilter.findIndex((i) => i.id === data.id); if (index !== -1) { state.leadsFilter.splice(index, 1, data); }
+  GETTEAM: (state, data) => { 
+    state.teamPending = data.users; 
+    state.team = data.team; 
   },
+  ADDTOTEAM: (state, data) => {
+    console.log(`data in store`, data)
+    const index = state.teamPending.findIndex((i) => i.id === data.userId); if (index !== -1) { state.teamPending.splice(index, 1); }
+    state.team.unshift(data);
+  },
+  UPDATETEAM: (state, data) => { const index = state.team.findIndex((i) => i.id === data.id); if (index !== -1) { state.team.splice(index, 1, data); } },
 
 
 };

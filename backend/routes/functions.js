@@ -366,6 +366,46 @@ function getSingleLead(id) {
     });
 }
 
+function changeUserStatus(id, status) {
+    console.log(`id, status`, id, status)
+    return new Promise((resolve, reject) => {
+        let sql =  `UPDATE users SET status = ${status} WHERE id = ${id};`
+        pool.query(sql, (err, results) => {
+            try{
+                console.log(`results`, results)
+                console.log(`results[0]`, results[0])
+                if(err){ throw err }
+                if(results){ resolve(results[0] ) }
+            }catch(e){ logError(e); return; }
+        });
+    });
+}
+
+function getTeamMember(id) {
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT a.id as teamId, a.schoolId, a.userId, a.changeroles, a.sendemail, a.sendsms, a.sendwhatsapp, a.status as teamStatus, a.updated_at, b.name, b.email, b.role, b.status FROM team as a left JOIN users as b on b.id = a.userId WHERE a.id = '${id}';`
+        pool.query(sql, (err, results) => {
+            try{
+                if(err){ throw err }
+                if(results){ resolve(results[0] ) }
+            }catch(e){ logError(e);return; }
+        });
+    });
+}
+
+function updateRole(id, role) {
+    console.log(`id, role`, id, role)
+    return new Promise((resolve, reject) => {
+        let sql =  `UPDATE users SET role = ${role} WHERE id = ${id};`
+        pool.query(sql, (err, results) => {
+            try{
+                if(err){ throw err }
+                if(results){ resolve(results[0] ) }
+            }catch(e){ logError(e); return; }
+        });
+    });
+}
+
 // School Functions
 
 // Generic Functions
@@ -451,4 +491,4 @@ function getUserId(req, res, next){
     }
 }
 
-module.exports = {verifyToken, verifyAdmin, verifyInsti, getUserId, getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails, dpPreview, getSchoolBasic, getSchoolGroup, getNames, getSingleLead };
+module.exports = {verifyToken, verifyAdmin, verifyInsti, getUserId, getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails, dpPreview, getSchoolBasic, getSchoolGroup, getNames, getSingleLead, changeUserStatus, getTeamMember, updateRole };

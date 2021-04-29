@@ -14,7 +14,7 @@ const state = {
 };
 
 const getters = {
-  blogs: (state) => state.blogs,
+  blogs: state =>{ return state.blogs},
   suggestBlogs: (state) => state.suggestBlogs,
   singleBlog: (state) => state.singleBlog,
   blogList: (state) => state.blogList,

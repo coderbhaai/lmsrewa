@@ -15,7 +15,7 @@ Vue.use(VueRouter);
  * with the Router instance.
  */
 
-export default function (/* { store, ssrContext } */) {
+export default function ( {store} /* { store, ssrContext } */) {
   const Router = new VueRouter({
     scrollBehavior: () => ({ x: 0, y: 0 }),
     routes,
@@ -28,15 +28,33 @@ export default function (/* { store, ssrContext } */) {
   });
   
   Router.beforeEach((to, from, next) => {
-    // if (to.matched.some((record) => record.meta.auth)) {
-    //   if(store.getters.isLoggedIn){ next(); return; }else{ message('You are not allowed'); next({ path: '/blog' }); return; }
-    // }
-    if (to.matched.some((record) => record.meta.ss)) { 
-      // if(store.getters.user['role'] == 'SS'){
-        next(); return; 
-      // } else { 
-      //   message('You are not allowed'); next({ path: '/blog' }); return; 
-      // } 
+    console.log('to.matched.some((i)', to.matched)
+    console.log(`store.getters.isLoggedIn`, store.getters.user.role)
+
+    if (to.matched.some((i) => i.meta.noAuth)) {
+      if(store.getters.user && store.getters.user.auth){ 
+        message('You are already logged in'); next({ path: '/blog' }); return; 
+      }
+    }
+
+    if (to.matched.some((i) => i.meta.auth)) {
+      if(!store.getters.user || !store.getters.user.auth){ 
+        message('You are not logged in'); next({ path: '/blog' }); return; 
+      }
+    }
+
+    if (to.matched.some((i) => i.meta.school)) {
+      if(store.getters.user.role== 'School' || store.getters.user.role== 'Owner'){
+      }else{
+        message('You are not Allowed to Enter'); next({ path: '/blog' }); return;
+      }
+    }
+
+    if (to.matched.some((i) => i.meta.ss)) {
+      if(store.getters.user.role== 'Admin' || store.getters.user.role== 'SS'){
+      }else{
+        message('You are not from SS'); next({ path: '/blog' }); return;
+      }
     }
 
     next();

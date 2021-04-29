@@ -24,7 +24,7 @@ const actions = {
   async schoolOptions({ commit }) { const res = await axios.get(api.schoolOptions); commit('SCHOOLOPTIONS', res.data.data); },
 
   async register({ commit }, form) {
-    const res = await axios.post(api.register, form); if (res.data.success) { this.$router.push({ name: 'Login' }); }
+    const res = await axios.post(api.register, form); if (res.data.success) { this.$router.push({ path: '/login' }); }
     message(res.data.message);
   },
   async login({ commit }, form) {
@@ -32,7 +32,7 @@ const actions = {
     if (res.data.success) {
       commit('LOGIN', res.data);
       setAxiosHeaders(state);
-      this.$router.push({ name: 'Home' }); 
+      this.$router.push({ path: '/' }); 
     }
     message(res.data.message);
   },
@@ -42,7 +42,7 @@ const actions = {
       commit('LOGOUT', res.data.message);
     }
     message(res.data.message);
-    this.$router.push({ name: 'Login' });
+    this.$router.push({ path: '/login' });
   },
 };
 

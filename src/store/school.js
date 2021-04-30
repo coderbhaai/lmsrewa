@@ -112,7 +112,9 @@ const actions = {
     message(res.data.message);
   },
   async updateTeam({ commit }, form) {
-    const res = await axios.post(api.updateTeam, form); if (res.data.success) { commit('UPDATETEAM', res.data.data); }
+    const res = await axios.post(api.updateTeam, form); 
+    console.log(`res`, res)
+    if (res.data.success) { commit('UPDATETEAM', res.data.data); }
     message(res.data.message);
   },
 

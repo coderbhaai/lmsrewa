@@ -60,6 +60,8 @@
 </template>
 <script>
     import { mapGetters, mapActions } from 'vuex';
+    import { date } from 'quasar'
+    
     export default {
         name: 'TeacherAttendance',
         data() {
@@ -77,7 +79,9 @@
                     { name: 'subjectName', label: 'Subject', align: 'left', field: 'name', sortable: true,},
                     { name: 'present', label: 'Present', align: 'left', field: 'name', sortable: true,},
                     { name: 'absent', label: 'Absent', align: 'left', field: 'name', sortable: true,},
-                    { name: 'updated_at', label: 'Update', align: 'left', field: 'updated_at', sortable: true,},
+                    { name: 'updated_at', label: 'Update', align: 'left', field: 'updated_at', sortable: true, format: (val, row) => formatDate(val, 'DD-MM-YYYY'),
+                    //  format: val => formatDate(val, 'DD-MM-YYYY')
+                     },
                 ],
             };
         },

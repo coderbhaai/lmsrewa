@@ -119,7 +119,7 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
   name: 'leftSidebar',
   methods: {
-    ...mapActions(['user']),
+    // ...mapActions(['user']),
     logOut(e) {
       e.preventDefault();
       const data={

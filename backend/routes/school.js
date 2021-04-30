@@ -337,13 +337,14 @@ router.post('/updateTeam', asyncMiddleware( async(req, res) => {
         'status':               req.body.status,
         "updated_at":           time,
     }
-    let sql = `UPDATE team SET ? WHERE id = '${req.body.id}'`;
+    let sql = `UPDATE team SET ? WHERE id = '${req.body.id}'`; 
     pool.query(sql, post, async(err, results) => {
         try{
             if(err){ throw err }
             if(results){
                 await func.updateRole(req.body.userId, req.body.role)
                 const data = await func.getTeamMember(req.body.id)
+                console.log(`data`, data)
                 res.send({ success: true, data, message: 'Team updated successfuly' });
             }
         }catch(e){ func.logError(e); res.status(500); return; }

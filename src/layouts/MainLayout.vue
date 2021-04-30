@@ -58,7 +58,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['user']),
+    // ...mapActions(['user']),
     logout() {
       this.$store.dispatch('logout');
       this.$router.push({ name: 'login' });

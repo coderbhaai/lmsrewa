@@ -396,7 +396,7 @@ function getTeamMember(id) {
 function updateRole(id, role) {
     console.log(`id, role`, id, role)
     return new Promise((resolve, reject) => {
-        let sql =  `UPDATE users SET role = ${role} WHERE id = ${id};`
+        let sql =  `UPDATE users SET role = '${role}' WHERE id = ${id};`
         pool.query(sql, (err, results) => {
             try{
                 if(err){ throw err }

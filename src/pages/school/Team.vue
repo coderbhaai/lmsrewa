@@ -170,7 +170,7 @@
                 this.userId = data.userId;
                 this.name = data.name;
                 this.email = data.email;
-                this.status = data.status;
+                this.status = data.teamStatus;
                 this.role = data.role;
                 this.medium2 = true;
                 this.changeroles = data.changeroles.toString();
@@ -187,6 +187,7 @@
                 this.role = '';
                 this.schoolId = '',
                 this.medium = false;
+                this.medium2 = false;
                 this.resetRights();
             },
             resetRights(){
@@ -215,7 +216,7 @@
                 };
 
                 console.log(`data`, data)
-                this.$store.dispatch('updateTeam', data);
+                this.$store.dispatch('updateTeam', data); 
                 this.resetData();
             },
         },

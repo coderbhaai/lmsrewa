@@ -38,10 +38,15 @@ img{
         font-weight: 700;
     }
 }
-.flex-h{
+.flex-h, .modalHead{
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+.flex-hc{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 img.edit{
     max-width: 25px;
@@ -53,11 +58,6 @@ img.edit{
     img{
         max-width: 80px;
     }
-}
-.modalHead{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 }
 .container{
     width: 80%;

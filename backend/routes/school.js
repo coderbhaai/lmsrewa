@@ -207,11 +207,12 @@ router.post('/showAttendance', asyncMiddleware( async(req, res) => {
 }))
 
 router.post('/getLeads', asyncMiddleware( async(req, res) => {
-    let sql = `SELECT * FROM leads WHERE schoolId = '${req.body.schoolId}';`
+    let sql = `SELECT * FROM leads WHERE schoolId = '${req.body.schoolId}';
+                SELECT id, name, role FROM users WHERE institute = '${req.body.schoolId}' AND status=1;`
     pool.query(sql, async(err, results) => {
         try{
             if(err){ throw err }
-            if(results){ res.send({ data: results }); }
+            if(results){ res.send({ leads: results[0], counsellors: results[1] }); }
         }catch(e){ func.logError(e); res.status(500); return; }
     })
 }))
@@ -350,6 +351,20 @@ router.post('/updateTeam', asyncMiddleware( async(req, res) => {
         }catch(e){ func.logError(e); res.status(500); return; }
     })
 }))
+
+router.get('/getLeadLog/:id', asyncMiddleware( async(req, res) => {
+    console.log(`req.params.id`, req.params.id)
+    // let sql = `SELECT a.id, a.schoolId, a.type, a.name, a.tab1, b.name as tab1Name FROM schoolbasics as a 
+    // left join schoolbasics as b on b.id = a.tab1 WHERE a.type IN ('Class', 'Subject') AND a.schoolId = '${req.params.id}';`
+    // pool.query(sql, (err, results) => {
+    //     try{
+    //         if(err){ throw err }
+    //         if(results){ res.send({ data: results }); }
+    //     }catch(e){ func.logError(e); res.status(500); return; }
+    // })
+}))
+
+
 
 
 module.exports = router;

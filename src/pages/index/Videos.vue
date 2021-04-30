@@ -5,7 +5,7 @@
       <div class="col-4 q-pr-lg"><q-select emit-value @input="classSelected($event)"  v-model="classx" :options="activeClasses" label="Class" option-label="video_class" option-value="video_class"  required/></div>
       <div class="col-4 q-pr-lg"><q-select emit-value @input="subSelected($event)" v-model="subject" :options="activeSubjects" label="Subject" option-label="video_sub" option-value="video_sub"  required/></div>
     </div>
-    <q-table title="Videos" :data="filterVideos" :columns="columns" row-key="id">
+    <q-table title="Videos" :data="filterVideos" :columns="columns" row-key="id" class="my-sticky-header-table" :pagination.sync="pagination">
       <template v-slot:header="props"><q-tr :props="props"><q-th v-for="col in props.cols" :key="col.name" :props="props">{{ col.label }}</q-th></q-tr></template>
       <template v-slot:body="props">
         <q-tr :props="props">
@@ -62,28 +62,20 @@ export default {
       //   descending: false,
       //   page: 2,
       //   rowsPerPage: 3,
-      // },
+      // }, 
+      pagination: { rowsPerPage: 100 },
       columns: [
-        {
-          name: 'id', label: 'Sl No.', align: 'left', field: 'id',
-        },
-        {
-          name: 'type', label: 'Type', align: 'left', field: 'type', sortable: true,
-        },
-        {
-          name: 'video_class', label: 'Class', align: 'left', field: 'video_class', sortable: true,
-        },
-        {
-          name: 'video_sub', label: 'Subject', align: 'left', field: 'video_sub', sortable: true,
-        },
-        {
-          name: 'video_name', label: 'Name', align: 'left', field: 'video_name', sortable: true,
-        },
+        { name: 'id', label: 'Sl No.', align: 'left', field: 'id', },
+        { name: 'type', label: 'Type', align: 'left', field: 'type', sortable: true, },
+        { name: 'video_class', label: 'Class', align: 'left', field: 'video_class', sortable: true, },
+        { name: 'video_sub', label: 'Subject', align: 'left', field: 'video_sub', sortable: true, },
+        { name: 'video_name', label: 'Name', align: 'left', field: 'video_name', sortable: true, },
+        { name: 'index', label: 'Watch Video', align: 'left' },
       ],
     };
   },
   methods: {
-    ...mapActions(['videos', 'activeClasses']),
+    // ...mapActions(['videos', 'activeClasses']),
     videoDialog(data) {
       this.video_sub = data.video_sub;
       this.video_class = data.video_class;

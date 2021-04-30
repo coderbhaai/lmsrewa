@@ -11,10 +11,23 @@
                 <q-td key="source" :props="props">{{ props.row.source }}</q-td>
                 <q-td key="status" :props="props">{{ props.row.status }}</q-td>
                 <!-- <q-td><img @click="editModal(props.row)" src="/images/icons/edit.svg" class="edit"/></q-td> -->
-                <q-td key="id"><q-checkbox v-model="selection" :val="props.row.id" color="teal"/></q-td>
+                <q-td><q-checkbox v-model="selection" :val="props.row.id" color="teal"/></q-td>
                 </q-tr>
             </template>
         </q-table>
+        <q-page-sticky position="bottom-left" :offset="[50, 10]">
+            <q-fab icon="add" label="Actions" direction="up" color="accent">
+                <q-fab-action label-position="left" color="primary" @click="selectNone" label="Unselect All" v-if="selection.length"/>
+                <q-fab-action label-position="left" color="primary" @click="addLead" label="Add Lead"/>
+                <q-fab-action label-position="left" color="primary" @click="uploadExcel" label="Upload Excel"/>
+                <q-fab-action label-position="left" color="primary" @click="sendMail" label="Send a Mail" v-if="selection.length"/>
+                <q-fab-action label-position="left" color="primary" @click="sendSms" label="Send an SMS" v-if="selection.length"/>
+                <q-fab-action label-position="left" color="primary" @click="selectAll" label="Select All"/>
+                <q-fab-action label-position="left" color="primary" @click="editModal" label="Update Lead" v-if="selection.length==1"/>
+                <q-fab-action label-position="left" color="primary" @click="allotCounsellor" label="Allot Counsellor" v-if="selection.length"/>
+                <q-fab-action label-position="left" color="primary" @click="checkLog" label="check History" v-if="selection.length==1"/>
+            </q-fab>
+        </q-page-sticky>
         <q-dialog v-model="medium" persistent transition-show="scale" transition-hide="scale">
             <q-card style="width: 70vw; max-width: 80vw;">
                 <q-card-section class="modalHead"><div class="text-h6">Add Lead</div><q-btn flat label="Close" color="primary" v-close-popup @click="resetData()"/></q-card-section>
@@ -62,18 +75,21 @@
                 </q-card-section>
             </q-card>
         </q-dialog>
-        <q-page-sticky position="bottom-left" :offset="[50, 10]">
-            <q-fab icon="add" label="Actions" direction="up" color="accent">
-                <q-fab-action label-position="left" color="primary" @click="selectNone" label="Unselect All" v-if="selection.length"/>
-                <q-fab-action label-position="left" color="primary" @click="addLead" label="Add Lead"/>
-                <q-fab-action label-position="left" color="primary" @click="uploadExcel" label="Upload Excel"/>
-                <q-fab-action label-position="left" color="primary" @click="sendMail" label="Send a Mail"/>
-                <q-fab-action label-position="left" color="primary" @click="sendSms" label="Send an SMS"/>
-                <q-fab-action label-position="left" color="primary" @click="selectAll" label="Select All"/>
-                <q-fab-action label-position="left" color="primary" @click="editModal" label="Update Lead" v-if="selection.length==1"/>
-                <q-fab-action label-position="left" color="primary" @click="allotCounsellor" label="Allot Counsellor" v-if="selection.length==1"/>
-            </q-fab>
-        </q-page-sticky>
+        <q-dialog v-model="medium4" persistent transition-show="scale" transition-hide="scale">
+            <q-card style="width: 70vw; max-width: 80vw;">
+                <q-card-section class="modalHead"><div class="text-h6">Assign a Counsellor</div><q-btn flat label="Close" color="primary" v-close-popup @click="resetData()"/></q-card-section>
+                <q-card-section class="q-pt-none">
+                    <q-form class="q-gutter-md" @submit="addCounsellor">
+                        <div class="row">
+                            <div class="col-6">
+                                <q-select map-options emit-value v-model="counsellorSelected" :options="counsellors" option-value="id" option-label="name" label="Select Counsellor" required/>
+                            </div>                            
+                            <div class="col-6 text-center flex-hc"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
+                        </div>
+                    </q-form>
+                </q-card-section>
+            </q-card>
+        </q-dialog>
     </q-page>
 </template>
 <script>
@@ -88,6 +104,8 @@ export default {
             phone: '',
             source: '',
             status: '',
+            counsellorSelected: '',
+            role:  '',
             jsonData: [],
             statusOptions: [
                 { text: 'Active', value: 1},
@@ -97,6 +115,7 @@ export default {
             medium: false,
             medium2: false,
             medium3: false,
+            medium4: false,
             pagination: { rowsPerPage: 30 },
             column: [
                 { name: 'id', label: 'Sl No.', align: 'left', field: 'Edit', },
@@ -105,7 +124,7 @@ export default {
                 { name: 'phone', label: 'Phone', align: 'left', field: 'phone', sortable: true,},
                 { name: 'source', label: 'Source', align: 'left', field: 'source', sortable: true,},
                 { name: 'status', label: 'Status', align: 'left', field: 'status', sortable: true,},
-                { name: 'id', label: 'Action', align: 'left', field: 'id', sortable: true,}
+                { name: 'index', label: 'Action', align: 'left', sortable: true,}
             ],
         }
     },
@@ -115,6 +134,8 @@ export default {
             var all = []
             this.leadsFilter.map((i)=>( all.push(i.id) ))
             this.selection = all
+            // console.log(`this.$refs`, this.$refs.leftDrawer)
+            // this.$refs.leftDrawer.open()
         },
         selectNone(){ this.selection= [] },
         addLead(){ this.medium= true },
@@ -167,7 +188,16 @@ export default {
         },
         sendMail(){},
         sendSms(){},
-        allotCounsellor(){},
+        allotCounsellor(){
+            this.medium4= true
+
+
+
+        },
+        addCounsellor(){
+            console.log('Clicked')
+
+        },
         uploadExcel(){ this.medium3= true },
         previewFiles(event) {
             if(event.target.files.length > 0) {
@@ -195,14 +225,21 @@ export default {
             this.$store.dispatch('uploadExcelUsers', data);
             this.medium3 = false
             this.jsonData= []
+        },
+        checkLog(){
+            const data={
+                leadId:             this.selection[0],
+            }
+            this.$store.dispatch('getLeadLog', data);
+            this.medium4= true
         }
     },
     computed: {
-        ...mapGetters(['leadsFilter']),
+        ...mapGetters(['user','leadsFilter', 'counsellors']),
     },
     created() {
         const data={
-            schoolId: 1,
+            schoolId: this.user.institute,
         }
         this.$store.dispatch('getLeads', data);
     }

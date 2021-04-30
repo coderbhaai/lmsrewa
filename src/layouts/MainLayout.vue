@@ -7,7 +7,7 @@
         </div>
         <q-toolbar-title><a href="/" class="logo"><q-avatar><img src="/images/icons/studyspectrum-logo.png"></q-avatar> STUDY SPECTRUM</a></q-toolbar-title>
         <div v-if="user">
-          <div v-if="user.role=='Admin' || user.role=='Owner'"><q-btn dense flat round icon="menu" @click="right = !right" /></div>
+          <div v-if="user.role=='SS' || user.role=='Admin' || user.role=='Owner' || user.role=='School'"><q-btn dense flat round icon="menu" @click="right = !right" /></div>
         </div>
       </q-toolbar>
       <q-tabs align="left">
@@ -29,7 +29,7 @@
     <div v-if="user">
       <div v-if="user.role=='SS' || user.role=='Admin' || user.role=='Owner' || user.role=='School'">
         <q-drawer v-model="left" side="left" bordered><LeftSidebar/></q-drawer>
-        <q-drawer v-model="right" side="right" bordered><RightSidebar/></q-drawer>
+        <q-drawer v-model="right" side="right" bordered ref="rightDrawer"><RightSidebar/></q-drawer>
       </div>
     </div>
     <q-page-container>

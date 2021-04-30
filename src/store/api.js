@@ -72,4 +72,5 @@ export default {
   getTeam: `${url}/school/getTeam`,
   addToTeam: `${url}/school/addToTeam`,
   updateTeam: `${url}/school/updateTeam`,
+  getLeadLog: `${url}/school/getLeadLog/`,
 };

@@ -22,6 +22,8 @@ const state = {
   leadsFilter:  [],
   team:   [],
   teamPending:   [],
+  leadLog:  [],
+  counsellors:  [],
 };
 
 const getters = {
@@ -44,6 +46,8 @@ const getters = {
   leadsFilter: (state) => state.leadsFilter,
   team: (state) => state.team,
   teamPending: (state) => state.teamPending,
+  leadLog: (state) => state.leadLog,
+  counsellors: (state) => state.counsellors,
 };
 
 const actions = {
@@ -96,27 +100,25 @@ const actions = {
   async showAttendance({ commit }, form) { const res = await axios.post(api.showAttendance, form); commit('SHOWATTENDANCE', res.data); },
   async clearPresentAbsent({ commit }) { commit('CLEARPRESENTABSENT'); },
   
-  async getLeads({ commit }, form) { const res = await axios.post(api.getLeads, form); commit('GETLEADS', res.data.data); },
+  async getLeads({ commit }, form) { const res = await axios.post(api.getLeads, form); commit('GETLEADS', res.data); },
   async addLead({ commit }, form) { const res = await axios.post(api.addLead, form); commit('ADDLEAD', res.data.data); },
   async updateLead({ commit }, form) { const res = await axios.post(api.updateLead, form); commit('UPDATELEAD', res.data.data); },
   async uploadExcelUsers({ commit }, form) { 
-    const res = await axios.post(api.uploadExcelUsers, form);
-    if (res.data.success) { commit('UPLOADEXCELUSERS', res.data.data);  }
+    const res = await axios.post(api.uploadExcelUsers, form); if (res.data.success) { commit('UPLOADEXCELUSERS', res.data.data);  }
     message(res.data.message);    
   },
 
   async getTeam({ commit }, form) { const res = await axios.post(api.getTeam, form); commit('GETTEAM', res.data); },
   async addToTeam({ commit }, form) {
-    const res = await axios.post(api.addToTeam, form);
-    if (res.data.success) { commit('ADDTOTEAM', res.data.data); }
+    const res = await axios.post(api.addToTeam, form); if (res.data.success) { commit('ADDTOTEAM', res.data.data); }
     message(res.data.message);
   },
   async updateTeam({ commit }, form) {
-    const res = await axios.post(api.updateTeam, form); 
-    console.log(`res`, res)
-    if (res.data.success) { commit('UPDATETEAM', res.data.data); }
+    const res = await axios.post(api.updateTeam, form); if (res.data.success) { commit('UPDATETEAM', res.data.data); }
     message(res.data.message);
   },
+
+  async getLeadLog({ commit }, form) { const res = await axios.get(api.getLeadLog+form.leadId); commit('GETLEADLOG', res.data.data); },
 
 };
 
@@ -198,8 +200,9 @@ const mutations = {
   },
 
   GETLEADS: (state, data) => {
-    state.leads = data;
-    state.leadsFilter = data;
+    state.leads = data.leads;
+    state.leadsFilter = data.leads;
+    state.counsellors = data.counsellors;
   },
   ADDLEAD: (state, data) => {
     // state.leads.unshift(data); 
@@ -216,7 +219,6 @@ const mutations = {
     state.team = data.team; 
   },
   ADDTOTEAM: (state, data) => {
-    console.log(`data in store`, data)
     const index = state.teamPending.findIndex((i) => i.id === data.userId); if (index !== -1) { state.teamPending.splice(index, 1); }
     state.team.unshift(data);
   },

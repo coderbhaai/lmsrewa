@@ -139,7 +139,6 @@
                     message('You have not added the user to team!!!');
                     this.resetData();
                 }else{
-                    console.log('clicked')
                     const data = {
                         userId: this.userId,
                         schoolId: this.schoolId,
@@ -150,7 +149,6 @@
                         sendsms : parseInt(this.sendSms),
                         sendwhatsapp : parseInt(this.sendWhatsApp),
                     };
-                    console.log(`data`, data)
                     this.$store.dispatch('addToTeam', data);
                     this.resetData();
                 }
@@ -165,7 +163,6 @@
                 this.medium = true;
             },
             updateTeam(data) {
-                console.log(`data`, data)
                 this.id = data.teamId;
                 this.userId = data.userId;
                 this.name = data.name;
@@ -214,8 +211,6 @@
                     sendsms : parseInt(this.sendSms),
                     sendwhatsapp : parseInt(this.sendWhatsApp),
                 };
-
-                console.log(`data`, data)
                 this.$store.dispatch('updateTeam', data); 
                 this.resetData();
             },

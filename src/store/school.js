@@ -101,7 +101,10 @@ const actions = {
   async clearPresentAbsent({ commit }) { commit('CLEARPRESENTABSENT'); },
   
   async getLeads({ commit }, form) { const res = await axios.post(api.getLeads, form); commit('GETLEADS', res.data); },
-  async addLead({ commit }, form) { const res = await axios.post(api.addLead, form); commit('ADDLEAD', res.data.data); },
+  async addLead({ commit }, form) { 
+    const res = await axios.post(api.addLead, form); commit('ADDLEAD', res.data.data); 
+    message(res.data.message);
+  },
   async updateLead({ commit }, form) { const res = await axios.post(api.updateLead, form); commit('UPDATELEAD', res.data.data); },
   async uploadExcelUsers({ commit }, form) { 
     const res = await axios.post(api.uploadExcelUsers, form); if (res.data.success) { commit('UPLOADEXCELUSERS', res.data.data);  }
@@ -119,6 +122,18 @@ const actions = {
   },
 
   async getLeadLog({ commit }, form) { const res = await axios.get(api.getLeadLog+form.leadId); commit('GETLEADLOG', res.data.data); },
+  async clearLeadLog({ commit }) { commit('CLEARLEADLOG'); },
+
+  async addCounsellor({ commit }, form) {
+    const res = await axios.post(api.addCounsellor, form); if (res.data.success) { commit('ADDCOUNSELLOR', res.data.data); }
+    message(res.data.message);
+  },
+
+  async changeLeadStatus({ commit }, form) {
+    const res = await axios.post(api.changeLeadStatus, form); if (res.data.success) { commit('CHANGELEADSTATUS', res.data.data); }
+    message(res.data.message);
+  }, 
+
 
 };
 
@@ -224,6 +239,23 @@ const mutations = {
   },
   UPDATETEAM: (state, data) => { const index = state.team.findIndex((i) => i.id === data.id); if (index !== -1) { state.team.splice(index, 1, data); } },
 
+  ADDCOUNSELLOR: (state, data) => {
+    data.forEach(el => {
+      const index = state.leads.findIndex((i) => i.id === el.id); if (index !== -1) { 
+        state.leads.splice(index, 1, el);
+        state.leadsFilter.splice(index, 1, el);
+      }      
+    });
+  },
+  CHANGELEADSTATUS: (state, data) => {
+    const index = state.leads.findIndex((i) => i.id === data.id); 
+    if (index !== -1) { 
+      state.leads.splice(index, 1, data);
+      state.leadsFilter.splice(index, 1, data);
+    }
+  },
+  GETLEADLOG: (state, data) => { state.leadLog = data; },
+  CLEARLEADLOG: (state, data) => { state.leadLog = []; },
 
 };
 

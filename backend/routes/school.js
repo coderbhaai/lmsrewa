@@ -207,7 +207,7 @@ router.post('/showAttendance', asyncMiddleware( async(req, res) => {
 }))
 
 router.post('/getLeads', asyncMiddleware( async(req, res) => {
-    let sql = `SELECT * FROM leads WHERE schoolId = '${req.body.schoolId}';
+    let sql = `SELECT a.id, a.schoolId, a.name, a.email, a.phone, a.source, a.status, a.counsellor, a.updated_at, b.name as counsellorName, b.role as counsellorRole FROM leads as a left join users as b on b.id= a.counsellor WHERE a.schoolId = '${req.body.schoolId}';
                 SELECT id, name, role FROM users WHERE institute = '${req.body.schoolId}' AND status=1;`
     pool.query(sql, async(err, results) => {
         try{
@@ -228,13 +228,23 @@ router.post('/addLead', asyncMiddleware( async(req, res) => {
         "created_at":           time,
         "updated_at":           time,
     }
+    let log ={
+        "schoolId":                 req.body.schoolId,
+        "type":                     "Single",
+        "entry":                    "Lead added in system",
+        "loggedby":                 req.body.loggedby,
+        "created_at":               time,
+        "updated_at":               time,
+    }
     let sql = `INSERT INTO leads SET ?`
     pool.query(sql, post, async(err, results) => {
         try{
             if(err){ throw err }
             if(results){ 
-                const data = await func.getSingleLead(results.insertId) 
-                res.send({ data, message: "Lead added successfully" }); 
+                log['leadId'] = results.insertId
+                await func.addLog(log)
+                const data = await func.getSingleLead(results.insertId)
+                res.send({ success: true, data, message: "Lead added successfully" });
             }
         }catch(e){ func.logError(e); res.status(500); return; }
     })
@@ -249,12 +259,26 @@ router.post('/updateLead', asyncMiddleware( async(req, res) => {
         'status':               req.body.status,
         "updated_at":           time,
     }
+    let log ={
+        "schoolId":                 req.body.schoolId,
+        "type":                     "Single",
+        "leadId":                   req.body.id,
+        "loggedby":                 req.body.loggedby,
+        "created_at":               time,
+        "updated_at":               time,
+    }
     let sql = `UPDATE leads SET ? WHERE id = '${req.body.id}'`;
     pool.query(sql, post, async(err, results) => {
         try{
             if(err){ throw err }
             if(results){ 
-                const data = await func.getSingleLead(req.body.id) 
+                const data = await func.getSingleLead(req.body.id)
+                if(req.body.changes.length){
+                    var text = ''
+                    req.body.changes.forEach(i => text += ` ${i}.`);
+                    log['entry'] = `lead updated with changes: ${text}`
+                    await func.addLog(log)
+                }
                 res.send({ data, message: "Lead updated successfully" }); }
         }catch(e){ func.logError(e); res.status(500); return; }
     })
@@ -273,6 +297,14 @@ router.post('/uploadExcelUsers', asyncMiddleware( async(req, res) => {
         time, 
         time
     ]);
+    let log ={
+        "schoolId":                 req.body.schoolId,
+        "type":                     "Multiple",
+        "entry":                    "Lead added in system",
+        "loggedby":                 req.body.loggedby,
+        "created_at":               time,
+        "updated_at":               time,
+    }
     pool.query(`INSERT INTO leads (schoolId, name, email, phone, status, source, created_at, updated_at) VALUES ?`, [values], async(err, results) => {
         try{
             if(err){ throw err }
@@ -281,7 +313,13 @@ router.post('/uploadExcelUsers', asyncMiddleware( async(req, res) => {
                 pool.query(sql2, async(err2, results2) => {
                     try{
                         if(err2){ throw err2 }
-                        if(results2){ res.send({ success: true, data: results2, message: "Leads uploaded successfully" }); }
+                        if(results2){ 
+                            var id = []
+                            results2.forEach(i => { id.push(i.id) });
+                            log['leadId'] = JSON.stringify(id)
+                            await func.addLog(log)
+                            res.send({ success: true, data: results2, message: "Leads uploaded successfully" }); 
+                        }
                     }catch(e){ func.logError(e); res.status(500); return; }
                 })
             }
@@ -304,7 +342,6 @@ router.post('/getTeam', asyncMiddleware( async(req, res) => {
 }))
 
 router.post('/addToTeam', asyncMiddleware( async(req, res) => {
-    console.log(`req.body`, req.body)
     let post= {
         'schoolId' :            req.body.schoolId,
         'userId' :              req.body.userId,
@@ -345,7 +382,6 @@ router.post('/updateTeam', asyncMiddleware( async(req, res) => {
             if(results){
                 await func.updateRole(req.body.userId, req.body.role)
                 const data = await func.getTeamMember(req.body.id)
-                console.log(`data`, data)
                 res.send({ success: true, data, message: 'Team updated successfuly' });
             }
         }catch(e){ func.logError(e); res.status(500); return; }
@@ -353,17 +389,70 @@ router.post('/updateTeam', asyncMiddleware( async(req, res) => {
 }))
 
 router.get('/getLeadLog/:id', asyncMiddleware( async(req, res) => {
-    console.log(`req.params.id`, req.params.id)
-    // let sql = `SELECT a.id, a.schoolId, a.type, a.name, a.tab1, b.name as tab1Name FROM schoolbasics as a 
-    // left join schoolbasics as b on b.id = a.tab1 WHERE a.type IN ('Class', 'Subject') AND a.schoolId = '${req.params.id}';`
-    // pool.query(sql, (err, results) => {
-    //     try{
-    //         if(err){ throw err }
-    //         if(results){ res.send({ data: results }); }
-    //     }catch(e){ func.logError(e); res.status(500); return; }
-    // })
+    let sql = `SELECT a.id, a.schoolId, a.type, a.leadId, a.entry, a.loggedby, a.created_at, b.name as loggedByName FROM leadlog as a left join users as b on b.id = a.loggedby WHERE a.leadId = '${req.params.id}' OR JSON_CONTAINS(a.leadId, '${req.params.id}') = 1 ORDER BY a.id DESC;`
+    pool.query(sql, (err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ data: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
 }))
 
+router.post('/addCounsellor', asyncMiddleware( async(req, res) => {
+    let post= {
+        'counsellor':               req.body.counsellorSelected,
+        "updated_at":               time,
+    }
+    let log ={
+        "schoolId":                 req.body.schoolId,
+        "type":                     req.body.type,
+        "leadId":                   req.body.leadId,
+        "entry":                    `${req.body.counsellorName} was alloted as counsellor`,
+        "loggedby":                 req.body.loggedby,
+        "created_at":               time,
+        "updated_at":               time,
+    }
+
+    let sql = `UPDATE leads SET ? WHERE id IN (${JSON.parse(req.body.id)});`
+    pool.query(sql, post, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){
+                const data = await func.getUpdatedLeads(req.body.id)
+                await func.addLog(log)
+                res.send({ success:true, data, message: "Leads updated successfully" }); 
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/changeLeadStatus', asyncMiddleware( async(req, res, next) => {
+    let post= {
+        "status":                   req.body.status,
+        "updated_at":               time,
+    }
+    if(req.body.status==0){ var status = 'Not Active' }else{ var status = 'Active' }
+    let log ={
+        "schoolId":                 req.body.schoolId,
+        "type":                     req.body.type,
+        "leadId":                   req.body.id,
+        "entry":                    `Status changed to ${status}`,
+        "loggedby":                 req.body.loggedby,
+        "created_at":               time,
+        "updated_at":               time,
+    }
+    let sql = `UPDATE leads SET ? WHERE id = ${req.body.id}`
+    pool.query(sql, post, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ 
+                const data = await func.getLead(req.body.id)
+                await func.addLog(log)
+                res.send({ success: true, data, message: 'Lead status changed successfully' });
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
 
 
 

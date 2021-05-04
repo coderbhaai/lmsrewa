@@ -1,4 +1,5 @@
 // app global css in SCSS form
+@import "quasar.variables.scss";
 .container{
  width: 80%;
  max-width: 80%;   
@@ -150,5 +151,13 @@ img.edit{
     justify-content: space-between;
     .filterBy{
         min-width: 250px;
+    }
+}
+.q-table{
+    tbody{
+        td{
+            word-wrap: break-word;
+            white-space: normal;
+        }   
     }
 }

@@ -748,7 +748,6 @@ router.get('/onlineTestSeries', asyncMiddleware( async(req, res) => {
 //                     pool.query(sql, post, async(err, results) => {
 //                         try{
 //                             if(err){ throw err }
-//                             console.log(index + ' is updated')
 //                         }catch(e){ func.logError(e); res.status(500); return; }
 //                     })                    
 //                 });
@@ -772,7 +771,6 @@ router.get('/onlineTestSeries', asyncMiddleware( async(req, res) => {
 //                     pool.query(sql, post, async(err, results) => {
 //                         try{
 //                             if(err){ throw err }
-//                             console.log(index + ' is updated')
 //                         }catch(e){ func.logError(e); res.status(500); return; }
 //                     })                    
 //                 });
@@ -795,7 +793,6 @@ router.get('/onlineTestSeries', asyncMiddleware( async(req, res) => {
 //                     pool.query(sql, post, async(err, results) => {
 //                         try{
 //                             if(err){ throw err }
-//                             console.log(i.id + ' is updated')
 //                         }catch(e){ func.logError(e); res.status(500); return; }
 //                     })                    
 //                 });
@@ -818,7 +815,6 @@ router.get('/onlineTestSeries', asyncMiddleware( async(req, res) => {
 //                     pool.query(sql, post, async(err, results) => {
 //                         try{
 //                             if(err){ throw err }
-//                             console.log(index + ' is updated')
 //                         }catch(e){ func.logError(e); res.status(500); return; }
 //                     })                    
 //                 });
@@ -858,11 +854,9 @@ router.get('/onlineTestSeries', asyncMiddleware( async(req, res) => {
 //                         pool.query(sql, post, async(err, results) => {
 //                             try{
 //                                 if(err){ throw err }
-//                                 console.log(index + ' is updated')
 //                             }catch(e){ func.logError(e); res.status(500); return; }
 //                         })
 //                     }else{
-//                         console.log('No Match')
 //                     }
 //                 });
 //             }
@@ -882,7 +876,6 @@ router.get('/onlineTestSeries', asyncMiddleware( async(req, res) => {
 //                     pool.query(sql, post, async(err, results) => {
 //                         try{
 //                             if(err){ throw err }
-//                             console.log(index + ' rows updated')
 //                         }catch(e){ func.logError(e); res.status(500); return; }
 //                     })                    
 //                 });
@@ -981,11 +974,9 @@ router.get('/onlineTestSeries', asyncMiddleware( async(req, res) => {
 //                         pool.query(sql, post, async(err, results) => {
 //                             try{
 //                                 if(err){ throw err }
-//                                 console.log(index + ' - '+  code + ' rows updated')
 //                             }catch(e){ func.logError(e); res.status(500); return; }
 //                         })
 //                     }else{
-//                         console.log('No Match')
 //                     }
 //                 });
 //             }
@@ -1009,11 +1000,9 @@ router.get('/onlineTestSeries', asyncMiddleware( async(req, res) => {
 //                         pool.query(sql, post, async(err, results) => {
 //                             try{
 //                                 if(err){ throw err }
-//                                 console.log(index + ' - '+  code + ' rows updated')
 //                             }catch(e){ func.logError(e); res.status(500); return; }
 //                         })
 //                     }else{
-//                         console.log('No Match')
 //                     }
 //                 });
 //             }
@@ -1034,7 +1023,6 @@ router.get('/onlineTestSeries', asyncMiddleware( async(req, res) => {
 //                         pool.query(sql, post, async(err, results) => {
 //                             try{
 //                                 if(err){ throw err }
-//                                 console.log(index + ' -  rows updated')
 //                             }catch(e){ func.logError(e); res.status(500); return; }
 //                         })
 //                 });
@@ -1055,7 +1043,6 @@ router.post('/count', asyncMiddleware( async(req, res, next) => {
     pool.query(sql, [1,2,3,4,5,6,7], async(err, results) => {
         try{
             if(err){ throw err }
-            console.log('results', results)
             if(results){ 
                 // results[0].forEach(i => {
                 //     results[1].forEach(j => {
@@ -1065,7 +1052,6 @@ router.post('/count', asyncMiddleware( async(req, res, next) => {
                 //                     results[5].filter(n=>n.tab1 == i.id && n.tab2 == l.id && n.tab3 == m.id ).forEach((n, index) => {
                 //                         if(n.id){
                 //                         var xx = results[6].filter(o=>o.class==i.id && o.difficulty==j.id && i.type==k.id && o.subject == l.id && o.topic == m.id && o.subTopic == n.id).length
-                //                         console.log('xx', xx)
                 //                             let post={
                 //                                 'classes': i.id,
                 //                                 'subject': l.id,
@@ -1075,9 +1061,7 @@ router.post('/count', asyncMiddleware( async(req, res, next) => {
                 //                                 'subTopic': n.id
                 //                             }
                 //                             let sql = `INSERT INTO questsummary SET ?`
-                //                             console.log('sql - '+ index, sql)
                 //                         }else{
-                //                             console.log('No Data')
                 //                         }
                 //                     });
                 //                 });
@@ -1095,7 +1079,6 @@ router.post('/count', asyncMiddleware( async(req, res, next) => {
 //                         pool.query(sql, post, async(err, results) => {
 //                             try{
 //                                 if(err){ throw err }
-//                                 console.log(index + ' -  rows updated')
 //                             }catch(e){ func.logError(e); res.status(500); return; }
 //                         })
 // Change DB

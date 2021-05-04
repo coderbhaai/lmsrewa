@@ -268,7 +268,6 @@ const mutations = {
     if (index !== -1) { state.adminInstitutes.splice(index, 1, data); }
   },
   CHANGEINSTITUTESTATUS: (state, data) => {
-    console.log(`data`, data)
     const index = state.adminInstitutes.findIndex((i) => i.id === data.id);
     if (index !== -1) { state.adminInstitutes.splice(index, 1, data); }
   },

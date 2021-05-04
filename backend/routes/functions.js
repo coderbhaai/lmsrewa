@@ -356,7 +356,7 @@ function getNames(data) {
 
 function getSingleLead(id) {
     return new Promise((resolve, reject) => {
-        let sql = `SELECT * FROM leads WHERE id = ${id};`
+        let sql = `SELECT a.id, a.schoolId, a.name, a.email, a.phone, a.source, a.status, a.counsellor, a.updated_at, b.name as counsellorName, b.role as counsellorRole FROM leads as a left join users as b on b.id= a.counsellor WHERE a.id = ${id}`
         pool.query(sql, (err, results) => {
             try{
                 if(err){ throw err }
@@ -367,13 +367,10 @@ function getSingleLead(id) {
 }
 
 function changeUserStatus(id, status) {
-    console.log(`id, status`, id, status)
     return new Promise((resolve, reject) => {
         let sql =  `UPDATE users SET status = ${status} WHERE id = ${id};`
         pool.query(sql, (err, results) => {
             try{
-                console.log(`results`, results)
-                console.log(`results[0]`, results[0])
                 if(err){ throw err }
                 if(results){ resolve(results[0] ) }
             }catch(e){ logError(e); return; }
@@ -394,10 +391,46 @@ function getTeamMember(id) {
 }
 
 function updateRole(id, role) {
-    console.log(`id, role`, id, role)
     return new Promise((resolve, reject) => {
         let sql =  `UPDATE users SET role = '${role}' WHERE id = ${id};`
         pool.query(sql, (err, results) => {
+            try{
+                if(err){ throw err }
+                if(results){ resolve(results[0] ) }
+            }catch(e){ logError(e); return; }
+        });
+    });
+}
+
+function getUpdatedLeads(idArray) {
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT id, schoolId, name, email, phone, source, status, counsellor, updated_at FROM leads WHERE id IN (${JSON.parse(idArray)});`
+        pool.query(sql, (err, results) => {
+            try{
+                if(err){ throw err }
+                if(results){ resolve(results ) }
+            }catch(e){ logError(e);return; }
+        });
+    });
+}
+
+function getLead(id) {
+    return new Promise((resolve, reject) => {
+        let sql =   `SELECT id, schoolId, name, email, phone, source, status, counsellor, updated_at FROM leads WHERE id = '${id}'`
+        pool.query(sql, (err, results) => {
+            try{
+                if(err){ throw err }
+                if(results){ resolve(results[0] ) }
+            }catch(e){ logError(e); return; }
+        });
+    });
+}
+
+function addLog(log) {
+    console.log(`log`, log)
+    return new Promise((resolve, reject) => {
+        let sql =  `INSERT INTO leadlog SET ?`
+        pool.query(sql, log, (err, results) => {
             try{
                 if(err){ throw err }
                 if(results){ resolve(results[0] ) }
@@ -491,4 +524,4 @@ function getUserId(req, res, next){
     }
 }
 
-module.exports = {verifyToken, verifyAdmin, verifyInsti, getUserId, getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails, dpPreview, getSchoolBasic, getSchoolGroup, getNames, getSingleLead, changeUserStatus, getTeamMember, updateRole };
+module.exports = {verifyToken, verifyAdmin, verifyInsti, getUserId, getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails, dpPreview, getSchoolBasic, getSchoolGroup, getNames, getSingleLead, changeUserStatus, getTeamMember, updateRole, getUpdatedLeads, getLead, addLog };

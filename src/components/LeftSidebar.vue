@@ -87,24 +87,13 @@
         </div>
         <div v-if="user.role=='School'">
             <q-list class="rounded-borders">
-              <q-item clickable tag="a" href="/school/basics">
-                <q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Basics</q-item-label></q-item-section>
-              </q-item>
-              <q-item clickable tag="a" href="/school/teacherAttendance">
-                <q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Attendance Register</q-item-label></q-item-section>
-              </q-item>
-              <q-item clickable tag="a" href="/school/takeAttendance">
-                <q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Take Attendance</q-item-label></q-item-section>
-              </q-item>
-              <q-item clickable tag="a" href="/school/groups">
-                <q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Groups</q-item-label></q-item-section>
-              </q-item>
-              <q-item clickable tag="a" href="/school/leadManagement">
-                <q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Lead Management</q-item-label></q-item-section>
-              </q-item>
-              <q-item clickable tag="a" href="/school/team">
-                <q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Team</q-item-label></q-item-section>
-              </q-item>
+              <q-item clickable tag="a" href="/school/basics"><q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Basics</q-item-label></q-item-section></q-item>
+              <q-item clickable tag="a" href="/school/teacherAttendance"><q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Attendance Register</q-item-label></q-item-section></q-item>
+              <q-item clickable tag="a" href="/school/takeAttendance"><q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Take Attendance</q-item-label></q-item-section></q-item>
+              <q-item clickable tag="a" href="/school/groups"><q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Groups</q-item-label></q-item-section></q-item>
+              <q-item clickable tag="a" href="/school/leadManagement"><q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Lead Management</q-item-label></q-item-section></q-item>
+              <q-item clickable tag="a" href="/school/team"><q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Team</q-item-label></q-item-section></q-item>
+              <q-item clickable tag="a" href="/school/fees"><q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Fee Management</q-item-label></q-item-section></q-item>
             </q-list>
             <q-item>
               <q-item-section avatar><q-icon name="schedule"/></q-item-section><q-item-section @click="logOut"><q-item-label>Log Out</q-item-label></q-item-section>

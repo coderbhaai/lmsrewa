@@ -69,6 +69,7 @@ const routes = [
       { path: '/school/teacherAttendance', component: () => import('pages/school/TeacherAttendance.vue') },
       { path: '/school/takeAttendance', component: () => import('pages/school/TakeAttendance.vue') },
       { path: '/school/groups', component: () => import('pages/school/Groups.vue') },
+      { path: '/school/fees', component: () => import('pages/school/Fees.vue') },
     ],
     meta: { auth: true, school: true },
   },

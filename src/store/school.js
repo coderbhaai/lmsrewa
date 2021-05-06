@@ -134,6 +134,7 @@ const actions = {
     message(res.data.message);
   }, 
 
+  async feeManagement({ commit }, form) { const res = await axios.post(api.feeManagement, form); commit('FEEMANAGEMENT', res.data); },
 
 };
 
@@ -256,6 +257,11 @@ const mutations = {
   },
   GETLEADLOG: (state, data) => { state.leadLog = data; },
   CLEARLEADLOG: (state, data) => { state.leadLog = []; },
+
+  FEEMANAGEMENT: (state, data) => {
+    console.log(`data`, data)
+    state.schoolClassOptions = data.classes;
+  },
 
 };
 

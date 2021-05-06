@@ -18,7 +18,6 @@ var date = new Date().toISOString().slice(0, 10)
 const time = new Date().toISOString().slice(0, 19).replace('T', ' ')
 const transporter = nodemailer.createTransport({ host: "smtpout.secureserver.net", port: 465, secure: true, auth: { user: 'contactus@thetrueloans.com', pass: 'contactus@123',  debug: true }, tls:{ rejectUnauthorized: false, secureProtocol: "TLSv1_method" } });
 
-
 router.get('/schoolBasics', asyncMiddleware( async(req, res) => {
     let sql = `SELECT a.id, a.schoolId, a.type, a.name, a.tab1, a.tab2, a.tab3, a.updated_at, b.name as tab1Name, c.name as tab2Name, d.name as tab3Name FROM schoolbasics as a 
     left join schoolbasics as b on b.id = a.tab1 left join schoolbasics as c on c.id = a.tab2 left join schoolbasics as d on d.id = a.tab3;`
@@ -453,6 +452,18 @@ router.post('/changeLeadStatus', asyncMiddleware( async(req, res, next) => {
         }catch(e){ func.logError(e); res.status(500); return; }
     })
 }))
+
+router.post('/feeManagement', asyncMiddleware( async(req, res) => {
+    console.log(`req.body`, req.body)
+    let sql = `SELECT name from schoolbasics WHERE type = 'Class' AND schoolId = '${req.body.schoolId}'`
+    pool.query(sql, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ classes: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
 
 
 

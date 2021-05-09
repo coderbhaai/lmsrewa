@@ -6,7 +6,7 @@
             <q-form class="q-gutter-md q-mb-lg" @submit="submitHandler">
                 <div class="row">
                     <div class="col-6 q-pr-lg"><q-input v-model="name" label="Name of Fee" required/></div>
-                    <div class="col-3 q-pr-lg"><q-select map-options emit-value v-model="classes" :options="schoolClassOptions" option-value="name" option-label="name" label="Class" required/></div>
+                    <div class="col-3 q-pr-lg"><q-select map-options emit-value v-model="classes" :options="schoolClassOptions" option-value="id" option-label="name" label="Class" required/></div>
                     <div class="col-3 q-pr-lg"><q-select map-options emit-value v-model="period" :options="periodOptions" option-value="value" option-label="name" label="Period" required/></div>
                     <div class="col-4 q-pr-lg"><q-input v-model="amount" type="number" label="Fee Amount" required/></div>
                     <div class="col-4 q-pr-lg"><q-select map-options emit-value v-model="status" :options="statusOptions" option-value="value" option-label="name" label="Status" required/></div>

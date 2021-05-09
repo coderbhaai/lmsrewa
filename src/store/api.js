@@ -80,5 +80,6 @@ export default {
   changeFeeStatus: `${url}/school/changeFeeStatus`,
   updateFeeStructure: `${url}/school/updateFeeStructure`,
   feeManagement: `${url}/school/feeManagement`,
-  studentList: `${url}/school/studentList`,
+  classSelInFees: `${url}/school/classSelInFees`,
+  addFees: `${url}/school/addFees`,
 };

@@ -439,10 +439,9 @@ function addLog(log) {
     });
 }
 
-function getFeeStructure(id) {
-    console.log(`id`, id)
+function getFeeDetails(id) {
     return new Promise((resolve, reject) => {
-        let sql =   `SELECT id, schoolId, name, classes, period, amount, status, updated_at FROM fees WHERE id = '${id}'`
+        let sql =   `SELECT id, schoolId, student, classes, fees, feeAmount, remarks, updated_at FROM feerecords WHERE id = '${id}';`
         pool.query(sql, (err, results) => {
             try{
                 if(err){ throw err }
@@ -451,7 +450,6 @@ function getFeeStructure(id) {
         });
     });
 }
-
 
 // School Functions
 
@@ -538,4 +536,4 @@ function getUserId(req, res, next){
     }
 }
 
-module.exports = {verifyToken, verifyAdmin, verifyInsti, getUserId, getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails, dpPreview, getSchoolBasic, getSchoolGroup, getNames, getSingleLead, changeUserStatus, getTeamMember, updateRole, getUpdatedLeads, getLead, addLog, getFeeStructure };
+module.exports = {verifyToken, verifyAdmin, verifyInsti, getUserId, getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails, dpPreview, getSchoolBasic, getSchoolGroup, getNames, getSingleLead, changeUserStatus, getTeamMember, updateRole, getUpdatedLeads, getLead, addLog, getFeeDetails };

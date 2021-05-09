@@ -26,7 +26,10 @@ const state = {
   leadLog:  [],
   counsellors:  [],
   feeStructure:  [],
+  filterFees: [],
+  feeRecords: [],
   studentList:  [],
+  filterStudents: [],
 };
 
 const getters = {
@@ -53,7 +56,10 @@ const getters = {
   leadLog: (state) => state.leadLog,
   counsellors: (state) => state.counsellors,
   feeStructure: (state) => state.feeStructure,
+  filterFees: (state) => state.filterFees,
+  feeRecords: (state) => state.feeRecords,
   studentList: (state) => state.studentList,
+  filterStudents: (state) => state.filterStudents,
 };
 
 const actions = {
@@ -155,8 +161,14 @@ const actions = {
     if (res.data.success) { commit('UPDATEFEESTRUCTURE', res.data.data); }
     message(res.data.message);
   },
-  // async studentList({ commit }, form) { const res = await axios.post(api.studentList, form); commit('STUDENTLIST', res.data.data); },
+  async classSelInFees({ commit }, form) { const res = await axios.post(api.classSelInFees, form); commit('CLASSSELINFEES', {data: res.data.data, form: form } ); },
   async feeManagement({ commit }, form) { const res = await axios.post(api.feeManagement, form); commit('FEEMANAGEMENT', res.data); },
+  // async filterStudents({ commit }, form) { commit('FILTERSTUDENTS', form); },
+  
+  async addFees({ commit }, form) { 
+    const res = await axios.post(api.addFees, form); commit( 'ADDFEES', res.data.data ); 
+    message(res.data.message);
+  },
 
 
 };
@@ -291,14 +303,25 @@ const mutations = {
   CHANGEFEESTATUS: (state, data) => { const index = state.feeStructure.findIndex((i) => i.id === data.id); if (index !== -1) { state.feeStructure.splice(index, 1, data); } },
   UPDATEFEESTRUCTURE: (state, data) => { const index = state.feeStructure.findIndex((i) => i.id === data.id); if (index !== -1) { state.feeStructure.splice(index, 1, data); } },
   FEEMANAGEMENT: (state, data) => {
-    state.studentList = data.studentList;
+    console.log(`data`, data)
     state.schoolClassOptionsCopy = data.classes;
     state.feeStructure = data.fees;
+    state.feeRecords = data.feeRecords;
+    state.filterStudents = []
+    state.filterFees = []
   },
   
-  STUDENTLIST: (state, data) => {
-    console.log(`data`, data)
-    state.studentList = data; },
+  CLASSSELINFEES: (state, data) => {
+    console.log(`data in student list`, data)
+    state.studentList = data.data;
+    state.filterStudents = data.data;
+    state.filterFees = state.feeStructure.filter(i=>i.classes == data.form.classes)
+  },
+
+  FILTERSTUDENTS: (state, form) => {
+    console.log(`form`, form)
+    state.filterStudents = state.studentList.filter(i=>i.name.includes(form.name))
+  },
 };
 
 export default { state, getters, actions, mutations, };

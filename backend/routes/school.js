@@ -527,15 +527,12 @@ router.post('/updateFeeStructure', asyncMiddleware( async(req, res) => {
     })
 }))
 
-router.post('/studentList', asyncMiddleware( async(req, res) => {
-    console.log(`req.body`, req.body)
-    let sql = `SELECT id, name FROM schoolbasics WHERE schoolId = '${req.body.schoolId}' AND type='Student' AND tab1='${req.body.classes}';`
-    console.log(`sql`, sql)
+router.post('/classSelInFees', asyncMiddleware( async(req, res) => {
+    let sql = `SELECT id, name, tab1 FROM schoolbasics WHERE schoolId='${req.body.schoolId}' AND type='Student' AND tab1='${req.body.classes}';`
     pool.query(sql, async(err, results) => {
         try{
             if(err){ throw err }
             if(results){ 
-                console.log(`results`, results)
                 res.send({ data: results }); }
         }catch(e){ func.logError(e); res.status(500); return; }
     })
@@ -543,18 +540,40 @@ router.post('/studentList', asyncMiddleware( async(req, res) => {
 
 router.post('/feeManagement', asyncMiddleware( async(req, res) => {
     let sql = `SELECT id, name from schoolbasics WHERE type = 'Class' AND schoolId = '${req.body.schoolId}';
-                SELECT id, name FROM schoolbasics WHERE schoolId = '${req.body.schoolId}' AND type='Student';
-    
-    `
+                SELECT id, name, classes, period, amount from fees WHERE status= 1 AND schoolId = '${req.body.schoolId}';
+                SELECT a.id, a.schoolID, a.student, a.classes, a.fees, a.feeAmount as feeCollected, a.remarks, a.updated_at, b.name as studentName, b.tab1, c.name as className, d.name as feeName, d.period, d.amount as feeAmount from feerecords as a 
+                left join schoolbasics as b on b.id = a.student left join schoolbasics as c on c.id = a.classes left join fees as d on d.id = a.fees
+                WHERE schoolId = '${req.body.schoolId}';`
     pool.query(sql, [1,2], async(err, results) => {
         try{
             if(err){ throw err }
-            if(results){ res.send({ classes: results[1], studentList: results[1] }); }
+            if(results){ res.send({ classes: results[0], fees: results[1], feeRecords: results[2] }); }
         }catch(e){ func.logError(e); res.status(500); return; }
     })
 }))
 
-
+router.post('/addFees', asyncMiddleware( async(req, res) => {
+    let post= {
+        'schoolId' :            req.body.schoolId,
+        'student' :             req.body.student,
+        'classes' :             req.body.classes,
+        'fees' :                req.body.fees,
+        'feeAmount' :           req.body.feeAmount,
+        'remarks' :             req.body.remarks,
+        "created_at":           time,
+        "updated_at":           time
+    }
+    let sql = `INSERT INTO feerecords SET ?`
+    pool.query(sql, post, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){
+                const data = await func.getFeeDetails(results.insertId )
+                res.send({ success: true, data, message: 'Fee added Succesfully' }); 
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
 
 
 

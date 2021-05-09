@@ -70,6 +70,7 @@ const routes = [
       { path: '/school/takeAttendance', component: () => import('pages/school/TakeAttendance.vue') },
       { path: '/school/groups', component: () => import('pages/school/Groups.vue') },
       { path: '/school/fees', component: () => import('pages/school/Fees.vue') },
+      { path: '/school/feeManagement', component: () => import('pages/school/FeeManagement.vue') },
     ],
     meta: { auth: true, school: true },
   },

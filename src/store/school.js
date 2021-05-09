@@ -7,6 +7,7 @@ const state = {
   schoolBasicsCopy: [],
   schoolBasicOptions: [],
   schoolClassOptions:  [],
+  schoolClassOptionsCopy: [],
   schoolStudentOptions:  [],
   schoolSubjectOptions: [],
   schoolGroups: [],
@@ -24,6 +25,8 @@ const state = {
   teamPending:   [],
   leadLog:  [],
   counsellors:  [],
+  feeStructure:  [],
+  studentList:  [],
 };
 
 const getters = {
@@ -31,6 +34,7 @@ const getters = {
   schoolBasicsCopy: (state) => state.schoolBasicsCopy,
   schoolBasicOptions: (state) => state.schoolBasicOptions,
   schoolClassOptions: (state) => state.schoolClassOptions,
+  schoolClassOptionsCopy: (state) => state.schoolClassOptionsCopy,
   schoolStudentOptions: (state) => state.schoolStudentOptions,
   schoolSubjectOptions: (state) => state.schoolSubjectOptions,
   schoolGroups: (state) => state.schoolGroups,
@@ -48,6 +52,8 @@ const getters = {
   teamPending: (state) => state.teamPending,
   leadLog: (state) => state.leadLog,
   counsellors: (state) => state.counsellors,
+  feeStructure: (state) => state.feeStructure,
+  studentList: (state) => state.studentList,
 };
 
 const actions = {
@@ -134,7 +140,24 @@ const actions = {
     message(res.data.message);
   }, 
 
+  async feeStructure({ commit }, form) { const res = await axios.post(api.feeStructure, form); commit('FEESTRUCTURE', res.data); },
+  async addFeeStructure({ commit }, form) { 
+    const res = await axios.post(api.addFeeStructure, form); commit('ADDFEESTRUCTURE', res.data.data);
+    message(res.data.message);
+  },
+  async changeFeeStatus({ commit }, form) {
+    const res = await axios.post(api.changeFeeStatus, form); if (res.data.success) { commit('CHANGEFEESTATUS', res.data.data); }
+    message(res.data.message);
+  },
+  async updateFeeStructure({ commit }, form) {
+    const res = await axios.post(api.updateFeeStructure, form); 
+    console.log(`res`, res)
+    if (res.data.success) { commit('UPDATEFEESTRUCTURE', res.data.data); }
+    message(res.data.message);
+  },
+  // async studentList({ commit }, form) { const res = await axios.post(api.studentList, form); commit('STUDENTLIST', res.data.data); },
   async feeManagement({ commit }, form) { const res = await axios.post(api.feeManagement, form); commit('FEEMANAGEMENT', res.data); },
+
 
 };
 
@@ -258,11 +281,24 @@ const mutations = {
   GETLEADLOG: (state, data) => { state.leadLog = data; },
   CLEARLEADLOG: (state, data) => { state.leadLog = []; },
 
-  FEEMANAGEMENT: (state, data) => {
-    console.log(`data`, data)
+  FEESTRUCTURE: (state, data) => {
     state.schoolClassOptions = data.classes;
+    state.schoolClassOptions.unshift({ id: 'All', name: "All Classes"})
+    state.schoolClassOptionsCopy = data.classes;
+    state.feeStructure = data.fees;
   },
-
+  ADDFEESTRUCTURE: (state, data) => { state.feeStructure.unshift(data); },
+  CHANGEFEESTATUS: (state, data) => { const index = state.feeStructure.findIndex((i) => i.id === data.id); if (index !== -1) { state.feeStructure.splice(index, 1, data); } },
+  UPDATEFEESTRUCTURE: (state, data) => { const index = state.feeStructure.findIndex((i) => i.id === data.id); if (index !== -1) { state.feeStructure.splice(index, 1, data); } },
+  FEEMANAGEMENT: (state, data) => {
+    state.studentList = data.studentList;
+    state.schoolClassOptionsCopy = data.classes;
+    state.feeStructure = data.fees;
+  },
+  
+  STUDENTLIST: (state, data) => {
+    console.log(`data`, data)
+    state.studentList = data; },
 };
 
 export default { state, getters, actions, mutations, };

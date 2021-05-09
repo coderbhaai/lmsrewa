@@ -93,7 +93,8 @@
               <q-item clickable tag="a" href="/school/groups"><q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Groups</q-item-label></q-item-section></q-item>
               <q-item clickable tag="a" href="/school/leadManagement"><q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Lead Management</q-item-label></q-item-section></q-item>
               <q-item clickable tag="a" href="/school/team"><q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Team</q-item-label></q-item-section></q-item>
-              <q-item clickable tag="a" href="/school/fees"><q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Fee Management</q-item-label></q-item-section></q-item>
+              <q-item clickable tag="a" href="/school/fees"><q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Fee Structure</q-item-label></q-item-section></q-item>
+              <q-item clickable tag="a" href="/school/feeManagement"><q-item-section avatar><q-icon name="schedule" /></q-item-section><q-item-section><q-item-label>Fee Management</q-item-label></q-item-section></q-item>
             </q-list>
             <q-item>
               <q-item-section avatar><q-icon name="schedule"/></q-item-section><q-item-section @click="logOut"><q-item-label>Log Out</q-item-label></q-item-section>

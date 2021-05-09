@@ -453,16 +453,108 @@ router.post('/changeLeadStatus', asyncMiddleware( async(req, res, next) => {
     })
 }))
 
-router.post('/feeManagement', asyncMiddleware( async(req, res) => {
-    console.log(`req.body`, req.body)
-    let sql = `SELECT name from schoolbasics WHERE type = 'Class' AND schoolId = '${req.body.schoolId}'`
-    pool.query(sql, async(err, results) => {
+router.post('/feeStructure', asyncMiddleware( async(req, res) => {
+    let sql = `SELECT id, schoolId, name, classes, period, amount, status, updated_at FROM fees;
+                SELECT id, name from schoolbasics WHERE type = 'Class' AND schoolId = '${req.body.schoolId}'`
+    pool.query(sql, [1,2], async(err, results) => {
         try{
             if(err){ throw err }
-            if(results){ res.send({ classes: results }); }
+            if(results){ res.send({ fees: results[0], classes: results[1] }); }
         }catch(e){ func.logError(e); res.status(500); return; }
     })
 }))
+
+router.post('/addFeeStructure', asyncMiddleware( async(req, res) => {
+    let post= {
+        'schoolId' :            req.body.schoolId,
+        'name' :                req.body.name,
+        'classes' :             req.body.classes,
+        'period' :              req.body.period,
+        'amount' :              req.body.amount,
+        'status' :              req.body.status,
+        "created_at":           time,
+        "updated_at":           time,
+    }
+    let sql = `INSERT INTO fees SET ?`
+    pool.query(sql, post, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ 
+                const data = await func.getFeeStructure(results.insertId)
+                res.send({ success: true, data, message: "Fees Added succesfully" }); 
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/changeFeeStatus', asyncMiddleware( async(req, res, next) => {
+    let post= {
+        "status":                   req.body.status,
+        "updated_at":               time,
+    }
+    let sql = `UPDATE fees SET ? WHERE id = ${req.body.id}`
+    pool.query(sql, post, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){
+                const data = await func.getFeeStructure(req.body.id)
+                res.send({ success: true, data, message: 'Fee status changed successfully' });
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/updateFeeStructure', asyncMiddleware( async(req, res) => {
+    console.log(`req.body`, req.body)
+    let post= {
+        'name' :                req.body.name,
+        'classes' :             req.body.classes,
+        'period' :              req.body.period,
+        'amount' :              req.body.amount,
+        'status' :              req.body.status,
+        "updated_at":           time,
+    }
+    let sql = `UPDATE fees SET ? WHERE id = '${req.body.id}'`; 
+    pool.query(sql, post, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){
+                const data = await func.getFeeStructure(req.body.id)
+                console.log(`data`, data)
+                res.send({ success: true, data, message: 'Fees updated successfuly' });
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/studentList', asyncMiddleware( async(req, res) => {
+    console.log(`req.body`, req.body)
+    let sql = `SELECT id, name FROM schoolbasics WHERE schoolId = '${req.body.schoolId}' AND type='Student' AND tab1='${req.body.classes}';`
+    console.log(`sql`, sql)
+    pool.query(sql, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ 
+                console.log(`results`, results)
+                res.send({ data: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+router.post('/feeManagement', asyncMiddleware( async(req, res) => {
+    let sql = `SELECT id, name from schoolbasics WHERE type = 'Class' AND schoolId = '${req.body.schoolId}';
+                SELECT id, name FROM schoolbasics WHERE schoolId = '${req.body.schoolId}' AND type='Student';
+    
+    `
+    pool.query(sql, [1,2], async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ classes: results[1], studentList: results[1] }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
+
+
 
 
 

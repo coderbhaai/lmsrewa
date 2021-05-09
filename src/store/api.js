@@ -75,5 +75,10 @@ export default {
   getLeadLog: `${url}/school/getLeadLog/`,
   addCounsellor: `${url}/school/addCounsellor`,
   changeLeadStatus: `${url}/school/changeLeadStatus`,
+  feeStructure: `${url}/school/feeStructure`,
+  addFeeStructure: `${url}/school/addFeeStructure`,
+  changeFeeStatus: `${url}/school/changeFeeStatus`,
+  updateFeeStructure: `${url}/school/updateFeeStructure`,
   feeManagement: `${url}/school/feeManagement`,
+  studentList: `${url}/school/studentList`,
 };

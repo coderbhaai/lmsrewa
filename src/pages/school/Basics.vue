@@ -8,11 +8,13 @@
     <div v-if="showAddForm">
       <q-form class="q-gutter-md q-mb-lg" @submit="addSubmit">
         <div class="row">
-          <div class="col-4 q-pr-lg"><q-select emit-value v-model="type" :options="schoolBasicOptions" option-value="name" option-label="name" label="Type"  required @input="typeSelected()"/></div>
+          <div class="col-4 q-pr-lg"><q-select emit-value v-model="type" :options="schoolBasicOptions" option-value="name" option-label="name" label="Type" @input="typeSelected()"     
+          :rules="rules"      
+          /></div>
           <div class="col-4 q-pr-lg" v-if="this.type=='Student' || this.type=='Subject'">
             <q-select emit-value map-options v-model="tab1" :options="schoolClassOptions" option-value="id" option-label="name" label="Class"  required @input="classSelected()"/>
           </div>
-          <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name"  required/></div>
+          <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name" :rules="rules" /></div>
         </div>
         <div><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
       </q-form>
@@ -82,6 +84,10 @@ export default {
         { name: 'updated_at', label: 'Date', align: 'left', field: 'updated_at', sortable: true, },
         { name: 'index', label: 'Edit', align: 'left', field: 'id', sortable: true, },
       ],
+      rules: [
+        val => !!val || " is required",
+
+      ]
     };
   },
   methods: {
@@ -125,8 +131,9 @@ export default {
         tab1: this.tab1,
         tab2: this.tab2,
         tab3: this.tab3,
-      };
-      this.$store.dispatch('addSchoolBasic', data);
+      };        
+      console.log('Submit Button')
+      // this.$store.dispatch('addSchoolBasic', data);
       // this.resetData();
     },
     resetData() {

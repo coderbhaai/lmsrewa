@@ -51,7 +51,7 @@ export default {
         { name: 'index', label: 'Edit', align: 'left', field: 'id', sortable: true, },
       ],
       column2: [
-        { name: 'id2', label: 'Sl No.', align: 'left', field: 'Edit', },
+        { name: 'id', label: 'Sl No.', align: 'left', field: 'Edit', },
         { name: 'name', label: 'Name', align: 'left', field: 'name', sortable: true,},
         { name: 'tab1Name', label: 'Class', align: 'left', field: 'tab1Name', sortable: true,},
         { name: 'updated_at', label: 'Update', align: 'left', field: 'updated_at', sortable: true,},

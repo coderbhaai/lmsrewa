@@ -8,13 +8,11 @@
     <div v-if="showAddForm">
       <q-form class="q-gutter-md q-mb-lg" @submit="addSubmit">
         <div class="row">
-          <div class="col-4 q-pr-lg"><q-select emit-value v-model="type" :options="schoolBasicOptions" option-value="name" option-label="name" label="Type" @input="typeSelected()"     
-          :rules="rules"      
-          /></div>
+          <div class="col-4 q-pr-lg"><q-select emit-value v-model="type" :options="schoolBasicOptions" option-value="name" option-label="name" label="Type" @input="typeSelected()" :rules="[...rules.required]"/></div>
           <div class="col-4 q-pr-lg" v-if="this.type=='Student' || this.type=='Subject'">
-            <q-select emit-value map-options v-model="tab1" :options="schoolClassOptions" option-value="id" option-label="name" label="Class"  required @input="classSelected()"/>
+            <q-select emit-value map-options v-model="tab1" :options="schoolClassOptions" option-value="id" option-label="name" label="Class" @input="classSelected()" :rules="[...rules.required]"/>
           </div>
-          <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name" :rules="rules" /></div>
+          <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name" :rules="[...rules.required, ...rules.aleast3Words]"/></div>
         </div>
         <div><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
       </q-form>
@@ -25,11 +23,11 @@
         <q-card-section class="q-pt-none">
           <q-form class="q-gutter-md" @submit="updateSubmit">
             <div class="row">
-              <div class="col-4 q-pr-lg"><q-select emit-value v-model="type" :options="schoolBasicOptions" option-value="name" option-label="name" label="Type"  required @input="typeSelected()"/></div>
+              <div class="col-4 q-pr-lg"><q-select emit-value v-model="type" :options="schoolBasicOptions" option-value="name" option-label="name" label="Type" @input="typeSelected()" :rules="[...rules.required]"/></div>
               <div class="col-4 q-pr-lg" v-if="this.type=='Student' || this.type=='Subject'">
-                <q-select emit-value map-options v-model="tab1" :options="schoolClassOptions" option-value="id" option-label="name" label="Class"  required @input="classSelected()"/>
+                <q-select emit-value map-options v-model="tab1" :options="schoolClassOptions" option-value="id" option-label="name" label="Class" @input="classSelected()" :rules="[...rules.required]"/>
               </div>
-              <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name"  required/></div>
+              <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name" :rules="[...rules.required]"/></div>
             </div>
             <div class="text-center"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
           </q-form>
@@ -58,11 +56,13 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
+import {rules} from '../../store/functions'
 
 export default {
   data() {
     return {
+      rules : rules,
       id: '',
       type: '',
       name: '',
@@ -84,11 +84,8 @@ export default {
         { name: 'updated_at', label: 'Date', align: 'left', field: 'updated_at', sortable: true, },
         { name: 'index', label: 'Edit', align: 'left', field: 'id', sortable: true, },
       ],
-      rules: [
-        val => !!val || " is required",
-
-      ]
     };
+    
   },
   methods: {
     // ...mapActions(['schoolBasics']),

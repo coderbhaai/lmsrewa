@@ -8,14 +8,14 @@
         <div v-if="showAddForm">
             <q-form class="q-gutter-md q-mb-lg" @submit="submitHandler">
                 <div class="row">
-                    <div class="col-3 q-pr-lg"><q-select map-options emit-value v-model="classes" :options="schoolClassOptionsCopy" option-value="id" option-label="name" label="Class" required @input="classSelected"/></div>
+                    <div class="col-3 q-pr-lg"><q-select map-options emit-value v-model="classes" :options="schoolClassOptionsCopy" option-value="id" option-label="name" label="Class" @input="classSelected" :rules="[...rules.required]"/></div>
                     <div class="col-3 q-pr-lg">
-                        <q-select v-model="student" use-input input-debounce="0" label="Select Student" :options="options" option-value="id" option-label="name" @filter="filterFn">
+                        <q-select v-model="student" use-input input-debounce="0" label="Select Student" :options="options" option-value="id" option-label="name" @filter="filterFn" :rules="[...rules.required]">
                             <template v-slot:no-option><q-item><q-item-section class="text-grey">No results</q-item-section></q-item></template>
                         </q-select>
                     </div>
-                    <div class="col-3 q-pr-lg"><q-select map-options emit-value v-model="fees" :options="filterFees" option-value="id" option-label="name" label="Fees for" required @input="feeSelected"/></div>
-                    <div class="col-3 q-pr-lg"><q-input v-model="feeAmount" label="Fee Amount"/></div>
+                    <div class="col-3 q-pr-lg"><q-select map-options emit-value v-model="fees" :options="filterFees" option-value="id" option-label="name" label="Fees for" @input="feeSelected" :rules="[...rules.required]"/></div>
+                    <div class="col-3 q-pr-lg"><q-input v-model="feeAmount" label="Fee Amount" :rules="[...rules.required]"/></div>
                     <div class="col-8 q-pr-lg"><q-input v-model="remarks" autogrow label="Remarks" type="textarea"/></div>
                     <div class="col-4 q-pr-lg flex-hc"><q-btn label="Create Fees" type="submit" color="primary" class="q-mr-lg"/></div>
                 </div>
@@ -56,9 +56,12 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import {rules} from '../../store/functions'
+
 export default {
     data() {
         return {
+            rules : rules,
             id:                     '',
             classes:                '',
             student:                '',

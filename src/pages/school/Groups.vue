@@ -4,12 +4,12 @@
             <q-card style="width: 70vw; max-width: 80vw;">
                 <q-card-section class="modalHead"><div class="text-h6">Update Group</div><q-btn flat label="Close" color="primary" v-close-popup @click="resetData()"/></q-card-section>
                 <q-card-section class="q-pt-none">
-                <q-form class="q-gutter-md" @submit="updateSubmit">
-                    <div class="row">
-                        <div class="col-12 q-pr-lg"><q-input v-model="name" label="Name"  /></div>
-                    </div>
-                    <div class="text-center"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
-                </q-form>
+                    <q-form class="q-gutter-md" @submit="updateSubmit">
+                        <div class="row">
+                            <div class="col-12 q-pr-lg"><q-input v-model="name" label="Name" :rules="[...rules.required]"/></div>
+                        </div>
+                        <div class="text-center"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
+                    </q-form>
                 </q-card-section>
             </q-card>
         </q-dialog>
@@ -20,7 +20,7 @@
                     <q-form class="q-gutter-md" @submit="updateSubmit2">
                         <div class="row">
                             <div class="col-12 q-pr-lg">
-                                <q-select map-options emit-value v-model="groupSelected" :options="schoolGroups" option-value="id" option-label="name" counter label="Add to group"/>
+                                <q-select map-options emit-value v-model="groupSelected" :options="schoolGroups" option-value="id" option-label="name" counter label="Add to group" :rules="[...rules.required]"/>
                             </div>
                         </div>
                         <div class="text-center"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
@@ -36,7 +36,7 @@
                 </div>
                 <div v-if="showAddForm">
                     <q-form class="q-gutter-md q-mb-lg" @submit="addSubmit">
-                        <q-input v-model="name" label="Name"  required/>
+                        <q-input v-model="name" label="Name" :rules="[...rules.required]"/>
                         <div class="text-center"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg"/></div>
                     </q-form>
                 </div>
@@ -99,10 +99,13 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import {rules} from '../../store/functions'
+
 export default {
     name: 'SchoolGroups',
     data() {
         return {
+            rules : rules,
             showAddForm: false,
             showActions: false,
             name:  '',

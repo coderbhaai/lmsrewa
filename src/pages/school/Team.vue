@@ -21,10 +21,10 @@
                 <q-card-section class="q-pt-none">
                 <q-form class="q-gutter-md" @submit="addToTeam">
                     <div class="row">
-                        <div class="col-3 q-pr-lg"><q-input v-model="name" label="Name"  required/></div>
-                        <div class="col-3 q-pr-lg"><q-input v-model="email" label="Email"  required/></div>
-                        <div class="col-3 q-pr-lg"><q-select map-options emit-value v-model="role" :options="roleOptions" option-value="value" option-label="name" label="Role" required /></div>
-                        <div class="col-3 q-pr-lg"><q-select map-options emit-value v-model="status" :options="statusOptions" option-value="value" option-label="name" label="Status" required @input="checkStatus()"/></div>
+                        <div class="col-3 q-pr-lg"><q-input v-model="name" label="Name" :rules="[...rules.required]"/></div>
+                        <div class="col-3 q-pr-lg"><q-input v-model="email" label="Email" :rules="[...rules.required]"/></div>
+                        <div class="col-3 q-pr-lg"><q-select map-options emit-value v-model="role" :options="roleOptions" option-value="value" option-label="name" label="Role" :rules="[...rules.required]" /></div>
+                        <div class="col-3 q-pr-lg"><q-select map-options emit-value v-model="status" :options="statusOptions" option-value="value" option-label="name" label="Status" :rules="[...rules.required]" @input="checkStatus()"/></div>
                         <div class="col-12 q-mt-xl">
                             <h3>Rights for {{name}}</h3>
                             <div class="row rights">
@@ -61,10 +61,10 @@
                 <q-card-section class="q-pt-none">
                 <q-form class="q-gutter-md" @submit="updateTeamHandler">
                     <div class="row">
-                        <div class="col-3 q-pr-lg"><q-input v-model="name" label="Name"  required/></div>
-                        <div class="col-3 q-pr-lg"><q-input v-model="email" label="Email"  required/></div>
-                        <div class="col-3 q-pr-lg"><q-select map-options emit-value v-model="role" :options="roleOptions" option-value="value" option-label="name" label="Role" required /></div>
-                        <div class="col-3 q-pr-lg"><q-select map-options emit-value v-model="status" :options="statusOptions" option-value="value" option-label="name" label="Status" required @input="checkStatus()"/></div>
+                        <div class="col-3 q-pr-lg"><q-input v-model="name" label="Name" :rules="[...rules.required]"/></div>
+                        <div class="col-3 q-pr-lg"><q-input v-model="email" label="Email" :rules="[...rules.required]"/></div>
+                        <div class="col-3 q-pr-lg"><q-select map-options emit-value v-model="role" :options="roleOptions" option-value="value" option-label="name" label="Role" :rules="[...rules.required]" /></div>
+                        <div class="col-3 q-pr-lg"><q-select map-options emit-value v-model="status" :options="statusOptions" option-value="value" option-label="name" label="Status" @input="checkStatus()" :rules="[...rules.required]"/></div>
                         <div class="col-12 q-mt-xl">
                             <h3>Rights for {{name}}</h3>
                             <div class="row rights">
@@ -83,13 +83,14 @@
     </div>
 </template>
 <script>
-    import { mapGetters, mapActions } from 'vuex';
-    import { message } from '../../store/functions';
+    import { mapGetters } from 'vuex';
+    import { message, rules } from '../../store/functions';
 
     export default {
         name: 'Team',
         data() {
             return {
+                rules : rules,
                 id: '',
                 userId: '',
                 schoolId: '',

@@ -35,16 +35,16 @@
             <q-card style="width: 70vw; max-width: 80vw;">
                 <q-card-section class="modalHead"><div class="text-h6">Add Lead</div><q-btn flat label="Close" color="primary" v-close-popup @click="resetData()"/></q-card-section>
                 <q-card-section class="q-pt-none">
-                <q-form class="q-gutter-md" @submit="addHandler">
-                    <div class="row">
-                        <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name" required/></div>
-                        <div class="col-4 q-pr-lg"><q-input v-model="email" label="Email" required/></div>
-                        <div class="col-4 q-pr-lg"><q-input v-model="phone" label="Phone" required/></div>
-                        <div class="col-8 q-pr-lg"><q-input v-model="source" label="Source" required/></div>
-                        <div class="col-4 q-pr-lg"><q-select map-options emit-value v-model="status" :options="statusOptions" option-value="value" option-label="text" label="Status" required/></div>
-                    </div>
-                    <div class="text-center"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
-                </q-form>
+                    <q-form class="q-gutter-md" @submit="addHandler">
+                        <div class="row">
+                            <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name" :rules="[...rules.required]"/></div>
+                            <div class="col-4 q-pr-lg"><q-input v-model="email" label="Email" :rules="[...rules.required]"/></div>
+                            <div class="col-4 q-pr-lg"><q-input v-model="phone" label="Phone" :rules="[...rules.required]"/></div>
+                            <div class="col-8 q-pr-lg"><q-input v-model="source" label="Source" :rules="[...rules.required]"/></div>
+                            <div class="col-4 q-pr-lg"><q-select map-options emit-value v-model="status" :options="statusOptions" option-value="value" option-label="text" label="Status" :rules="[...rules.required]"/></div>
+                        </div>
+                        <div class="text-center"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
+                    </q-form>
                 </q-card-section>
             </q-card>
         </q-dialog>
@@ -52,16 +52,16 @@
             <q-card style="width: 70vw; max-width: 80vw;">
                 <q-card-section class="modalHead"><div class="text-h6">Update Lead</div><q-btn flat label="Close" color="primary" v-close-popup @click="resetData()"/></q-card-section>
                 <q-card-section class="q-pt-none">
-                <q-form class="q-gutter-md" @submit="updateHandler">
-                    <div class="row">
-                    <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name" required/></div>
-                    <div class="col-4 q-pr-lg"><q-input v-model="email" label="Email" required/></div>
-                    <div class="col-4 q-pr-lg"><q-input v-model="phone" label="Phone" required/></div>
-                    <div class="col-8 q-pr-lg"><q-input v-model="source" label="Source" required/></div>
-                    <div class="col-4 q-pr-lg"><q-select map-options emit-value v-model="status" :options="statusOptions" option-value="value" option-label="text" label="Status" required/></div>
-                    </div>
-                    <div class="text-center"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
-                </q-form>
+                    <q-form class="q-gutter-md" @submit="updateHandler">
+                        <div class="row">
+                            <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name" :rules="[...rules.required]"/></div>
+                            <div class="col-4 q-pr-lg"><q-input v-model="email" label="Email" :rules="[...rules.required]"/></div>
+                            <div class="col-4 q-pr-lg"><q-input v-model="phone" label="Phone" :rules="[...rules.required]"/></div>
+                            <div class="col-8 q-pr-lg"><q-input v-model="source" label="Source" :rules="[...rules.required]"/></div>
+                            <div class="col-4 q-pr-lg"><q-select map-options emit-value v-model="status" :options="statusOptions" option-value="value" option-label="text" label="Status" :rules="[...rules.required]"/></div>
+                        </div>
+                        <div class="text-center"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
+                    </q-form>
                 </q-card-section>
             </q-card>
         </q-dialog>
@@ -69,12 +69,12 @@
             <q-card style="width: 70vw; max-width: 80vw;">
                 <q-card-section class="modalHead"><div class="text-h6">Upload Excel Sheet</div><q-btn flat label="Close" color="primary" v-close-popup @click="resetData()"/></q-card-section>
                 <q-card-section class="q-pt-none">
-                <q-form class="q-gutter-md" @submit="uploadFile">
-                    <div class="row">
-                        <div class="col-6 q-pr-lg"><input @change="previewFiles" type="file"></div>
-                        <div class="col-6 text-center"><q-btn label="Upload Excel sheet" type="submit" color="primary" class="q-mr-lg" /></div>
-                    </div>
-                </q-form>
+                    <q-form class="q-gutter-md" @submit="uploadFile">
+                        <div class="row">
+                            <div class="col-6 q-pr-lg"><input @change="previewFiles" type="file" :rules="[...rules.required]"></div>
+                            <div class="col-6 text-center"><q-btn label="Upload Excel sheet" type="submit" color="primary" class="q-mr-lg" /></div>
+                        </div>
+                    </q-form>
                 </q-card-section>
             </q-card>
         </q-dialog>
@@ -85,7 +85,7 @@
                     <q-form class="q-gutter-md" @submit="addCounsellor">
                         <div class="row">
                             <div class="col-6">
-                                <q-select map-options emit-value v-model="counsellorSelected" :options="counsellors" option-value="id" option-label="name" label="Select Counsellor" required/>
+                                <q-select map-options emit-value v-model="counsellorSelected" :options="counsellors" option-value="id" option-label="name" label="Select Counsellor" :rules="[...rules.required]"/>
                             </div>                            
                             <div class="col-6 text-center flex-hc"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
                         </div>
@@ -108,7 +108,6 @@
                             </q-tr>
                         </template>
                     </q-table>
-                    
                 </q-card-section>
             </q-card>
         </q-dialog>
@@ -116,10 +115,13 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import {rules} from '../../store/functions'
+
 export default {
     name: 'LeadManagement',
     data() {
         return {
+            rules : rules,
             id: '',
             name: '',
             email: '',

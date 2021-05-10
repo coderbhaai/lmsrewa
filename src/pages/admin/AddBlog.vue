@@ -3,19 +3,14 @@
     <h1 class="heading">Add Blog Here</h1>
     <q-form class="q-gutter-md" @submit="onSubmit">
       <div class="row q-pb-lg">
-        <div class="col-4 q-pr-lg">
-          <q-input v-model="title" label="Blog Title"  />
-        </div>
-        <div class="col-4 q-pr-lg">
-          <q-input v-model="url" label="Blog URL"  />
-        </div>
-        <div class="col-4">
-          <q-file v-model="image" label="Blog Image" />
-        </div>
+        <div class="col-4 q-pr-lg"><q-input v-model="title" label="Blog Title" :rules="[...rules.required]"/></div>
+        <div class="col-4 q-pr-lg"><q-input v-model="url" label="Blog URL" :rules="[...rules.required]"/></div>
+        <div class="col-4"><q-file v-model="image" label="Blog Image" :rules="[...rules.required]"/></div>
       </div>
       <div class="row q-pb-lg">
         <div class="col-12">
           <q-editor
+            :rules="[...rules.required]"
             v-model="qeditor"
             :dense="$q.screen.lt.md"
             :toolbar="[
@@ -108,10 +103,10 @@
       </div>
       <div class="row q-pb-lg">
         <div class="col-6 q-pr-sm">
-          <q-select filled map-options emit-value v-model="catSelected" multiple :options="catOptions" option-value="value" option-label="text" counter label="Select Category"/>
+          <q-select filled map-options emit-value v-model="catSelected" multiple :options="catOptions" option-value="value" option-label="text" counter label="Select Category" :rules="[...rules.required]"/>
         </div>
         <div class="col-6 q-pr-sm">
-          <q-select filled map-options emit-value v-model="tagSelected" multiple :options="tagOptions" option-value="value" option-label="text" counter label="Select Tag"/>
+          <q-select filled map-options emit-value v-model="tagSelected" multiple :options="tagOptions" option-value="value" option-label="text" counter label="Select Tag" :rules="[...rules.required]"/>
         </div>
       </div>
       <div>
@@ -123,11 +118,13 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import {rules} from '../../store/functions'
 
 export default {
   name: 'AdminBlogs',
   data() {
     return {
+      rules : rules,
       title: '',
       url: '',
       image: '',

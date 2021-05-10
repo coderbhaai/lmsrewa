@@ -9,3 +9,8 @@ export function message(mesg) {
     message: mesg,
   });
 }
+
+export const rules = {
+  required: [v => !!v || 'Field is required'],
+  aleast3Words: [v => v.length >= 3 || 'Field is too short']
+}

@@ -131,10 +131,9 @@ export default {
         tab1: this.tab1,
         tab2: this.tab2,
         tab3: this.tab3,
-      };        
-      console.log('Submit Button')
-      // this.$store.dispatch('addSchoolBasic', data);
-      // this.resetData();
+      };
+      this.$store.dispatch('addSchoolBasic', data);
+      this.resetData();
     },
     resetData() {
       this.id = null;

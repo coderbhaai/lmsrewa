@@ -505,7 +505,6 @@ router.post('/changeFeeStatus', asyncMiddleware( async(req, res, next) => {
 }))
 
 router.post('/updateFeeStructure', asyncMiddleware( async(req, res) => {
-    console.log(`req.body`, req.body)
     let post= {
         'name' :                req.body.name,
         'classes' :             req.body.classes,
@@ -520,7 +519,6 @@ router.post('/updateFeeStructure', asyncMiddleware( async(req, res) => {
             if(err){ throw err }
             if(results){
                 const data = await func.getFeeStructure(req.body.id)
-                console.log(`data`, data)
                 res.send({ success: true, data, message: 'Fees updated successfuly' });
             }
         }catch(e){ func.logError(e); res.status(500); return; }
@@ -543,7 +541,7 @@ router.post('/feeManagement', asyncMiddleware( async(req, res) => {
                 SELECT id, name, classes, period, amount from fees WHERE status= 1 AND schoolId = '${req.body.schoolId}';
                 SELECT a.id, a.schoolID, a.student, a.classes, a.fees, a.feeAmount as feeCollected, a.remarks, a.updated_at, b.name as studentName, b.tab1, c.name as className, d.name as feeName, d.period, d.amount as feeAmount from feerecords as a 
                 left join schoolbasics as b on b.id = a.student left join schoolbasics as c on c.id = a.classes left join fees as d on d.id = a.fees
-                WHERE schoolId = '${req.body.schoolId}';`
+                WHERE a.schoolId = '${req.body.schoolId}';`
     pool.query(sql, [1,2], async(err, results) => {
         try{
             if(err){ throw err }
@@ -575,7 +573,33 @@ router.post('/addFees', asyncMiddleware( async(req, res) => {
     })
 }))
 
+router.post('/updateFeeRemarks', asyncMiddleware( async(req, res) => {
+    let post= {
+        'remarks' :             req.body.remarks,
+        "updated_at":           time,
+    }
+    let sql = `UPDATE feerecords SET ? WHERE id = '${req.body.id}'`; 
+    pool.query(sql, post, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){
+                const data = await func.getFeeDetails(req.body.id)
+                res.send({ success: true, data, message: 'Fee Record updated successfuly' });
+            }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
 
-
+router.post('/filterFeeRecords', asyncMiddleware( async(req, res) => {
+    let sql = `SELECT a.id, a.schoolID, a.student, a.classes, a.fees, a.feeAmount as feeCollected, a.remarks, a.updated_at, b.name as studentName, b.tab1, c.name as className, d.name as feeName, d.period, d.amount as feeAmount from feerecords as a 
+                left join schoolbasics as b on b.id = a.student left join schoolbasics as c on c.id = a.classes left join fees as d on d.id = a.fees
+                WHERE a.schoolId = '${req.body.schoolId}' AND b.name LIKE '%${req.body.filterBy}%';`
+    pool.query(sql, async(err, results) => {
+        try{
+            if(err){ throw err }
+            if(results){ res.send({ data: results }); }
+        }catch(e){ func.logError(e); res.status(500); return; }
+    })
+}))
 
 module.exports = router;

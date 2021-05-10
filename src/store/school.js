@@ -28,6 +28,7 @@ const state = {
   feeStructure:  [],
   filterFees: [],
   feeRecords: [],
+  feeRecordsCopy: [],
   studentList:  [],
   filterStudents: [],
 };
@@ -58,6 +59,7 @@ const getters = {
   feeStructure: (state) => state.feeStructure,
   filterFees: (state) => state.filterFees,
   feeRecords: (state) => state.feeRecords,
+  feeRecordsCopy: (state) => state.feeRecordsCopy,
   studentList: (state) => state.studentList,
   filterStudents: (state) => state.filterStudents,
 };
@@ -156,8 +158,7 @@ const actions = {
     message(res.data.message);
   },
   async updateFeeStructure({ commit }, form) {
-    const res = await axios.post(api.updateFeeStructure, form); 
-    console.log(`res`, res)
+    const res = await axios.post(api.updateFeeStructure, form);
     if (res.data.success) { commit('UPDATEFEESTRUCTURE', res.data.data); }
     message(res.data.message);
   },
@@ -170,6 +171,18 @@ const actions = {
     message(res.data.message);
   },
 
+  async updateFeeRemarks({ commit }, form) {
+    const res = await axios.post(api.updateFeeRemarks, form); commit( 'UPDATEFEEREMARKS', res.data.data ); 
+    message(res.data.message);
+  },
+
+  async filterFeeRecords({ commit }, form) {
+    if(form.filterBy.length>3){
+      const res = await axios.post(api.filterFeeRecords, form); commit( 'FILTERFEERECORDS', res.data.data ); 
+    }else{
+      commit( 'RESETFEERECORD', form ); 
+    }
+  },
 
 };
 
@@ -303,25 +316,26 @@ const mutations = {
   CHANGEFEESTATUS: (state, data) => { const index = state.feeStructure.findIndex((i) => i.id === data.id); if (index !== -1) { state.feeStructure.splice(index, 1, data); } },
   UPDATEFEESTRUCTURE: (state, data) => { const index = state.feeStructure.findIndex((i) => i.id === data.id); if (index !== -1) { state.feeStructure.splice(index, 1, data); } },
   FEEMANAGEMENT: (state, data) => {
-    console.log(`data`, data)
     state.schoolClassOptionsCopy = data.classes;
     state.feeStructure = data.fees;
     state.feeRecords = data.feeRecords;
+    state.feeRecordsCopy = data.feeRecords;
     state.filterStudents = []
     state.filterFees = []
   },
   
   CLASSSELINFEES: (state, data) => {
-    console.log(`data in student list`, data)
     state.studentList = data.data;
     state.filterStudents = data.data;
     state.filterFees = state.feeStructure.filter(i=>i.classes == data.form.classes)
   },
 
-  FILTERSTUDENTS: (state, form) => {
-    console.log(`form`, form)
-    state.filterStudents = state.studentList.filter(i=>i.name.includes(form.name))
-  },
+  FILTERSTUDENTS: (state, form) => { state.filterStudents = state.studentList.filter(i=>i.name.includes(form.name)) },
+  UPDATEFEEREMARKS: (state, data) => { const index = state.feeRecords.findIndex((i) => i.id === data.id); if (index !== -1) { state.feeRecords.splice(index, 1, data); } },
+
+  FILTERFEERECORDS: (state, data) => { state.feeRecordsCopy = data },
+  RESETFEERECORD: (state, form) => { state.feeRecordsCopy = state.feeRecords },
+
 };
 
 export default { state, getters, actions, mutations, };

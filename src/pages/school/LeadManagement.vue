@@ -171,7 +171,6 @@ export default {
             var all = []
             this.leadsFilter.map((i)=>( all.push(i.id) ))
             this.selection = all
-            // console.log(`this.$refs`, this.$refs.leftDrawer)
             // this.$refs.leftDrawer.open()
         },
         selectNone(){ this.selection= [] },

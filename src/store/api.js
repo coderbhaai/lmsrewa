@@ -82,4 +82,7 @@ export default {
   feeManagement: `${url}/school/feeManagement`,
   classSelInFees: `${url}/school/classSelInFees`,
   addFees: `${url}/school/addFees`,
+  updateFeeRemarks: `${url}/school/updateFeeRemarks`,
+  filterFeeRecords: `${url}/school/filterFeeRecords`,
+
 };

@@ -427,7 +427,6 @@ function getLead(id) {
 }
 
 function addLog(log) {
-    console.log(`log`, log)
     return new Promise((resolve, reject) => {
         let sql =  `INSERT INTO leadlog SET ?`
         pool.query(sql, log, (err, results) => {
@@ -441,7 +440,9 @@ function addLog(log) {
 
 function getFeeDetails(id) {
     return new Promise((resolve, reject) => {
-        let sql =   `SELECT id, schoolId, student, classes, fees, feeAmount, remarks, updated_at FROM feerecords WHERE id = '${id}';`
+        let sql =   `SELECT a.id, a.schoolID, a.student, a.classes, a.fees, a.feeAmount as feeCollected, a.remarks, a.updated_at, b.name as studentName, b.tab1, c.name as className, d.name as feeName, d.period, d.amount as feeAmount from feerecords as a 
+                left join schoolbasics as b on b.id = a.student left join schoolbasics as c on c.id = a.classes left join fees as d on d.id = a.fees
+                WHERE a.id = '${id}';`
         pool.query(sql, (err, results) => {
             try{
                 if(err){ throw err }

@@ -14,11 +14,9 @@
                 </q-card-section>
                 <q-card-section>
                     <q-form class="q-gutter-md" @submit="onSubmit">
-                        <q-input v-model="email" label="Email"/>
-                        <q-input v-model="password" label="Password"/>
-                        <div>
-                            <q-btn label="Login" type="submit" color="primary"/>
-                        </div>
+                        <q-input v-model="email" label="Email" :rules="[...rules.required]"/>
+                        <q-input v-model="password" label="Password" :rules="[...rules.required]"/>
+                        <div><q-btn label="Login" type="submit" color="primary"/></div>
                     </q-form>
                 </q-card-section>
                 </q-card>
@@ -28,13 +26,14 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import {rules} from '../../store/functions'
 
 export default {
   data() {
     return {
-      email: 'amit.khare588@gmail.com',
-      password: '123456789',
+        rules : rules,
+        email: 'amit.khare588@gmail.com',
+        password: '123456789',
     };
   },
   methods: {

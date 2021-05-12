@@ -5,10 +5,10 @@
     <div v-if="showAddForm">
       <q-form class="q-gutter-md q-mb-lg" @submit="addSubmit">
         <div class="row">
-          <div class="col-4 q-pr-lg"><q-input v-model="url" label="URL"  /></div>
-          <div class="col-4 q-pr-lg"><q-input v-model="title" label="Title"  /></div>
-          <div class="col-4 q-pr-lg"><q-input v-model="keyword" label="Keyword"  /></div>
-          <div class="col-12 q-pr-lg"><q-input v-model="description" label="Description"  /></div>
+          <div class="col-4 q-pr-lg"><q-input v-model="url" label="URL" :rules="[...rules.required]"/></div>
+          <div class="col-4 q-pr-lg"><q-input v-model="title" label="Title" :rules="[...rules.required]"/></div>
+          <div class="col-4 q-pr-lg"><q-input v-model="keyword" label="Keyword" :rules="[...rules.required]"/></div>
+          <div class="col-12 q-pr-lg"><q-input v-model="description" label="Description" :rules="[...rules.required]"/></div>
         </div>
         <div><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
       </q-form>
@@ -19,12 +19,12 @@
         <q-card-section class="q-pt-none">
           <q-form class="q-gutter-md" @submit="updateSubmit">
             <div class="row">
-              <div class="col-4 q-pr-lg"><q-input v-model="url" label="URL"  /></div>
-              <div class="col-4 q-pr-lg"><q-input v-model="title" label="Title"  /></div>
-              <div class="col-4 q-pr-lg"><q-input v-model="keyword" label="Keyword"  /></div>
-              <div class="col-12 q-pr-lg"><q-input v-model="description" label="Description"  /></div>
+              <div class="col-4 q-pr-lg"><q-input v-model="url" label="URL" :rules="[...rules.required]"/></div>
+              <div class="col-4 q-pr-lg"><q-input v-model="title" label="Title" :rules="[...rules.required]"/></div>
+              <div class="col-4 q-pr-lg"><q-input v-model="keyword" label="Keyword" :rules="[...rules.required]"/></div>
+              <div class="col-12 q-pr-lg"><q-input v-model="description" label="Description" :rules="[...rules.required]"/></div>
             </div>
-            <div class="text-center"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
+            <div class="text-center"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg"/></div>
           </q-form>
         </q-card-section>
       </q-card>
@@ -48,10 +48,12 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import {rules} from '../../store/functions'
 
 export default {
   data() {
     return {
+      rules : rules,
       id: '',
       url: '',
       title: '',

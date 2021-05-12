@@ -14,14 +14,14 @@
             </q-card-section>
             <q-card-section>
                 <q-form class="q-gutter-md" @submit="onSubmit">
-                    <q-input v-model="name" label="Name"  />
-                    <q-input v-model="email" label="Email" />
-                    <q-input v-model="password" label="Password" />
-                    <q-input v-model="confirm_password" label="Confirm Password" />
-                    <q-input v-model="confirm_password" label="Confirm Password" />
-                    <q-select v-model="role" :options="options" option-value="value" option-label="text" label="Iam a" />
+                    <q-input v-model="name" label="Name" :rules="[...rules.required]"/>
+                    <q-input v-model="email" label="Email" :rules="[...rules.required]"/>
+                    <q-input v-model="password" label="Password" :rules="[...rules.required]"/>
+                    <q-input v-model="confirm_password" label="Confirm Password" :rules="[...rules.required]"/>
+                    <q-input v-model="confirm_password" label="Confirm Password" :rules="[...rules.required]"/>
+                    <q-select v-model="role" :options="options" option-value="value" option-label="text" label="Iam a" :rules="[...rules.required]"/>
                     <div v-if="this.role.value=='CheckUser'">
-                        <q-select emit-value map-options v-model="institute" :options="schoolOptions" option-value="value" option-label="text" label="Select Organisation" required/>
+                        <q-select emit-value map-options v-model="institute" :options="schoolOptions" option-value="value" option-label="text" label="Select Organisation" :rules="[...rules.required]"/>
                         <!-- <q-select v-model="institute" :options="schoolOptions" option-value="value" option-label="text" label="Select Organisation" /> -->
                         <p>Your login will be held till the organisation approves it</p>
                     </div>
@@ -34,12 +34,14 @@
     </q-layout>
 </template>
 
-<script type="text/javascript"></script>
 <script>
-    import { mapGetters, mapActions } from 'vuex';
+    import { mapGetters } from 'vuex';
+    import {rules} from '../../store/functions'
+
     export default {
         data() {
             return {
+                rules : rules,
                 name: 'Amit',
                 email: 'amit.khare588@gmail.com',
                 password: '123456789',
@@ -74,7 +76,7 @@
                 };
                 this.$store.dispatch('register', data);
             },
-            ...mapActions(['schoolOptions']),
+            // ...mapActions(['schoolOptions']),
         },
         mounted() {
             particlesJS("particles-js", {

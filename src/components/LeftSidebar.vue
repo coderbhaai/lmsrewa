@@ -50,7 +50,7 @@
                   <q-item-section><q-item-label>Question Summary</q-item-label></q-item-section>
               </q-item>
             </q-expansion-item>
-            <q-item>
+            <q-item> 
               <q-item-section avatar><q-icon name="schedule"/></q-item-section><q-item-section @click="logOut"><q-item-label>Log Out</q-item-label></q-item-section>
             </q-item>
         </div>

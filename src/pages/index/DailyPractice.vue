@@ -17,9 +17,9 @@
             <div class="container page py-3" v-if="allowPractice && !startPractice">
                 <q-form class="q-gutter-md" @submit="onSubmit">
                     <div class="row">
-                        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="subject" :options="dpSubject" option-value="id" option-label="name" label="Subject"  required @input="subjectSelected()"/></div>
-                        <div class="col-4 q-pr-lg q-mb-lg"><q-select multiple emit-value map-options v-model="topic" :options="dpTopicFilter" option-value="id" option-label="name" label="Topics"  required @input="topicSelected()"/></div>
-                        <div class="col-4 q-pr-lg q-mb-lg"><q-select multiple emit-value map-options v-model="subTopic" :options="dpSubTopicFilter" option-value="id" option-label="name" label="Sub Topics"  required/></div>
+                        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="subject" :options="dpSubject" option-value="id" option-label="name" label="Subject" @input="subjectSelected()" :rules="[...rules.required]"/></div>
+                        <div class="col-4 q-pr-lg q-mb-lg"><q-select multiple emit-value map-options v-model="topic" :options="dpTopicFilter" option-value="id" option-label="name" label="Topics" @input="topicSelected()" :rules="[...rules.required]"/></div>
+                        <div class="col-4 q-pr-lg q-mb-lg"><q-select multiple emit-value map-options v-model="subTopic" :options="dpSubTopicFilter" option-value="id" option-label="name" label="Sub Topics" :rules="[...rules.required]"/></div>
                     </div>
                     <!-- <p class="text-center" v-if="this.topic.length && questCount< this.paper"><strong>Note: </strong>We are in the process of adding more questions to our database. Till then you need to add more topics and subtopics in it to create a test paper.</p>  -->
                     <div class="text-center"><q-btn label="Start Practice" type="submit" color="primary"/></div>
@@ -88,12 +88,13 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { message } from '../../store/functions';
+import { message, rules } from '../../store/functions';
 
 export default {
     name: 'DailyPractice',
     data() {
         return {
+            rules : rules,
             // subject: '',
             // topic: [],
             // subTopic: [],

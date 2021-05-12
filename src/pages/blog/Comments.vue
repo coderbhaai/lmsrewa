@@ -9,11 +9,11 @@
                     <q-card-section>
                         <q-form class="q-gutter-md q-mb-lg" @submit="addSubmit">
                             <div class="row" v-if="!this.user">
-                                <div class="col-6 q-pr-lg"><q-input v-model="name" label="Name"  /></div>
-                                <div class="col-6 q-pr-lg"><q-input v-model="email" label="Email"  /></div>
+                                <div class="col-6 q-pr-lg"><q-input v-model="name" label="Name" :rules="[...rules.required]"/></div>
+                                <div class="col-6 q-pr-lg"><q-input v-model="email" label="Email" :rules="[...rules.required]"/></div>
                             </div>
                             <div class="row">
-                                <div class="col-12 q-pr-lg"><q-input v-model="comment" label="Comment" type="textarea"  /></div>
+                                <div class="col-12 q-pr-lg"><q-input v-model="comment" label="Comment" type="textarea" :rules="[...rules.required]"/></div>
                             </div>
                             <div class="text-center"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
                         </q-form>
@@ -41,11 +41,11 @@
                     <div v-if="i.id === commentId">
                         <q-form class="q-gutter-md q-mb-lg" @submit="replyComment">
                             <div class="row" v-if="!user">
-                              <div class="col-6 q-pr-lg"><q-input v-model="name" label="Name"  /></div>
-                              <div class="col-6 q-pr-lg"><q-input v-model="email" label="Email"  /></div>
+                              <div class="col-6 q-pr-lg"><q-input v-model="name" label="Name" :rules="[...rules.required]"/></div>
+                              <div class="col-6 q-pr-lg"><q-input v-model="email" label="Email" :rules="[...rules.required]"/></div>
                             </div>
                             <div class="row">
-                              <div class="col-12 q-pr-lg"><q-input v-model="newComment" label="Comment" type="textarea"  /></div>
+                              <div class="col-12 q-pr-lg"><q-input v-model="newComment" label="Comment" type="textarea" :rules="[...rules.required]"/></div>
                             </div>
                             <q-card-actions>
                               <q-btn color="primary" label="Submit Your Views" type="submit"/>
@@ -62,13 +62,15 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
+import {rules} from '../../store/functions'
 
 export default {
   name: 'blog',
   props: ['comments', 'response', 'blogId'],
   data() {
     return {
+      rules : rules,
       name: '',
       email: '',
       comment: '',
@@ -78,7 +80,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['user']),
+    // ...mapActions(['user']),
     addSubmit(e) {
       e.preventDefault();
       const data = {

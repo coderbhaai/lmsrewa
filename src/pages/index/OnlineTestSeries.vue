@@ -8,14 +8,14 @@
                 <p>With our online test series you will be able to identify areas that you need to work on and perform well in academics. The questions in the online test series are prepared by our expert teachers from IIT and NITs who have tremendous amount of experience in teaching. The questions in test series are updated regularly to keep it as per the latest exam patterns.</p>
                 <q-form class="q-gutter-md" @submit="onSubmit" v-if="this.showFilter" >
                     <div class="row">
-                        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="type" :options="typeOptions" option-value="id" option-label="name" label="Type"  required/></div>
-                        <div class="col-4 q-pr-lg q-mb-lg"><q-select map-options emit-value v-model="paper" :options="paperOptions" label="Select Paper Type" required :option-value="i => i.tab1" :option-label="i => i.name"/></div>
-                        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="difficulty" :options="difficultyOptions" option-value="id" option-label="name" label="Difficulty"  required/></div>
-                        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="board" :options="boardOptions" option-value="id" option-label="name" label="Board"  required/></div>
-                        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="classes" :options="classOptions" option-value="id" option-label="name" label="Class"  required @input="classSelected()"/></div>
-                        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="subject" :options="basicSubjectFilter" option-value="id" option-label="name" label="Subject"  required @input="subjectSelected()"/></div> 
-                        <div class="col-4 q-pr-lg q-mb-lg"><q-select multiple emit-value map-options v-model="topic" :options="basicTopicFilter" option-value="id" option-label="name" label="Topic"  required @input="topicSelected()"/></div>
-                        <div class="col-sm-8 q-pr-lg q-mb-lg"><q-select multiple map-options emit-value v-model="subTopic" :options="testSubTopicFilter" option-value="id" option-label="name" label="SubTopic"  required @input="subTopicSelected()"/></div>
+                        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="type" :options="typeOptions" option-value="id" option-label="name" label="Type" :rules="[...rules.required]"/></div>
+                        <div class="col-4 q-pr-lg q-mb-lg"><q-select map-options emit-value v-model="paper" :options="paperOptions" label="Select Paper Type" :option-value="i => i.tab1" :option-label="i => i.name" :rules="[...rules.required]"/></div>
+                        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="difficulty" :options="difficultyOptions" option-value="id" option-label="name" label="Difficulty" :rules="[...rules.required]"/></div>
+                        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="board" :options="boardOptions" option-value="id" option-label="name" label="Board" :rules="[...rules.required]"/></div>
+                        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="classes" :options="classOptions" option-value="id" option-label="name" label="Class" @input="classSelected()" :rules="[...rules.required]"/></div>
+                        <div class="col-4 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="subject" :options="basicSubjectFilter" option-value="id" option-label="name" label="Subject" @input="subjectSelected()" :rules="[...rules.required]"/></div> 
+                        <div class="col-4 q-pr-lg q-mb-lg"><q-select multiple emit-value map-options v-model="topic" :options="basicTopicFilter" option-value="id" option-label="name" label="Topic" @input="topicSelected()" :rules="[...rules.required]"/></div>
+                        <div class="col-sm-8 q-pr-lg q-mb-lg"><q-select multiple map-options emit-value v-model="subTopic" :options="testSubTopicFilter" option-value="id" option-label="name" label="SubTopic" @input="subTopicSelected()" :rules="[...rules.required]"/></div>
                     </div>
                     <p class="text-center" v-if="this.topic.length && questCount< this.paper"><strong>Note: </strong>We are in the process of adding more questions to our database. Till then you need to add more topics and subtopics in it to create a test paper.</p>
                     <div class="text-center"><q-btn label="Create Test" type="submit" color="primary" :disabled="isDisabled"/></div>
@@ -151,12 +151,14 @@
 </template>
 <script>
 import { LocalStorage } from 'quasar';
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
+import {rules} from '../../store/functions'
 
 export default {
     name: 'OnlineTestSeries',
     data() {
         return {
+            rules : rules,
             active: '',
             type: 25,
             paper: 10,
@@ -172,7 +174,6 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['user', 'balance']),
         showChild(id) { this.active= id; },
         hideChild() { this.active= ''; },
         showFilters() { this.showFilter = true },

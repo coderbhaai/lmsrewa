@@ -5,11 +5,11 @@
     <div v-if="showAddForm">
       <q-form class="q-gutter-md q-mb-lg" @submit="addSubmit">
         <div class="row">
-          <div class="col-4 q-pr-lg"><q-select emit-value v-model="type" :options="typeOptions" option-value="name" option-label="name" label="Type" required/></div>
-          <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name" required/></div>
-          <div class="col-4 q-pr-lg"><q-input v-model="email" label="Email" required/></div>
-          <div class="col-4 q-pr-lg"><q-input v-model="phone" label="Phone" required/></div>
-          <div class="col-4 q-pr-lg"><q-select map-options emit-value v-model="status" :options="statusOptions" option-value="value" option-label="text" label="Status" required/></div>
+          <div class="col-4 q-pr-lg"><q-select emit-value v-model="type" :options="typeOptions" option-value="name" option-label="name" label="Type" :rules="[...rules.required]"/></div>
+          <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name" :rules="[...rules.required]"/></div>
+          <div class="col-4 q-pr-lg"><q-input v-model="email" label="Email" :rules="[...rules.required]"/></div>
+          <div class="col-4 q-pr-lg"><q-input v-model="phone" label="Phone" :rules="[...rules.required]"/></div>
+          <div class="col-4 q-pr-lg"><q-select map-options emit-value v-model="status" :options="statusOptions" option-value="value" option-label="text" label="Status" :rules="[...rules.required]"/></div>
         </div>
         <div><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
       </q-form>
@@ -36,11 +36,11 @@
         <q-card-section class="q-pt-none">
           <q-form class="q-gutter-md" @submit="updateHandler">
             <div class="row">
-              <div class="col-4 q-pr-lg"><q-select emit-value v-model="type" :options="typeOptions" option-value="name" option-label="name" label="Type" required/></div>
-              <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name" required/></div>
-              <div class="col-4 q-pr-lg"><q-input v-model="email" label="Email" required/></div>
-              <div class="col-4 q-pr-lg"><q-input v-model="phone" label="Phone" required/></div>
-              <div class="col-4 q-pr-lg"><q-select map-options emit-value v-model="status" :options="statusOptions" option-value="value" option-label="text" label="Status" required/></div>
+              <div class="col-4 q-pr-lg"><q-select emit-value v-model="type" :options="typeOptions" option-value="name" option-label="name" label="Type" :rules="[...rules.required]"/></div>
+              <div class="col-4 q-pr-lg"><q-input v-model="name" label="Name" :rules="[...rules.required]"/></div>
+              <div class="col-4 q-pr-lg"><q-input v-model="email" label="Email" :rules="[...rules.required]"/></div>
+              <div class="col-4 q-pr-lg"><q-input v-model="phone" label="Phone" :rules="[...rules.required]"/></div>
+              <div class="col-4 q-pr-lg"><q-select map-options emit-value v-model="status" :options="statusOptions" option-value="value" option-label="text" label="Status" :rules="[...rules.required]"/></div>
             </div>
             <div class="text-center"><q-btn label="Submit" type="submit" color="primary" class="q-mr-lg" /></div>
           </q-form>
@@ -51,11 +51,13 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
+import {rules} from '../../store/functions'
 
 export default {
   data() {
     return {
+      rules : rules,
       showAddForm: false,
       type: '',
       name: '',
@@ -86,7 +88,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['adminInstitutes']),
+    // ...mapActions(['adminInstitutes']),
     showForm() {
       this.showAddForm = true;
     },

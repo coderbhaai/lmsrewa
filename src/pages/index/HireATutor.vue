@@ -11,25 +11,21 @@
                 </div>
                 <q-form class="q-gutter-md hireTutorForm" v-if="showForm" @submit="onSubmit">
                     <div class="row q-pt-lg">
-                        <div class="col-3 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="board" :options="boardOptions" option-value="id" option-label="name" label="Board" required/></div>
-                        <div class="col-3 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="classes" :options="classOptions" option-value="id" option-label="name" label="Class" required @input="classSelected()"/></div>
-                        <div class="col-3 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="subject" :options="subjectOptions" option-value="id" option-label="name" label="Subject" required /></div>
-                        <div class="col-3 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="mode" :options="modeOptions" option-value="id" option-label="name" label="Learning Mode" required /></div>
+                        <div class="col-3 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="board" :options="boardOptions" option-value="id" option-label="name" label="Board" :rules="[...rules.required]"/></div>
+                        <div class="col-3 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="classes" :options="classOptions" option-value="id" option-label="name" label="Class" :rules="[...rules.required]" @input="classSelected()"/></div>
+                        <div class="col-3 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="subject" :options="subjectOptions" option-value="id" option-label="name" label="Subject" :rules="[...rules.required]" /></div>
+                        <div class="col-3 q-pr-lg q-mb-lg"><q-select emit-value map-options v-model="mode" :options="modeOptions" option-value="id" option-label="name" label="Learning Mode" :rules="[...rules.required]" /></div>
                     </div>
                      <div class="row">
-                        <div class="col-3 q-pr-lg q-mb-lg"><q-input v-model="phone" label="Phone" required error-message="Please use maximum 3 characters"/></div>
-                        <div class="col-3 q-pr-lg q-mb-lg"><q-input v-model="state" label="State" required/></div>
-                        <div class="col-3 q-pr-lg q-mb-lg"><q-input v-model="city" label="City" required/></div>
-                        <div class="col-3 q-pr-lg q-mb-lg"><q-input v-model="street" label="Street" required/></div>
+                        <div class="col-3 q-pr-lg q-mb-lg"><q-input v-model="phone" label="Phone" :rules="[...rules.required]"/></div>
+                        <div class="col-3 q-pr-lg q-mb-lg"><q-input v-model="state" label="State" :rules="[...rules.required]"/></div>
+                        <div class="col-3 q-pr-lg q-mb-lg"><q-input v-model="city" label="City" :rules="[...rules.required]"/></div>
+                        <div class="col-3 q-pr-lg q-mb-lg"><q-input v-model="street" label="Street" :rules="[...rules.required]"/></div>
                         <div class="col-12 q-pr-lg q-mb-lg"><q-input v-model="message" label="Message" type="textarea"/></div>
                         <q-btn class="closeBtn" round color="primary" icon="remove" @click="hideForm()"/>
                     </div>
                     <div class="text-center"><q-btn label="Post the requirement" type="submit" color="primary"/></div>
                 </q-form>
-                <!-- <div class="text-center q-mt-lg" v-if="showForm">
-                    <q-btn class="closeBtn" round color="primary" icon="remove" @click="hideForm()"/>
-                    <q-btn label="Cancel requirement" type="submit" color="primary" @click="hideForm()"/>
-                </div> -->
                 <div class="row q-my-lg">
                     <div class="col-sm-12 text-center">
                         <h2 class="heading">Hire A <span>Tutor</span></h2>
@@ -120,14 +116,15 @@
     </q-page>
 </template>
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 import { email, maxValue, minValue, numeric, required } from 'vuelidate/lib/validators'
-import { message } from '../../store/functions';
+import { rules } from '../../store/functions';
 
 export default {
     name: 'HireATutor',
     data() {
         return {
+            rules : rules,
             showForm : false,
             active: '',
             step: 1,
@@ -143,7 +140,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['user']),
+        // ...mapActions(['user']),
         showChild(id) { this.active= id },
         hideChild() { this.active= '' },
         classSelected() {
@@ -154,21 +151,6 @@ export default {
         hideForm(){ this.showForm = false },
         onSubmit(e){
             e.preventDefault();
-            // if (this.$v.$anyError) {
-            //     this.$q.notify({
-            //     color: 'red-4',
-            //     textColor: 'white',
-            //     icon: 'warning',
-            //     message: 'Form not valid'
-            //     })
-            // } else {
-            //     this.$q.notify({
-            //     color: 'green-4',
-            //     textColor: 'white',
-            //     icon: 'cloud_done',
-            //     message: 'Form submitted'
-            //     })
-            // }
             const data={
                 'userId': this.user.id,
                 'board': this.board,
@@ -182,19 +164,10 @@ export default {
                 'message': this.message,
             }
             this.$store.dispatch('postRequirement', data);
-
         },
-        myRule (val) {
-            if (val === null) {
-                return 'You must make a selection!'        
-            }
-        }
     },
     computed: {
         ...mapGetters(['user', 'boardOptions', 'classOptions', 'subjectOptions', 'modeOptions']),
-        isValid () {
-            return this.state.length <= 3
-        }
     },
     created() {
         this.$store.dispatch('hireATutor');

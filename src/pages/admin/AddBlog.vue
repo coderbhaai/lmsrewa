@@ -37,16 +37,7 @@
                   label: $q.lang.editor.formatting,
                   icon: $q.iconSet.editor.formatting,
                   list: 'no-icons',
-                  options: [
-                    'p',
-                    'h1',
-                    'h2',
-                    'h3',
-                    'h4',
-                    'h5',
-                    'h6',
-                    'code'
-                  ]
+                  options: [ 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'code' ]
                 },
                 {
                   label: $q.lang.editor.fontSize,
@@ -54,32 +45,14 @@
                   fixedLabel: true,
                   fixedIcon: true,
                   list: 'no-icons',
-                  options: [
-                    'size-1',
-                    'size-2',
-                    'size-3',
-                    'size-4',
-                    'size-5',
-                    'size-6',
-                    'size-7'
-                  ]
+                  options: [ 'size-1', 'size-2', 'size-3', 'size-4', 'size-5', 'size-6', 'size-7' ]
                 },
                 {
                   label: $q.lang.editor.defaultFont,
                   icon: $q.iconSet.editor.font,
                   fixedIcon: true,
                   list: 'no-icons',
-                  options: [
-                    'default_font',
-                    'arial',
-                    'arial_black',
-                    'comic_sans',
-                    'courier_new',
-                    'impact',
-                    'lucida_grande',
-                    'times_new_roman',
-                    'verdana'
-                  ]
+                  options: [ 'default_font', 'arial', 'arial_black', 'comic_sans', 'courier_new', 'impact', 'lucida_grande', 'times_new_roman', 'verdana' ]
                 },
                 'removeFormat'
               ],
@@ -88,16 +61,7 @@
               ['undo', 'redo'],
               ['viewsource']
             ]"
-            :fonts="{
-              arial: 'Arial',
-              arial_black: 'Arial Black',
-              comic_sans: 'Comic Sans MS',
-              courier_new: 'Courier New',
-              impact: 'Impact',
-              lucida_grande: 'Lucida Grande',
-              times_new_roman: 'Times New Roman',
-              verdana: 'Verdana'
-            }"
+            :fonts="{ arial: 'Arial', arial_black: 'Arial Black', comic_sans: 'Comic Sans MS', courier_new: 'Courier New', impact: 'Impact', lucida_grande: 'Lucida Grande', times_new_roman: 'Times New Roman', verdana: 'Verdana' }"
           />
         </div>
       </div>
@@ -117,7 +81,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 import {rules} from '../../store/functions'
 
 export default {
@@ -134,7 +98,6 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['tagOptions', 'catOptions']),
     onSubmit(e) {
       e.preventDefault();
       const data = new FormData();

@@ -3,14 +3,10 @@
     <h1 class="heading">Update Blog Here {{ $route.params.id }}</h1>
     <q-form class="q-gutter-md" @submit="onSubmit">
       <div class="row q-pb-lg">
-        <div class="col-4 q-pr-lg">
-          <q-input v-model="title" label="Blog Title" />
-        </div>
-        <div class="col-4 q-pr-lg">
-          <q-input v-model="url" label="Blog URL"  />
-        </div>
+        <div class="col-4 q-pr-lg"><q-input v-model="title" label="Blog Title" :rules="[...rules.required]"/></div>
+        <div class="col-4 q-pr-lg"><q-input v-model="url" label="Blog URL" :rules="[...rules.required]"/></div>
         <div class="col-4 previewImg">
-          <q-file v-model="image" label="Blog Image" />
+          <q-file v-model="image" label="Blog Image" :rules="[...rules.required]"/>
           <img :src="'/images/blog/'+ oldImage" class="q-mt-sm"/>
         </div>
       </div>
@@ -108,16 +104,10 @@
         </div>
       </div>
       <div class="row q-pb-lg">
-        <div class="col-6 q-pr-sm">
-          <q-select filled map-options emit-value v-model="catSelected" multiple :options="catOptions" option-value="value" option-label="text" counter label="Select Category"/>
-        </div>
-        <div class="col-6 q-pr-sm">
-          <q-select filled map-options emit-value v-model="tagSelected" multiple :options="tagOptions" option-value="value" option-label="text" counter label="Select Tag"/>
-        </div>
+        <div class="col-6 q-pr-sm"><q-select filled map-options emit-value v-model="catSelected" multiple :options="catOptions" option-value="value" option-label="text" counter label="Select Category" :rules="[...rules.required]"/></div>
+        <div class="col-6 q-pr-sm"><q-select filled map-options emit-value v-model="tagSelected" multiple :options="tagOptions" option-value="value" option-label="text" counter label="Select Tag" :rules="[...rules.required]"/></div>
       </div>
-      <div>
-        <q-btn label="Update Blog" type="submit" color="primary"/>
-      </div>
+      <div><q-btn label="Update Blog" type="submit" color="primary"/></div>
     </q-form>
   </div>
 </template>
@@ -126,11 +116,13 @@
 import { mapGetters, mapActions } from 'vuex';
 import axios from 'axios';
 import api from '../../store/api';
+import {rules} from '../../store/functions'
 
 export default {
   name: 'UpdateBlog',
   data() {
     return {
+      rules : rules,
       id: '',
       title: '',
       url: '',

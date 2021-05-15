@@ -440,10 +440,38 @@ function addLog(log) {
 
 function getFeeDetails(id) {
     return new Promise((resolve, reject) => {
-        let sql =   `SELECT a.id, a.schoolID, a.student, a.classes, a.fees, a.feeAmount as feeCollected, a.remarks, a.updated_at, b.name as studentName, b.tab1, c.name as className, d.name as feeName, d.period, d.amount as feeAmount from feerecords as a 
+        let sql =   `SELECT a.id, a.schoolID, a.student, a.classes, a.mode, a.fees, a.feeAmount as feeCollected, a.remarks, a.updated_at, b.name as studentName, b.tab1, c.name as className, d.name as feeName, d.period, d.amount as feeAmount from feerecords as a 
                 left join schoolbasics as b on b.id = a.student left join schoolbasics as c on c.id = a.classes left join fees as d on d.id = a.fees
                 WHERE a.id = '${id}';`
         pool.query(sql, (err, results) => {
+            try{
+                if(err){ throw err }
+                if(results){ resolve(results[0] ) }
+            }catch(e){ logError(e); return; }
+        });
+    });
+}
+
+function checkFeeRecord(post) {
+    return new Promise(async(resolve, reject) => {
+        let sql = `SELECT id, period, amount FROM feeregister WHERE schoolId = '${post.schoolId}' AND studentId = '${post.studentId}' AND classes = '${post.classes}' AND year = '${post.year}' AND type = '${post.type}';`
+        pool.query(sql, post, async(err, results) => {
+            try{
+                if(err){ throw err }
+                if(results && results.length){ 
+                    resolve(results[0] )
+                }else{
+                    resolve([])
+                }
+            }catch(e){ logError(e); return; }
+        });
+    });
+}
+
+function insertFeeRecord(post) {
+    return new Promise(async(resolve, reject) => {
+        let sql = `INSERT INTO feeregister SET ?`
+        pool.query(sql, post, async(err, results) => {
             try{
                 if(err){ throw err }
                 if(results){ resolve(results[0] ) }
@@ -537,4 +565,4 @@ function getUserId(req, res, next){
     }
 }
 
-module.exports = {verifyToken, verifyAdmin, verifyInsti, getUserId, getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails, dpPreview, getSchoolBasic, getSchoolGroup, getNames, getSingleLead, changeUserStatus, getTeamMember, updateRole, getUpdatedLeads, getLead, addLog, getFeeDetails };
+module.exports = {verifyToken, verifyAdmin, verifyInsti, getUserId, getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails, dpPreview, getSchoolBasic, getSchoolGroup, getNames, getSingleLead, changeUserStatus, getTeamMember, updateRole, getUpdatedLeads, getLead, addLog, getFeeDetails, insertFeeRecord, checkFeeRecord };

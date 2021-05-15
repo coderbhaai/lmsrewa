@@ -71,6 +71,7 @@ const routes = [
       { path: '/school/groups', component: () => import('pages/school/Groups.vue') },
       { path: '/school/fees', component: () => import('pages/school/Fees.vue') },
       { path: '/school/feeManagement', component: () => import('pages/school/FeeManagement.vue') },
+      { path: '/school/pendingFee', component: () => import('pages/school/PendingFee.vue') },
     ],
     meta: { auth: true, school: true },
   },

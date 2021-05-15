@@ -1031,48 +1031,48 @@ router.get('/onlineTestSeries', asyncMiddleware( async(req, res) => {
 //     })    
 // }))
 
-router.post('/count', asyncMiddleware( async(req, res, next) => {
-    let sql =   `SELECT DISTINCT id, name FROM basics WHERE type= 'Class';
-                SELECT DISTINCT id, name FROM basics WHERE type= 'Difficulty';
-                SELECT DISTINCT id, name FROM basics WHERE type= 'Type';
-                SELECT DISTINCT id, name, tab1 FROM basics WHERE type= 'Subject';
-                SELECT DISTINCT id, name, tab1, tab2 FROM basics WHERE type= 'Topic';
-                SELECT DISTINCT id, name, tab1, tab2, tab3 FROM basics WHERE type= 'SubTopic';
-                SELECT DISTINCT id, class, subject, topic, subTopic, difficulty, type FROM test_papers;
-                `
-    pool.query(sql, [1,2,3,4,5,6,7], async(err, results) => {
-        try{
-            if(err){ throw err }
-            if(results){ 
-                // results[0].forEach(i => {
-                //     results[1].forEach(j => {
-                //         results[2].forEach(k => {
-                //             results[3].filter(l=>l.tab1 == i.id).forEach(l => {
-                //                 results[4].filter(m=>m.tab1 == i.id && m.tab2 == l.id).forEach(m => {
-                //                     results[5].filter(n=>n.tab1 == i.id && n.tab2 == l.id && n.tab3 == m.id ).forEach((n, index) => {
-                //                         if(n.id){
-                //                         var xx = results[6].filter(o=>o.class==i.id && o.difficulty==j.id && i.type==k.id && o.subject == l.id && o.topic == m.id && o.subTopic == n.id).length
-                //                             let post={
-                //                                 'classes': i.id,
-                //                                 'subject': l.id,
-                //                                 'difficulty': j.id,
-                //                                 'type': k.id,
-                //                                 'topic': m.id,
-                //                                 'subTopic': n.id
-                //                             }
-                //                             let sql = `INSERT INTO questsummary SET ?`
-                //                         }else{
-                //                         }
-                //                     });
-                //                 });
-                //             });
-                //         });
-                //     });
-                // });
-            }
-        }catch(e){ func.logError(e); res.status(500); return; }
-    })    
-}))
+// router.post('/count', asyncMiddleware( async(req, res, next) => {
+//     let sql =   `SELECT DISTINCT id, name FROM basics WHERE type= 'Class';
+//                 SELECT DISTINCT id, name FROM basics WHERE type= 'Difficulty';
+//                 SELECT DISTINCT id, name FROM basics WHERE type= 'Type';
+//                 SELECT DISTINCT id, name, tab1 FROM basics WHERE type= 'Subject';
+//                 SELECT DISTINCT id, name, tab1, tab2 FROM basics WHERE type= 'Topic';
+//                 SELECT DISTINCT id, name, tab1, tab2, tab3 FROM basics WHERE type= 'SubTopic';
+//                 SELECT DISTINCT id, class, subject, topic, subTopic, difficulty, type FROM test_papers;
+//                 `
+//     pool.query(sql, [1,2,3,4,5,6,7], async(err, results) => {
+//         try{
+//             if(err){ throw err }
+//             if(results){ 
+//                 // results[0].forEach(i => {
+//                 //     results[1].forEach(j => {
+//                 //         results[2].forEach(k => {
+//                 //             results[3].filter(l=>l.tab1 == i.id).forEach(l => {
+//                 //                 results[4].filter(m=>m.tab1 == i.id && m.tab2 == l.id).forEach(m => {
+//                 //                     results[5].filter(n=>n.tab1 == i.id && n.tab2 == l.id && n.tab3 == m.id ).forEach((n, index) => {
+//                 //                         if(n.id){
+//                 //                         var xx = results[6].filter(o=>o.class==i.id && o.difficulty==j.id && i.type==k.id && o.subject == l.id && o.topic == m.id && o.subTopic == n.id).length
+//                 //                             let post={
+//                 //                                 'classes': i.id,
+//                 //                                 'subject': l.id,
+//                 //                                 'difficulty': j.id,
+//                 //                                 'type': k.id,
+//                 //                                 'topic': m.id,
+//                 //                                 'subTopic': n.id
+//                 //                             }
+//                 //                             let sql = `INSERT INTO questsummary SET ?`
+//                 //                         }else{
+//                 //                         }
+//                 //                     });
+//                 //                 });
+//                 //             });
+//                 //         });
+//                 //     });
+//                 // });
+//             }
+//         }catch(e){ func.logError(e); res.status(500); return; }
+//     })    
+// }))
 
 // const post ={ 'board': '[9,10,11,12]' }
 //                         let sql = `UPDATE test_papers SET ? WHERE id = ${i.id}`;

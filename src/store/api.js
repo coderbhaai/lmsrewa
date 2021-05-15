@@ -84,5 +84,6 @@ export default {
   addFees: `${url}/school/addFees`,
   updateFeeRemarks: `${url}/school/updateFeeRemarks`,
   filterFeeRecords: `${url}/school/filterFeeRecords`,
-
+  feeRegister: `${url}/school/feeRegister`,
+  pendingFee: `${url}/school/pendingFee`,
 };

@@ -642,8 +642,8 @@ router.post('/filterFeeRecords', asyncMiddleware( async(req, res) => {
 }))
 
 router.post('/pendingFee', asyncMiddleware( async(req, res) => {
-    let sql = `SELECT a.id as studentId, a.schoolId, a.name, a.tab1, b.name as className, c.fees, c.mode, c.feeAmount, c.remarks, c.updated_at from schoolbasics as a left join schoolbasics as b on b.id = a.tab1
-                left join feerecords as c on c.student = a.id WHERE a.schoolId = '${req.body.schoolId}' AND a.type = 'Student';
+    let sql = `SELECT a.id as studentId, a.schoolId, a.name, a.tab1, b.name as className, c.year, c.period, c.type, c.amount, c.updated_at from schoolbasics as a left join schoolbasics as b on b.id = a.tab1
+                left join feeregister as c on c.studentId = a.id WHERE a.schoolId = '${req.body.schoolId}' AND a.type = 'Student';
                 SELECT id, name, classes, period, amount from fees WHERE status= 1 AND schoolId = '${req.body.schoolId}';`
     pool.query(sql, [1,2], async(err, results) => {
         try{

@@ -51,7 +51,7 @@
           <q-td key="video_class" :props="props">{{ props.row.video_class }}</q-td>
           <q-td key="video_sub" :props="props">{{ props.row.video_sub }}</q-td>
           <q-td key="status" :props="props">{{ props.row.status }}</q-td>
-          <q-td key="updated_at" :props="props">{{ props.row.updated_at }}</q-td>
+          <q-td key="updated_at" :props="props" v-html="refineDate(props.row.updated_at)"></q-td>
           <q-td><img @click="updateDialog(props.row)" src="/images/icons/edit.svg" class="edit"/></q-td>
         </q-tr>
       </template>
@@ -61,12 +61,13 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import {rules} from '../../store/functions'
+import {rules, refineDate} from '../../store/functions'
 
 export default {
   data() {
     return {
       rules : rules,
+      refineDate: refineDate,
       id: '',
       type: '',
       name: '',

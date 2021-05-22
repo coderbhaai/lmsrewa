@@ -25,7 +25,7 @@
           <q-td key="status" :props="props">
             <q-toggle v-model="props.row.status==1 ? true : false" color="primary" @input="changeStatus(props.row.id, props.row.status)"></q-toggle>
           </q-td>
-          <q-td key="updated_at" :props="props">{{ props.row.updated_at }}</q-td>
+          <q-td key="updated_at" :props="props" v-html="refineDate(props.row.updated_at)"></q-td>
           <q-td><img @click="updateDialog(props.row)" src="/images/icons/edit.svg" class="edit"/></q-td>
         </q-tr>
       </template>
@@ -52,12 +52,13 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import {rules} from '../../store/functions'
+import {rules, refineDate} from '../../store/functions'
 
 export default {
   data() {
     return {
       rules : rules,
+      refineDate: refineDate,
       showAddForm: false,
       type: '',
       name: '',

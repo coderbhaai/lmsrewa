@@ -14,7 +14,7 @@
             <q-toggle v-model="props.row.status==1 ? true : false" color="primary" @input="changeStatus(props.row.id, props.row.status)"></q-toggle>
           </q-td>
           <q-td key="marks" :props="props">{{props.row.marks}}</q-td>
-          <q-td key="updated_at" :props="props">{{props.row.updated_at}}</q-td>
+          <q-td key="updated_at" :props="props" v-html="refineDate(props.row.updated_at)"></q-td>
           <q-td><a :href="'/admin/updateQuestion/'+props.row.id"><img src="/images/icons/edit.svg" class="edit"/></a></q-td>
         </q-tr>
       </template>
@@ -24,11 +24,13 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import {refineDate} from '../../store/functions'
 
 export default {
   name: 'QuestionBank',
   data() {
     return {
+      refineDate: refineDate,
       pagination: { rowsPerPage: 30 },
       columns: [
         { name: 'id', label: 'Sl No.', align: 'left', field: 'Edit', },

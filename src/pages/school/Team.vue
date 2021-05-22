@@ -10,7 +10,7 @@
                     <q-td key="role" :props="props">{{ props.row.role }}</q-td>
                     <q-td key="status" :props="props" v-if="props.row.status == '1'" >Active</q-td>
                     <q-td key="status" :props="props" v-if="props.row.status == '0'">Not Active</q-td>
-                    <q-td key="updated_at" :props="props">{{ props.row.updated_at }}</q-td>
+                    <q-td key="updated_at" :props="props" v-html="refineDate(props.row.updated_at)"></q-td>
                     <q-td><img @click="updateDialog(props.row)" src="/images/icons/edit.svg" class="edit"/></q-td>
                 </q-tr>
             </template>
@@ -50,7 +50,7 @@
                     <q-td key="role" :props="props">{{ props.row.role }}</q-td>
                     <q-td key="teamStatus" :props="props" v-if="props.row.teamStatus == '1'" >Active</q-td>
                     <q-td key="teamStatus" :props="props" v-if="props.row.teamStatus == '0'">Not Active</q-td>
-                    <q-td key="updated_at" :props="props">{{ props.row.updated_at }}</q-td>
+                    <q-td key="updated_at" :props="props" v-html="refineDate(props.row.updated_at)"></q-td>
                     <q-td><img @click="updateTeam(props.row)" src="/images/icons/edit.svg" class="edit"/></q-td>
                 </q-tr>
             </template>
@@ -84,13 +84,14 @@
 </template>
 <script>
     import { mapGetters } from 'vuex';
-    import { message, rules } from '../../store/functions';
+    import { message, rules, refineDate } from '../../store/functions';
 
     export default {
         name: 'Team',
         data() {
             return {
                 rules : rules,
+                refineDate: refineDate,
                 id: '',
                 userId: '',
                 schoolId: '',

@@ -12,7 +12,7 @@
           <q-td key="question" :props="props">{{props.row.question}}</q-td>
           <q-td key="status" :props="props">{{props.row.status}}</q-td>
           <q-td key="marks" :props="props">{{props.row.marks}}</q-td>
-          <q-td key="updated_at" :props="props">{{props.row.updated_at}}</q-td>
+          <q-td key="updated_at" :props="props" v-html="refineDate(props.row.updated_at)"></q-td>
           <q-td><a :href="'/admin/updateQuestion/'+props.row.id"><img src="/images/icons/edit.svg" class="edit"/></a></q-td>
         </q-tr>
       </template>
@@ -22,11 +22,13 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import {refineDate} from '../../store/functions'
 
 export default {
   name: 'QuestionSummary',
   data() {
     return {
+      refineDate: refineDate,
       pagination: { rowsPerPage: 30 },
       columns: [
         { name: 'id', label: 'Sl No.', align: 'left', field: 'Edit', },

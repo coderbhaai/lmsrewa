@@ -38,7 +38,7 @@
           <q-td key="title" :props="props">{{ props.row.title }}</q-td>
           <q-td key="description" :props="props">{{ props.row.description }}</q-td>
           <q-td key="keyword" :props="props">{{ props.row.keyword }}</q-td>
-          <q-td key="updated_at" :props="props">{{ props.row.updated_at }}</q-td>
+          <q-td key="updated_at" :props="props" v-html="refineDate(props.row.updated_at)"></q-td>
           <q-td><img @click="updateDialog(props.row)" src="/images/icons/edit.svg" class="edit"/></q-td>
         </q-tr>
       </template>
@@ -48,12 +48,13 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import {rules} from '../../store/functions'
+import {rules, refineDate} from '../../store/functions'
 
 export default {
   data() {
     return {
       rules : rules,
+      refineDate: refineDate,
       id: '',
       url: '',
       title: '',

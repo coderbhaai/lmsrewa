@@ -14,7 +14,7 @@
           <q-td key="video_class" :props="props">{{ props.row.video_class }}</q-td>
           <q-td key="video_sub" :props="props">{{ props.row.video_sub }}</q-td>
           <q-td key="video_name" :props="props">{{ props.row.video_name }}</q-td>
-          <q-td key="updated_at" :props="props">{{ props.row.updated_at }}</q-td>
+          <q-td key="updated_at" :props="props" v-html="refineDate(props.row.updated_at)"></q-td>
           <q-td><q-btn label="Watch Video" color="primary" @click="videoDialog(props.row)"/></q-td>
         </q-tr>
       </template>
@@ -39,6 +39,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import {refineDate} from '../../store/functions'
 
 export default {
   name: 'videos',
@@ -47,6 +48,7 @@ export default {
   },
   data() {
     return {
+      refineDate: refineDate,
       datax: [],
       title: '',
       classx: '',

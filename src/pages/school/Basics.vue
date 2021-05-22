@@ -47,7 +47,8 @@
           <q-td key="tab1" :props="props" v-if="props.row.type== 'Daily Practice Packages'">Fees - {{ props.row.tab2 }}</q-td>
           <q-td key="tab2" :props="props" v-else>{{ props.row.tab2Name }}</q-td>
           <q-td key="tab3" :props="props">{{ props.row.tab3Name }}</q-td>
-          <q-td key="updated_at" :props="props">{{ props.row.updated_at }}</q-td>
+          <!-- <q-td key="updated_at" :props="props">{{ props.row.updated_at }}</q-td> -->
+          <q-td key="updated_at" :props="props" v-html="refineDate(props.row.updated_at)"></q-td>
           <q-td><img @click="updateDialog(props.row)" src="/images/icons/edit.svg" class="edit"/></q-td>
         </q-tr>
       </template>
@@ -57,12 +58,13 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import {rules} from '../../store/functions'
+import {rules, refineDate} from '../../store/functions'
 
 export default {
   data() {
     return {
       rules : rules,
+      refineDate: refineDate,
       id: '',
       type: '',
       name: '',

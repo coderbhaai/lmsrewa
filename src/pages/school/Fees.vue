@@ -23,7 +23,8 @@
                 <q-td key="classes" :props="props">{{ props.row.classes }}</q-td>
                 <q-td key="amount" :props="props">{{ props.row.amount }}</q-td>
                 <q-td key="period" :props="props">{{ props.row.period }}</q-td>
-                <q-td key="updated_at" :props="props">{{ props.row.updated_at }}</q-td>
+                <!-- <q-td key="updated_at" :props="props">{{ props.row.updated_at }}</q-td> -->
+                <q-td key="updated_at" :props="props" v-html="refineDate(props.row.updated_at)"></q-td>
                 <q-td key="status" :props="props">
                     <q-toggle v-model="props.row.status==1 ? true : false" color="primary" @input="changeStatus(props.row.id, props.row.status)"></q-toggle>
                 </q-td>
@@ -52,12 +53,13 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import {rules} from '../../store/functions'
+import {rules, refineDate} from '../../store/functions'
 
 export default {
     data() {
         return {
-            rules : rules,
+            rules :                 rules,
+            refineDate:             refineDate,
             id:                     '',
             schoolId:               '',
             name:                   '',

@@ -20,10 +20,9 @@
                 <q-tr :props="props">
                 <q-td key="id" :props="props">{{ props.row.id }}</q-td>
                 <q-td key="name" :props="props">{{ props.row.name }}</q-td>
-                <q-td key="classes" :props="props">{{ props.row.classes }}</q-td>
+                <q-td key="classes" :props="props">{{ props.row.className }}</q-td>
                 <q-td key="amount" :props="props">{{ props.row.amount }}</q-td>
                 <q-td key="period" :props="props">{{ props.row.period }}</q-td>
-                <!-- <q-td key="updated_at" :props="props">{{ props.row.updated_at }}</q-td> -->
                 <q-td key="updated_at" :props="props" v-html="refineDate(props.row.updated_at)"></q-td>
                 <q-td key="status" :props="props">
                     <q-toggle v-model="props.row.status==1 ? true : false" color="primary" @input="changeStatus(props.row.id, props.row.status)"></q-toggle>
@@ -153,7 +152,7 @@ export default {
     },
     computed: {
         ...mapGetters([ 'user', 'schoolClassOptions', 'feeStructure' ]),
-    },
+    }, 
     created() {
         const data={
             schoolId : this.user.institute

@@ -308,8 +308,6 @@ function blogMetaName(type, data) {
     });
 }
 
-
-
 // School Functions
 
 function getSchoolBasic(id) {
@@ -480,6 +478,18 @@ function insertFeeRecord(post) {
     });
 }
 
+function getFeeStructure(id){
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT a.id, a.schoolId, a.name, a.classes, a.period, a.amount, a.status, a.updated_at, b.name as className FROM fees as a left join schoolbasics as b on b.id = a.classes WHERE a.id=${id};`
+        pool.query(sql, async(err, results) => {
+            try{
+                if(err){ throw err }
+                if(results){ resolve(results[0]) }
+            }catch(e){ logError(e); return; }
+        });
+    })
+}
+
 // School Functions
 
 // Generic Functions
@@ -565,4 +575,4 @@ function getUserId(req, res, next){
     }
 }
 
-module.exports = {verifyToken, verifyAdmin, verifyInsti, getUserId, getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails, dpPreview, getSchoolBasic, getSchoolGroup, getNames, getSingleLead, changeUserStatus, getTeamMember, updateRole, getUpdatedLeads, getLead, addLog, getFeeDetails, insertFeeRecord, checkFeeRecord };
+module.exports = {verifyToken, verifyAdmin, verifyInsti, getUserId, getBalance, printError, logError, storage, uploadImage, uploadDeleteImage, blogMetaName, blogMetaData, suggestBlogs, getInstitute, getQuestion, createTest, getQuestions, calculateScore, getNewQuestion, insertPractice, updatePractice, sameQuestion, increaseScore, getdpDetails, dpPreview, getSchoolBasic, getSchoolGroup, getNames, getSingleLead, changeUserStatus, getTeamMember, updateRole, getUpdatedLeads, getLead, addLog, getFeeDetails, insertFeeRecord, checkFeeRecord, getFeeStructure };

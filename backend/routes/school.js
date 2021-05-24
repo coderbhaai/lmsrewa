@@ -454,7 +454,7 @@ router.post('/changeLeadStatus', asyncMiddleware( async(req, res, next) => {
 }))
 
 router.post('/feeStructure', asyncMiddleware( async(req, res) => {
-    let sql = `SELECT id, schoolId, name, classes, period, amount, status, updated_at FROM fees;
+    let sql = `SELECT a.id, a.schoolId, a.name, a.classes, a.period, a.amount, a.status, a.updated_at, b.name as className FROM fees as a left join schoolbasics as b on b.id = a.classes;
                 SELECT id, name from schoolbasics WHERE type = 'Class' AND schoolId = '${req.body.schoolId}'`
     pool.query(sql, [1,2], async(err, results) => {
         try{
@@ -642,8 +642,11 @@ router.post('/filterFeeRecords', asyncMiddleware( async(req, res) => {
 }))
 
 router.post('/pendingFee', asyncMiddleware( async(req, res) => {
-    let sql = `SELECT a.id as studentId, a.schoolId, a.name, a.tab1, b.name as className, c.year, c.period, c.type, c.amount, c.updated_at from schoolbasics as a left join schoolbasics as b on b.id = a.tab1
-                left join feeregister as c on c.studentId = a.id WHERE a.schoolId = '${req.body.schoolId}' AND a.type = 'Student';
+    let sql = `SELECT a.id as studentId, a.schoolId, a.name, a.tab1, b.name as className, c.year, c.period, c.type, c.amount, c.updated_at, d.name as feeName, d.period as feePeriod
+                from schoolbasics as a left join schoolbasics as b on b.id = a.tab1 
+                left join feeregister as c on c.studentId = a.id 
+                left join fees as d on c.type = d.id 
+                WHERE a.schoolId = '${req.body.schoolId}' AND a.type = 'Student';
                 SELECT id, name, classes, period, amount from fees WHERE status= 1 AND schoolId = '${req.body.schoolId}';`
     pool.query(sql, [1,2], async(err, results) => {
         try{

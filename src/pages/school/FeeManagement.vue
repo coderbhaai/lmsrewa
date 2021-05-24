@@ -131,9 +131,9 @@ export default {
             ],
             quarter: [
                 {value : 1, name: 'Q1 (Jan - Mar)'},
-                {value : 2, name: 'Q1 (Apr - Jun)'},
-                {value : 3, name: 'Q1 (Jul - Aug)'},
-                {value : 4, name: 'Q1 (Sep - Dec)'}
+                {value : 2, name: 'Q2 (Apr - Jun)'},
+                {value : 3, name: 'Q3 (Jul - Aug)'},
+                {value : 4, name: 'Q4 (Sep - Dec)'}
             ]
         }
     },
@@ -157,7 +157,6 @@ export default {
             const total =    this.feeArray.reduce(function(total, current){
                     return total + parseInt(current[2])
                 }, 0)
-            console.log(`total`, total)
             const data ={
                 schoolId :                  this.user.institute,
                 classes :                   this.classes,
@@ -237,7 +236,6 @@ export default {
         ...mapGetters([ 'user', 'schoolClassOptionsCopy', 'filterFees', 'filterStudents', 'feeRecordsCopy', 'feeStructure' ]),
         years () {
             const year = new Date().getFullYear()
-            console.log(`year`, year)
             return Array.from({length: year - 2019}, (value, index) => 2020 + index)
         }
     },

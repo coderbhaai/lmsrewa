@@ -323,7 +323,6 @@ const mutations = {
   CHANGEFEESTATUS: (state, data) => { const index = state.feeStructure.findIndex((i) => i.id === data.id); if (index !== -1) { state.feeStructure.splice(index, 1, data); } },
   UPDATEFEESTRUCTURE: (state, data) => { const index = state.feeStructure.findIndex((i) => i.id === data.id); if (index !== -1) { state.feeStructure.splice(index, 1, data); } },
   FEEMANAGEMENT: (state, data) => {
-    console.log(`data`, data)
     state.schoolClassOptionsCopy = data.classes;
     state.feeStructure = data.fees;
     state.feeRecords = data.feeRecords;
@@ -339,7 +338,6 @@ const mutations = {
   },
 
   ADDFEES: (state, data) => {
-    console.log(`data`, data)
     state.feeRecords.unshift(data);
     // state.feeRecordsCopy.unshift(data);
   },
@@ -350,7 +348,6 @@ const mutations = {
   FILTERFEERECORDS: (state, data) => { state.feeRecordsCopy = data },
   RESETFEERECORD: (state, form) => { state.feeRecordsCopy = state.feeRecords },
   PENDINGFEE: (state, data) => {
-    console.log(`data`, data) 
     state.pendingFee = data.pendingFee
     state.feeRecords = data.feeRecords
   },

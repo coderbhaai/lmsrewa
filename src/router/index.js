@@ -28,8 +28,6 @@ export default function ( {store} /* { store, ssrContext } */) {
   });
   
   Router.beforeEach((to, from, next) => {
-    // console.log('to.matched.some((i)', to.matched)
-    // console.log(`store.getters.isLoggedIn`, store.getters.user.role)
 
     if (to.matched.some((i) => i.meta.noAuth)) {
       if(store.getters.user && store.getters.user.auth){ 

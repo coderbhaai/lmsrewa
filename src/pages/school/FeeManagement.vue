@@ -33,7 +33,8 @@
                 </div>
             </q-form>
         </div>
-        <q-table title="Fee Records" :data="feeRecordsCopy" :columns="columns" row-key="id" :filter="filter" class="my-sticky-header-table" :pagination.sync="pagination">
+        <q-table title="Fee Records" :data="feeManagement" :columns="columns" row-key="id" class="my-sticky-header-table" :pagination.sync="pagination">
+            <!-- :filter="filter"  -->
             <template v-slot:header="props"><q-tr :props="props"><q-th v-for="col in props.cols" :key="col.name" :props="props">{{ col.label }}</q-th></q-tr></template>
             <template v-slot:body="props">
                 <q-tr :props="props">
@@ -42,7 +43,6 @@
                 <q-td key="studentName" :props="props">{{ props.row.studentName }}</q-td>
                 <q-td key="mode" :props="props">{{ props.row.mode }}</q-td>
                 <q-td key="feeCollected" :props="props">Rs. {{ props.row.feeCollected }}</q-td>
-                <!-- <q-td key="updated_at" :props="props">{{ props.row.updated_at }}</q-td> -->
                 <q-td key="updated_at" :props="props" v-html="refineDate(props.row.updated_at)"></q-td>
                 <q-td><img @click="updateDialog(props.row)" src="/images/icons/edit.svg" class="edit"/></q-td>
                 </q-tr>
@@ -69,17 +69,66 @@
                                     <q-select multiple map-options emit-value v-model="feeArray[index][3]" :options="quarter" option-value="value" option-label="name" label="Fees for" readonly/>
                                 </div>                       
                             </div>
-                            <div class="col-3 q-pr-lg flex-hc"><q-btn label="Update Remarks" type="submit" color="primary" class="q-mr-lg"/></div>
+                            <div class="col-3 q-pr-lg doubleBtn">
+                                <q-btn label="Update Remarks" type="submit" color="primary" class="q-mr-lg"/>
+                                <q-btn label="Create A Receipt" type="button" color="primary" class="q-mr-lg" @click="this.createPDF"/>
+                            </div>
                         </div>
                     </q-form>
                 </q-card-section>
             </q-card>
         </q-dialog>
+        <div id="print" v-if="this.printObj.id">
+            <!-- <div v-if="this.printObj.length"> -->
+            <!-- <ul>
+                <li><img src="/images/logo.png"/></li>
+                <li>Invoice Number: 101</li>
+            </ul> -->
+            <h2 class="heading">Invoice</h2>
+            <p><strong>Student:</strong> {{printObj.studentName}}</p>
+            <p><strong>Class: </strong>{{printObj.className}}</p>
+            <table id="tab_customers" class="table table-striped">
+                <colgroup>
+                    <col width="10%">
+                        <col width="20%">
+                            <col width="60%">
+                                <col width="10%">
+                                <!-- <col width="20%">
+                                    <col width="10%">
+                                    <col width="20%"> -->
+                </colgroup>
+                <thead>
+                    <tr class='warning'>
+                        <th>Sl No.</th>
+                        <th>Fees</th>
+                        <!-- <th>Period</th> -->
+                        <th>Duration</th>
+                        <th>Amount</th>
+                        <!-- <th>Mode</th> -->
+                        <!-- <th>Date</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(i, index) in printObj.feeDetails">
+                        <td>{{index+1}}</td>
+                        <td>{{i.feeName}}<br/>{{i.freq}}</td>
+                        <!-- <td></td> -->
+                        <td>{{i.period}}</td>
+                        <td>{{i.amount}}</td>
+                        <!-- <td>{{printObj.mode}}</td> -->
+                        <!-- <td>{{refineDate(printObj.updated_at)}}</td> -->
+                    </tr>
+                </tbody>
+            </table>
+            <p class="mt-3"><strong>Total Amount Paid:</strong> {{printObj.feeCollected}}</p>
+        </div>
     </div>
 </template>
 <script>
 import { mapGetters } from 'vuex';
 import {message, rules, refineDate} from '../../store/functions'
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 
 export default {
     data() {
@@ -100,6 +149,8 @@ export default {
             showAddForm:            false,
             pagination:             { rowsPerPage: 30 },
             medium:                 false,
+            feeManagement:          [],
+            printObj:               {},
             columns: [
                 { name: 'id', label: 'Sl No.', align: 'left', field: 'Edit', },
                 { name: 'className', label: 'Class', align: 'left', field: 'className', sortable: true, },
@@ -116,18 +167,18 @@ export default {
                 {name: "Others"}
             ],
             months: [
-                {value: 1, name: 'January'},
-                {value: 2, name: 'February'},
-                {value: 3, name: 'March'},
-                {value: 4, name: 'April'},
-                {value: 5, name: 'May'},
-                {value: 6, name: 'June'},
-                {value: 7, name: 'July'},
-                {value: 8, name: 'August'},
-                {value: 9, name: 'September'},
-                {value: 10, name: 'October'},
-                {value: 11, name: 'November'},
-                {value: 12, name: 'December'},
+                {value: 1, name: 'January', short: 'Jan'},
+                {value: 2, name: 'February', short: 'Feb'},
+                {value: 3, name: 'March', short: 'Mar'},
+                {value: 4, name: 'April', short: 'Apr'},
+                {value: 5, name: 'May', short: 'May'},
+                {value: 6, name: 'June', short: 'Jun'},
+                {value: 7, name: 'July', short: 'Jul'},
+                {value: 8, name: 'August', short: 'Aug'},
+                {value: 9, name: 'September', short: 'Sep'},
+                {value: 10, name: 'October', short: 'Oct'},
+                {value: 11, name: 'November', short: 'Nov'},
+                {value: 12, name: 'December', short: 'Dec'},
             ],
             quarter: [
                 {value : 1, name: 'Q1 (Jan - Mar)'},
@@ -138,6 +189,36 @@ export default {
         }
     },
     methods: {
+        createPDF () {
+            window.html2canvas = html2canvas
+            var doc = new jsPDF("p", "pt", "a4")
+            doc.html(document.querySelector("#print"),{
+                callback: function(pdf){
+                    pdf.save("test.pdf")
+                }
+            })
+
+
+
+
+
+
+
+            // let pdfName = 'test'; 
+            // var doc = new jsPDF();
+            // var pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
+            // var pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.getWidth();
+            // doc.addImage("/images/logo.png", "JPEG", 10, 5, 15, 20);
+            // doc.setFontSize(22);
+            // doc.text('Fee Invoice', pageWidth / 2, 50, {align: 'center'});
+            // doc.setFontSize(14);
+            // for (var i = 1; i <= this.feeArray.length-1; i++) {
+            //     doc.text(20, 65 + i * 10, this.feeArray[i][0] +'-'+this.feeArray[i][1] );
+            // }
+
+            // doc.save(pdfName + '.pdf');
+            this.printObj={}
+        },
         showForm() { this.showAddForm = true;},
         hideForm() { this.showAddForm = false; },
         resetData(){
@@ -195,6 +276,7 @@ export default {
             // this.$store.dispatch('filterStudents', data);
         },
         updateDialog(i){
+            console.log(`i`, i)
             this.id=                        i.id
             this.classes=                   i.className
             this.student=                   i.studentName
@@ -202,7 +284,8 @@ export default {
             this.feeAmount=                 i.feeCollected
             this.mode=                      i.mode
             this.remarks=                   i.remarks
-            this.medium =                   true
+            this.medium =                   true,
+            this.printObj =                 i
         },
         updateSubmit(){
             const data={
@@ -230,7 +313,70 @@ export default {
             this.feeArray[index][0]= this.filterFees.filter(i=>i.id == this.feeArray[index][1])[0].period
             this.feeArray[index][2]= this.filterFees.filter(i=>i.id == this.feeArray[index][1])[0].amount
         },
-        deleteFeeArray(index){ this. feeArray.splice(index, 1) }
+        deleteFeeArray(index){ this. feeArray.splice(index, 1) },
+        getPaidMonths(array){
+            var data = []
+            var data = ''
+            for (var i = 1; i <= this.months.length; ++i) {
+                if (array.includes(this.months[i - 1].value)) { 
+                    data += this.months[i - 1].short+', '
+                    // data.push(this.months[i - 1].name) 
+                    }
+            }
+            return data
+        },
+        getPaidQuarters(array){
+            var data = []
+            for (var i = 1; i <= this.quarter.length; ++i) {
+                if (array.includes(this.quarter[i - 1].value)) { data.push(this.quarter[i - 1].name) }
+            }
+            return data
+        },
+        getFeeName(id){
+            var data = ''
+            for (var i = 1; i <= this.feeStructure.length; ++i) {
+                if (id == this.feeStructure[i-1].id){ data = this.feeStructure[i - 1].name }
+            }
+            return data
+        },
+        reformatFee () {
+            for (let i = 0; i < this.feeRecordsCopy.length; i++) {
+                var xx ={
+                    className:              this.feeRecordsCopy[i].className,
+                    classes:                this.feeRecordsCopy[i].classes,
+                    feeCollected:           this.feeRecordsCopy[i].feeCollected,
+                    fees:                   this.feeRecordsCopy[i].fees,
+                    id:                     this.feeRecordsCopy[i].id,
+                    mode:                   this.feeRecordsCopy[i].mode,
+                    remarks:                this.feeRecordsCopy[i].remarks,
+                    schoolID:               this.feeRecordsCopy[i].schoolID,
+                    student:                this.feeRecordsCopy[i].student,
+                    studentName:            this.feeRecordsCopy[i].studentName,
+                    tab1:                   this.feeRecordsCopy[i].tab1,
+                    updated_at:             this.feeRecordsCopy[i].updated_at,
+                }
+                var feeDetails=[]
+                for (let j = 0; j < JSON.parse(this.feeRecordsCopy[i].fees).length; j++) {
+                    var check = JSON.parse(this.feeRecordsCopy[i].fees)[j]
+                    var obj = {
+                        freq :  check[0],
+                        amount: check [2],
+                    }
+                    var feeName = this.getFeeName( JSON.parse(this.feeRecordsCopy[i].fees)[0][1] )
+                    obj.feeName =  feeName
+                    if(JSON.parse(this.feeRecordsCopy[i].fees)[j][0]=='Monthly'){
+                        var period = this.getPaidMonths( JSON.parse(this.feeRecordsCopy[i].fees)[0][3] )
+                    }
+                    if(JSON.parse(this.feeRecordsCopy[i].fees)[j][0]=='Quarterly'){
+                        var period = this.getPaidQuarters( JSON.parse(this.feeRecordsCopy[i].fees)[0][3] )
+                    }
+                    obj.period =  period
+                    feeDetails.push(obj)
+                }
+                xx.feeDetails = feeDetails
+                this.feeManagement.push(xx)
+            }
+        }
     },
     computed: {
         ...mapGetters([ 'user', 'schoolClassOptionsCopy', 'filterFees', 'filterStudents', 'feeRecordsCopy', 'feeStructure' ]),
@@ -244,8 +390,29 @@ export default {
             schoolId : this.user.institute
         }
         this.$store.dispatch('feeManagement', data);
+    },
+    mounted () {
+        this.reformatFee()
     }
 };
 </script>
-<style>
+<style lang="sass" scoped>
+    .doubleBtn
+        width: 100%
+        text-align: center
+        margin: 1em 
+    #print
+        padding: 1em
+        ul
+            display: flex
+            align-items: center
+            justify-content: space-around
+            li
+                list-style: none
+        table
+            td
+                text-align: center
+        p
+            margin: 0
+            line-height: 1.5em
 </style>
